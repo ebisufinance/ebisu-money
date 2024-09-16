@@ -2,7 +2,6 @@ name: Frontend Deployment
 
 # This workflow:
 # - Deploys the app to Vercel (main branch only, not PRs)
-# - Deploys the gallery to Vercel (main branch only, not PRs)
 
 on:
   push:
@@ -10,10 +9,6 @@ on:
     paths:
       - ".github/workflows/frontend-deployment.yml"
       - "frontend/**"
-      
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
 
 env:
   CI: true
@@ -23,39 +18,8 @@ jobs:
   deploy-app:
     name: Deploy app
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
     env:
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    steps:
-      - name: Git checkout
-        uses: actions/checkout@v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3.0.0
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Install Vercel CLI
-        run: pnpm install --global vercel@canary
-
-      - name: Pull Vercel Environment Information
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Build Project Artifacts
-        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-      - name: Deploy Project Artifacts to Vercel
-        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-
-  deploy-gallery:
-    name: Deploy gallery
-    runs-on: ubuntu-latest
-    if: ${{ github.event_name != 'pull_request' }}
-    env:
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_GALLERY_PROJECT_ID }}
     steps:
       - name: Git checkout
         uses: actions/checkout@v4
