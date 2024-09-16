@@ -1,8 +1,5 @@
 name: Frontend Deployment
 
-# This workflow:
-# - Deploys the app to Vercel (main branch only, not PRs)
-
 on:
   push:
     branches: [main, dev]
@@ -28,31 +25,18 @@ jobs:
         uses: pnpm/action-setup@v3.0.0
         with:
           version: 8
-
+          
       - name: Install dependencies
-        run: |
-          cd frontend/app && pnpm install --frozen-lockfile
-          cd ../uikit && pnpm install --frozen-lockfile
-
-      - name: Build UIKit
-        run: cd frontend/app && pnpm build-uikit
-
-      - name: Build App
-        working-directory: frontend/app
-        run: |
-          pnpm panda-codegen
-          pnpm build
+        run: pnpm install --frozen-lockfile
 
       - name: Install Vercel CLI
         run: pnpm install --global vercel@latest
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: frontend/app
 
       - name: Build Project Artifacts
         run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy to Vercel
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
-        working-directory: frontend/app
