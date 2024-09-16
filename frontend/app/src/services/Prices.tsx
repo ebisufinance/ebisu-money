@@ -17,7 +17,7 @@ import {
 } from "@/src/demo-mode";
 import { DEMO_MODE } from "@/src/env";
 import * as dn from "dnum";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 
 type PriceToken = "LQTY" | "BOLD" | CollateralSymbol;
@@ -49,7 +49,7 @@ let useWatchPrices = function useWatchPrices(callback: (prices: Prices) => void)
   const rethPrice = useWatchCollateralPrice("RETH");
   const stethPrice = useWatchCollateralPrice("STETH");
 
-  useEffect(() => {
+  const memoizedCallback = useCallback(() => {
     callback({
       // TODO: fetch prices for LQTY & BOLD
       ...initialPrices,
@@ -57,17 +57,18 @@ let useWatchPrices = function useWatchPrices(callback: (prices: Prices) => void)
       RETH: rethPrice.data ? [rethPrice.data, 18] : null,
       STETH: stethPrice.data ? [stethPrice.data, 18] : null,
     });
-  }, [
-    callback,
-    ethPrice,
-    rethPrice,
-    stethPrice,
-  ]);
+  }, [callback, ethPrice.data, rethPrice.data, stethPrice.data]);
+
+  useEffect(() => {
+    memoizedCallback();
+  }, [memoizedCallback]);
 };
 
 if (DEMO_MODE) {
   // in demo mode, simulate a variation of the prices
   useWatchPrices = (callback) => {
+    const memoizedCallback = useCallback(callback, []);
+
     useEffect(() => {
       const update = () => {
         const variation = () => dn.from((Math.random() - 0.5) * DEMO_PRICE_UPDATE_VARIATION, 18);
@@ -84,10 +85,10 @@ if (DEMO_MODE) {
         ? undefined
         : setInterval(update, DEMO_PRICE_UPDATE_INTERVAL);
 
-      update();
+        update();
 
-      return () => clearInterval(timer);
-    }, []);
+        return () => clearInterval(timer);
+    }, [memoizedCallback]);
   };
 }
 
@@ -102,10 +103,14 @@ const PriceContext = createContext<{
 export function Prices({ children }: { children: ReactNode }) {
   const [prices, setPrices] = useState<Prices>(initialPrices);
 
-  useWatchPrices(setPrices);
+  const memoizedSetPrices = useCallback((newPrices: Prices | ((prevPrices: Prices) => Prices)) => {
+    setPrices(newPrices);
+  }, []);
+
+  useWatchPrices(memoizedSetPrices);
 
   return (
-    <PriceContext.Provider value={{ prices, setPrices }}>
+    <PriceContext.Provider value={{ prices, setPrices: memoizedSetPrices }}>
       {children}
     </PriceContext.Provider>
   );
