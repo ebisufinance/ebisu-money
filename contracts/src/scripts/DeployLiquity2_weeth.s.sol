@@ -33,6 +33,7 @@ import "../Zappers/GasCompZapper.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "forge-std/console.sol";
+import {PriceFeedWeethTestnet} from "../test/TestContracts/PriceFeedWeethTestnet.sol";
 
 contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
     using Strings for *;
@@ -40,6 +41,8 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
 
     bytes32 SALT;
     address deployer;
+    address WEETH_ADDRESS = 0x3b8b6E96e57f0d1cD366AaCf4CcC68413aF308D0;
+    address WEETH_ORACLE = 0xc7b78b5c1433C81c455CD1e9A68FF18764acbCe1;
 
     struct LiquityContractsTestnet {
         IAddressesRegistry addressesRegistry;
@@ -316,22 +319,16 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
 
         // Use WETH as collateral for the first branch
         vars.collaterals[0] = _WETH;
-
         vars.collaterals[1] = new ERC20Faucet(
-            "Staked ETH", // _name
-            "stETH", // _symbol
-            100 ether, // _tapAmount
-            1 days // _tapPeriod
-        );
-
-        vars.collaterals[2] = new ERC20Faucet(
-            "Weeth Token", // _name
-            "weeth", // _symbol
-            100 ether, // _tapAmount
-            1 days // _tapPeriod
-        );
-
-        // Deploy plain ERC20Faucets for the rest of the branches
+                    string.concat("Staked ETH", string(abi.encode(vars.i))), // _name
+                    string.concat("stETH", string(abi.encode(vars.i))), // _symbol
+                    100 ether, //     _tapAmount
+                    1 days //         _tapPeriod
+                );
+        
+        vars.collaterals[2] = IERC20Metadata(WEETH_ADDRESS);
+        
+        // // Deploy plain ERC20Faucets for the rest of the branches
         // for (vars.i = 1; vars.i < vars.numCollaterals; vars.i++) {
         //     if (vars.i == 1) {
         //         vars.collaterals[vars.i] = new ERC20Faucet(
@@ -421,8 +418,13 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             SALT, keccak256(getBytecode(type(MetadataNFT).creationCode, address(initializedFixedAssetReader)))
         );
         assert(address(contracts.metadataNFT) == addresses.metadataNFT);
-
-        contracts.priceFeed = new PriceFeedTestnet();
+        
+        if (address(_collToken) == WEETH_ADDRESS) {
+            contracts.priceFeed = new PriceFeedWeethTestnet(WEETH_ORACLE);
+        } else {
+            contracts.priceFeed = new PriceFeedTestnet();
+        }
+        // contracts.priceFeed = new PriceFeedTestnet();
         contracts.interestRouter = new MockInterestRouter();
         addresses.borrowerOperations = vm.computeCreate2Address(
             SALT, keccak256(getBytecode(type(BorrowerOperations).creationCode, address(contracts.addressesRegistry)))

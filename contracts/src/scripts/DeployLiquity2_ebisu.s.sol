@@ -317,38 +317,24 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         // Use WETH as collateral for the first branch
         vars.collaterals[0] = _WETH;
 
-        vars.collaterals[1] = new ERC20Faucet(
-            "Staked ETH", // _name
-            "stETH", // _symbol
-            100 ether, // _tapAmount
-            1 days // _tapPeriod
-        );
-
-        vars.collaterals[2] = new ERC20Faucet(
-            "Weeth Token", // _name
-            "weeth", // _symbol
-            100 ether, // _tapAmount
-            1 days // _tapPeriod
-        );
-
         // Deploy plain ERC20Faucets for the rest of the branches
-        // for (vars.i = 1; vars.i < vars.numCollaterals; vars.i++) {
-        //     if (vars.i == 1) {
-        //         vars.collaterals[vars.i] = new ERC20Faucet(
-        //             string.concat("Staked ETH", string(abi.encode(vars.i))), // _name
-        //             string.concat("stETH", string(abi.encode(vars.i))), // _symbol
-        //             100 ether, //     _tapAmount
-        //             1 days //         _tapPeriod
-        //         );
-        //     } else {
-        //         vars.collaterals[vars.i] = new ERC20Faucet(
-        //             string.concat("Weeth Token", string(abi.encode(vars.i))), // _name
-        //             string.concat("weeth", string(abi.encode(vars.i))), // _symbol
-        //             100 ether, //     _tapAmount
-        //             1 days //         _tapPeriod
-        //         );
-        //     }
-        // }
+        for (vars.i = 1; vars.i < vars.numCollaterals; vars.i++) {
+            if (vars.i == 1) {
+                vars.collaterals[vars.i] = new ERC20Faucet(
+                    string.concat("Staked ETH", string(abi.encode(vars.i))), // _name
+                    string.concat("stETH", string(abi.encode(vars.i))), // _symbol
+                    100 ether, //     _tapAmount
+                    1 days //         _tapPeriod
+                );
+            } else {
+                vars.collaterals[vars.i] = new ERC20Faucet(
+                    string.concat("Weeth Token", string(abi.encode(vars.i))), // _name
+                    string.concat("weeth", string(abi.encode(vars.i))), // _symbol
+                    100 ether, //     _tapAmount
+                    1 days //         _tapPeriod
+                );
+            }
+        }
 
         // Deploy AddressesRegistries and get TroveManager addresses
         for (vars.i = 0; vars.i < vars.numCollaterals; vars.i++) {
