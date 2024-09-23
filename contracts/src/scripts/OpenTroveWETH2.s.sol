@@ -89,8 +89,6 @@ contract OpenTroveWETH is Script {
         console.log("here");
         vm.label(address(hintHelpers), "HintHelpers");
 
-        address proxyImplementation = address(new Proxy());
-        vm.label(proxyImplementation, "ProxyImplementation");
         console.log("here");
         uint256 token_index = 0;
         console.log("here2");
@@ -144,27 +142,24 @@ contract OpenTroveWETH is Script {
 
         
 
-        Proxy proxy = Proxy(Clones.clone(proxyImplementation));
-        vm.label(address(proxy), "Proxy");
 
-        proxy.tap(c.collateral);
+        c.collateral.tap();
         uint256 ethAmount = c.collateral.tapAmount() / 2;
-        c.collateral.approve(address(c.borrowerOperations), ethAmount + ETH_GAS_COMPENSATION);
 
         console.log("ethAmount: %d", ethAmount);
         console.log("address(c.borrowerOperations): ", address(c.borrowerOperations));
-
         //approve spend
         c.collateral.approve(address(c.borrowerOperations), ethAmount + ETH_GAS_COMPENSATION);
         console.log("approved spend");
+        
         uint256 interestRate = 0.01 ether;
         (uint256 upperHint, uint256 lowerHint) = _findHints(hintHelpers, c, 0, interestRate);
         console.log("open trove");
-        console.log("proxy address: ", address(proxy));
-        console.log("balance of proxy: ", c.collateral.balanceOf(address(proxy)));
+        
+        console.log("balance of proxy: ", c.collateral.balanceOf(msg.sender));
 
         uint256 troveId = c.borrowerOperations.openTrove({
-                    _owner: address(proxy),
+                    _owner: msg.sender,
                     _ownerIndex: 0,
                     _ETHAmount: ethAmount,
                     _boldAmount: 2_000 ether,
@@ -177,9 +172,11 @@ contract OpenTroveWETH is Script {
                     _receiver: address(0)
                 });
         console.log("troveId: %d", troveId);
-        console.log("sweep trove");
-        proxy.sweepTrove(c.nft, troveId);
-        console.log("after sweep trove");
+
+        // console.log("sweep trove");
+        // ITroveNFT nft = c.troveManager.troveNFT();
+        // nft.sweepTrove(c.nft, troveId);
+        // console.log("after sweep trove");
         // uint256 balanceOfMsgSender = c.collateral.balanceOf(msg.sender);
         // console.log("balanceOfMsgSender: %d", balanceOfMsgSender);
         // c.collateral.transfer(address(0xdead), c.collateral.balanceOf(msg.sender)); //send to dead address

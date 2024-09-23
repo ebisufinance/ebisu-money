@@ -43,6 +43,7 @@ contract Proxy {
 }
 
 contract OpenTroveStETH is Script {
+    string deployment_file_name = "deployment-manifest.json";
     struct BranchContracts {
         ERC20Faucet collateral;
         ITroveManager troveManager;
@@ -72,7 +73,7 @@ contract OpenTroveStETH is Script {
         vm.startBroadcast();
 
         string memory manifestJson;
-        try vm.readFile("deployment-manifest.json") returns (string memory content) {
+        try vm.readFile(deployment_file_name) returns (string memory content) {
             manifestJson = content;
         } catch {}
 
@@ -172,7 +173,7 @@ contract OpenTroveStETH is Script {
                     _removeManager: address(0),
                     _receiver: address(0)
                 });
-                
+
         console.log("troveId: %d", troveId);
         console.log("sweep trove");
         proxy.sweepTrove(c.nft, troveId);
