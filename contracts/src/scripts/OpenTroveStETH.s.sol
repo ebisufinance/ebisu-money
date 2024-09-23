@@ -1,3 +1,4 @@
+import "forge-std/console.sol";
 import {Script} from "forge-std/Script.sol";
 import {ERC20Faucet} from "../test/TestContracts/ERC20Faucet.sol";
 import {ITroveManager} from "../interfaces/ITroveManager.sol";
@@ -7,7 +8,8 @@ import {ITroveNFT} from "../interfaces/ITroveNFT.sol";
 import {IHintHelpers} from "../interfaces/IHintHelpers.sol";
 import {ICollateralRegistry} from "../interfaces/ICollateralRegistry.sol";
 import {Clones} from "openzeppelin-contracts/contracts/proxy/Clones.sol";
-import "forge-std/console.sol";
+import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
 
 import {
     ETH_GAS_COMPENSATION,
@@ -40,7 +42,7 @@ contract Proxy {
     }
 }
 
-contract OpenTrove is Script {
+contract OpenTroveStETH is Script {
     struct BranchContracts {
         ERC20Faucet collateral;
         ITroveManager troveManager;
@@ -49,14 +51,14 @@ contract OpenTrove is Script {
         ITroveNFT nft;
     }
 
-    function _findHints(IHintHelpers hintHelpers, BranchContracts memory c, uint256 interestRate)
+    function _findHints(IHintHelpers hintHelpers, BranchContracts memory c, uint256 branch, uint256 interestRate)
         internal
         view
         returns (uint256 upperHint, uint256 lowerHint)
     {
         // Find approx hint (off-chain)
         (uint256 approxHint,,) = hintHelpers.getApproxHint({
-            _collIndex: 0,
+            _collIndex: branch,
             _interestRate: interestRate,
             _numTrials: sqrt(100 * c.troveManager.getTroveIdsCount()),
             _inputRandomSeed: block.timestamp
@@ -75,31 +77,36 @@ contract OpenTrove is Script {
         } catch {}
 
         ICollateralRegistry collateralRegistry;
-        try vm.envAddress("COLLATERAL_REGISTRY") returns (address value) {
-            collateralRegistry = ICollateralRegistry(value);
-        } catch {
-            collateralRegistry = ICollateralRegistry(vm.parseJsonAddress(manifestJson, ".collateralRegistry"));
-        }
+        
+        collateralRegistry = ICollateralRegistry(vm.parseJsonAddress(manifestJson, ".collateralRegistry"));
+        console.log("collateralRegistry: ", address(collateralRegistry));
         vm.label(address(collateralRegistry), "CollateralRegistry");
-
+        console.log("here");
         IHintHelpers hintHelpers;
-        try vm.envAddress("HINT_HELPERS") returns (address value) {
-            hintHelpers = IHintHelpers(value);
-        } catch {
-            hintHelpers = IHintHelpers(vm.parseJsonAddress(manifestJson, ".hintHelpers"));
-        }
+        
+        hintHelpers = IHintHelpers(vm.parseJsonAddress(manifestJson, ".hintHelpers"));
+        console.log("here");
         vm.label(address(hintHelpers), "HintHelpers");
 
         address proxyImplementation = address(new Proxy());
         vm.label(proxyImplementation, "ProxyImplementation");
-
-        // Correct constructor parameters for ERC20Faucet
-        ERC20Faucet testRETH = new ERC20Faucet("testRETH", "tRETH", 1000 ether, 1 days);
-        vm.label(address(testRETH), "testRETH");
-
+        console.log("here");
+        uint256 token_index = 1;
+        console.log("here2");
+        uint256 res = collateralRegistry.getRedemptionRateWithDecay();
+        console.log("res: ", res);
+        ERC20Faucet weth = ERC20Faucet(address(collateralRegistry.getToken(0))); // branch #0 is WETH
+        
+        
+        IERC20Metadata token = collateralRegistry.getToken(token_index);
+        console.log("token address: ", address(token));
+        ERC20Faucet stETH = ERC20Faucet(address(token)); // branch #1 is stETH
+        console.log("here");
+        
         BranchContracts memory c;
-        c.collateral = testRETH;
-        c.troveManager = collateralRegistry.getTroveManager(0);
+        c.collateral = stETH;
+        vm.label(address(c.collateral), "ERC20Faucet");
+        c.troveManager = collateralRegistry.getTroveManager(token_index);
         vm.label(address(c.troveManager), "TroveManager");
         c.sortedTroves = c.troveManager.sortedTroves();
         vm.label(address(c.sortedTroves), "SortedTroves");
@@ -110,54 +117,67 @@ contract OpenTrove is Script {
 
         // approve the faucet to spend the collateral
 
+        console.log("msg.sender: ", msg.sender);
+        //print all branch contracts
+        console.log("c.collateral: ", address(c.collateral));
+        console.log("c.troveManager: ", address(c.troveManager));
+        console.log("c.sortedTroves: ", address(c.sortedTroves));
+        console.log("c.borrowerOperations: ", address(c.borrowerOperations));
+        console.log("c.nft: ", address(c.nft));
+
+        
         if (c.borrowerOperations.getInterestBatchManager(msg.sender).maxInterestRate == 0) {
-            // Register ourselves as batch manager, if we haven't
-            c.borrowerOperations.registerBatchManager({
-                minInterestRate: uint128(MIN_ANNUAL_INTEREST_RATE),
-                maxInterestRate: uint128(MAX_ANNUAL_INTEREST_RATE),
-                currentInterestRate: 0.025 ether,
-                fee: 0.001 ether,
-                minInterestRateChangePeriod: MIN_INTEREST_RATE_CHANGE_PERIOD
-            });
-        }
+                // Register ourselves as batch manager, if we haven't
+                c.borrowerOperations.registerBatchManager({
+                    minInterestRate: uint128(MIN_ANNUAL_INTEREST_RATE),
+                    maxInterestRate: uint128(MAX_ANNUAL_INTEREST_RATE),
+                    currentInterestRate: 0.025 ether,
+                    fee: 0.001 ether,
+                    minInterestRateChangePeriod: MIN_INTEREST_RATE_CHANGE_PERIOD
+                });
+            }
+
+        
 
         Proxy proxy = Proxy(Clones.clone(proxyImplementation));
         vm.label(address(proxy), "Proxy");
 
+        //mint stETH
         proxy.tap(c.collateral);
         uint256 ethAmount = c.collateral.tapAmount() / 2;
+
+        proxy.tap(weth);
+        c.collateral.approve(address(c.borrowerOperations), ethAmount);
+        weth.approve(address(c.borrowerOperations), ETH_GAS_COMPENSATION);
 
         console.log("ethAmount: %d", ethAmount);
         console.log("address(c.borrowerOperations): ", address(c.borrowerOperations));
 
-        // Ensure sufficient allowance
-        (bool approveSuccess, ) = address(proxy).call(
-            abi.encodeWithSignature("approve(address,uint256)", address(c.borrowerOperations), ethAmount + ETH_GAS_COMPENSATION)
-        );
-        console.log("approveSuccess: %s", approveSuccess);
-
-        uint256 allowance = c.collateral.allowance(address(proxy), address(c.borrowerOperations));
-        console.log("allowance: %d", allowance);
-
-        uint256 interestRate = 0.01 ether;
-        (uint256 upperHint, uint256 lowerHint) = _findHints(hintHelpers, c, interestRate);
+        uint256 interestRate = 2 * 0.01 ether;
+        (uint256 upperHint, uint256 lowerHint) = _findHints(hintHelpers, c, 0, interestRate);
+        console.log("open trove");
+        console.log("proxy address: ", address(proxy));
+        console.log("balance of proxy: ", c.collateral.balanceOf(address(proxy)));
 
         uint256 troveId = c.borrowerOperations.openTrove({
-            _owner: address(proxy),
-            _ownerIndex: 0,
-            _ETHAmount: ethAmount,
-            _boldAmount: 2_000 ether,
-            _upperHint: upperHint,
-            _lowerHint: lowerHint,
-            _annualInterestRate: interestRate,
-            _maxUpfrontFee: type(uint256).max, // we don't care about fee slippage
-            _addManager: address(0),
-            _removeManager: address(0),
-            _receiver: address(0)
-        });
-
+                    _owner: address(proxy),
+                    _ownerIndex: 0,
+                    _ETHAmount: ethAmount,
+                    _boldAmount: 2_000 ether,
+                    _upperHint: upperHint,
+                    _lowerHint: lowerHint,
+                    _annualInterestRate: interestRate,
+                    _maxUpfrontFee: type(uint256).max, // we don't care about fee slippage
+                    _addManager: address(0),
+                    _removeManager: address(0),
+                    _receiver: address(0)
+                });
+                
+        console.log("troveId: %d", troveId);
+        console.log("sweep trove");
         proxy.sweepTrove(c.nft, troveId);
-        c.collateral.transfer(address(0xdead), c.collateral.balanceOf(msg.sender));
+        console.log("after sweep trove");
+        
     }
     
     
