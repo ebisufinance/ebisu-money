@@ -58,10 +58,9 @@ let useWatchPrices = function useWatchPrices(callback: (prices: Prices) => void)
       STETH: stethPrice.data ? [stethPrice.data, 18] : null,
     });
   }, [callback, ethPrice.data, rethPrice.data, stethPrice.data]);
-
   useEffect(() => {
     memoizedCallback();
-  }, [memoizedCallback]);
+  }, [memoizedCallback, ethPrice.data, rethPrice.data, stethPrice.data]);
 };
 
 if (DEMO_MODE) {
