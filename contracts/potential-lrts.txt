@@ -1,0 +1,16 @@
+Mainnet LRT's from Eithan
+EigenLayer LRT
+weETH (https://etherscan.io/address/0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee#readProxyContract%23F8) 0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee
+ezETH (https://etherscan.io/token/0xbf5495Efe5DB9ce00f80364C8B423567e58d2110#code) 0xbf5495Efe5DB9ce00f80364C8B423567e58d2110
+pufETH (https://etherscan.io/address/0xD9A442856C234a39a81a089C06451EBAa4306a72) 0xD9A442856C234a39a81a089C06451EBAa4306a72
+rsETH (https://etherscan.io/address/0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7) 0xA1290d69c65A6Fe4DF752f95823fae25cB99e5A7
+ynETH (https://etherscan.io/token/0x09db87a538bd693e9d08544577d5ccfaa6373a48)0x09db87A538BD693E9d08544577d5cCfAA6373A48
+uniETH (https://etherscan.io/address/0xf1376bcef0f78459c0ed0ba5ddce976f1ddf51f4) 0xF1376bceF0f78459C0Ed0ba5ddce976F1ddF51F4
+rswETH (https://etherscan.io/address/0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0) 0xFAe103DC9cf190eD75350761e95403b7b8aFa6c0
+sfrxETH (https://etherscan.io/token/0xac3e018457b222d93114458476f3e3416abbe38f) v2 0xac3E018457B222d93114458476f3E3416Abbe38F
+
+Symbiotic
+weETHs (https://etherscan.io/token/0x917cee801a67f933f2e6b33fc0cd1ed2d5909d88) 0x917ceE801a67f933F2e6b33fC0cD1ED2d5909D88
+
+All the Mellow deployments
+https://docs.mellow.finance/mellow-lrt-primitive/contract-deploymentss
