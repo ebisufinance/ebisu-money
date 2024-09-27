@@ -78,13 +78,13 @@ export const colors = {
 	"desert:100": "#EFECE5",
 
 	//pink
-	"pink": "#ed3899",
+	pink: "#ed3899",
 
 	//black
-	"black": "#000000",
+	black: "#000000",
 
 	// White
-	"white": "#FFFFFF",
+	white: "#FFFFFF",
 
 	// Brand colors
 	"brand:pink": "#ed3899",
@@ -185,6 +185,9 @@ export const lightTheme = {
 		riskGradient3: "yellow:400",
 		riskGradient4: "#FFA12B",
 		riskGradient5: "red:500",
+
+		loadingGradient1: "blue:50",
+		loadingGradient2: "blue:100",
 
 		// not used yet
 		brandCyan: "brand:cyan",
