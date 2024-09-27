@@ -12,18 +12,18 @@ contract WEETHPriceFeed is CompositePriceFeed {
     constructor(
         address _owner,
         address _ethUsdOracleAddress,
-        address _lrtEthOracleAddress,
+        address _weethEthOracleAddress,
         address _rateProviderAddress,
         uint256 _ethUsdStalenessThreshold,
-        uint256 _lstEthStalenessThreshold
+        uint256 _weethEthStalenessThreshold
     )
     CompositePriceFeed(
     _owner,
     _ethUsdOracleAddress,
-    _lrtEthOracleAddress,
+    _weethEthOracleAddress,
     _rateProviderAddress,
     _ethUsdStalenessThreshold,
-    _lstEthStalenessThreshold
+    _weethEthStalenessThreshold
     )
     {}
 
