@@ -27,9 +27,8 @@ contract WEETHPriceFeed is CompositePriceFeed {
     {}
 
     function _getCanonicalRate() internal view override returns (uint256) {
-        (uint256 lrtEthPrice,) = _getOracleAnswer(lstEthOracle);
-        uint256 canonicalRate = lrtEthPrice;
-        return canonicalRate;
+        // Weeth returns exchange rate with 18 digit decimal precision
+        return IWEETHToken(rateProviderAddress).getRate();
 
     }
 }
