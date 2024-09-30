@@ -9,7 +9,7 @@ import { useAccount } from "@/src/services/Ethereum";
 import { usePrice } from "@/src/services/Prices";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { css } from "@/styled-system/css";
-import { Button, InfoTooltip } from "@liquity2/uikit";
+import { Button, InfoTooltip, TOKENS_BY_SYMBOL } from "@liquity2/uikit";
 import * as dn from "dnum";
 
 export function RewardsPanel({
@@ -20,15 +20,16 @@ export function RewardsPanel({
   const account = useAccount();
 
   const ethPriceUsd = usePrice("ETH");
+  const collPriceUsd = position?.collateral ? usePrice(TOKENS_BY_SYMBOL[position?.collateral].symbol) : DNUM_0;
   const boldPriceUsd = usePrice("BOLD");
 
-  if (!ethPriceUsd || !boldPriceUsd) {
+  if (!ethPriceUsd || !collPriceUsd || !boldPriceUsd) {
     return null;
   }
 
   const totalRewards = dn.add(
     dn.mul(position?.rewards?.bold ?? DNUM_0, boldPriceUsd),
-    dn.mul(position?.rewards?.eth ?? DNUM_0, ethPriceUsd),
+    dn.mul(position?.rewards?.coll ?? DNUM_0, collPriceUsd),
   );
 
   const gasFeeUsd = dn.multiply(dn.from(0.0015, 18), ethPriceUsd);
@@ -81,9 +82,9 @@ export function RewardsPanel({
                 value={position.rewards?.bold}
               />
               <Amount
-                symbol="ETH"
-                tooltip={<InfoTooltip {...infoTooltipProps(content.earnScreen.infoTooltips.rewardsEth)} />}
-                value={position.rewards?.eth}
+                symbol={TOKENS_BY_SYMBOL[position.collateral].name}
+                tooltip={<InfoTooltip {...infoTooltipProps(content.earnScreen.infoTooltips.rewardsColl)} />}
+                value={position.rewards?.coll}
               />
             </div>
           )

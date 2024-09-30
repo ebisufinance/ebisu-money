@@ -1,6 +1,7 @@
 import type { PositionEarn } from "@/src/types";
 import type { Dnum } from "dnum";
 
+import { Amount } from "@/src/comps/Amount/Amount";
 import { ConnectWarningBox } from "@/src/comps/ConnectWarningBox/ConnectWarningBox";
 import { Field } from "@/src/comps/Field/Field";
 import content from "@/src/content";
@@ -9,7 +10,16 @@ import { parseInputFloat } from "@/src/form-utils";
 import { useAccount } from "@/src/services/Ethereum";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { css } from "@/styled-system/css";
-import { Button, Checkbox, HFlex, InfoTooltip, InputField, TextButton, TokenIcon } from "@liquity2/uikit";
+import {
+  Button,
+  Checkbox,
+  HFlex,
+  InfoTooltip,
+  InputField,
+  TextButton,
+  TokenIcon,
+  TOKENS_BY_SYMBOL,
+} from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useState } from "react";
 
@@ -155,13 +165,13 @@ export function WithdrawPanel({
                 </span>
               </div>
               <div>
-                {dn.format(position.rewards.eth, 2)}{" "}
+                <Amount format={2} value={position.rewards.coll} />{" "}
                 <span
                   className={css({
                     color: "contentAlt",
                   })}
                 >
-                  ETH
+                  {TOKENS_BY_SYMBOL[position.collateral].name}
                 </span>
               </div>
             </div>

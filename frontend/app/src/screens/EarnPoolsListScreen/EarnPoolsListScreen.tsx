@@ -303,12 +303,13 @@ function Pool({
             </div>
           )}
         </div>
-
-        <PoolLink
-          active={active}
-          path={path}
-          title={`${active ? "Manage" : "Join"} ${token.name} pool`}
-        />
+        {active && (
+          <PoolLink
+            active={active}
+            path={path}
+            title={`${active ? "Manage" : "Join"} ${token.name} pool`}
+          />
+        )}
       </div>
     </div>
   );

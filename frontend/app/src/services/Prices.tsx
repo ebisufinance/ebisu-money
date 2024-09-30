@@ -18,7 +18,7 @@ import {
 import { dnum18, jsonStringifyWithDnum } from "@/src/dnum-utils";
 import { DEMO_MODE } from "@/src/env";
 import * as dn from "dnum";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { useReadContract } from "wagmi";
 
