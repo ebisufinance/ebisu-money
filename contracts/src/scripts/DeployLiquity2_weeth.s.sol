@@ -30,24 +30,61 @@ import "../test/TestContracts/PriceFeedTestnet.sol";
 import "../test/TestContracts/MetadataDeployment.sol";
 import "../Zappers/WETHZapper.sol";
 import "../Zappers/GasCompZapper.sol";
+import "../Zappers/Interfaces/ILeverageZapper.sol";
+import "../Zappers/LeverageWETHZapper.sol";
+import "../Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
+import "../Zappers/Modules/Exchanges/UniV3Exchange.sol";
+import "../Zappers/LeverageLSTZapper.sol";
+import "../Zappers/Modules/Exchanges/UniV3Exchange.sol";
+import "../Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
+import "../Zappers/Modules/Exchanges/Curve/ICurveFactory.sol";
+import "../Zappers/Modules/Exchanges/Curve/ICurvePool.sol";
+import "../Zappers/Modules/Exchanges/CurveExchange.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {PriceFeedWeethTestnet} from "../test/TestContracts/PriceFeedWeethTestnet.sol";
 import {WEETHPriceFeed} from "../PriceFeeds/WEETHPriceFeed.sol";
 import "forge-std/console.sol";
 
+uint256 constant _24_HOURS = 86400;
+uint256 constant _48_HOURS = 172800;
+
+
 contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
     using Strings for *;
     using StringFormatting for *;
 
+    ICurveFactory constant curveFactory = ICurveFactory(0x98EE851a00abeE0d95D08cF4CA2BdCE32aeaAF7F);
+    ISwapRouter constant uniV3Router = ISwapRouter(0xE592427A0AEce92De3Edee1F18E0157C05861564);
+    IQuoterV2 constant uniV3Quoter = IQuoterV2(0x61fFE014bA17989E743c5F6cB21bF9697530B21e);
+    INonfungiblePositionManager constant uniV3PositionManager =
+    INonfungiblePositionManager(0xC36442b4a4522E871399CD717aBDD847Ab11FE88);
+
+    uint24 constant UNIV3_FEE = 3000; // 0.3%
     bytes32 SALT;
     address deployer;
     address ETHOracle = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
-    address WEETH_ADDRESS = 0xcd5fe23c85820f7b72d0926fc9b05b43e359b7ee;
+    address WEETH_ADDRESS = 0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee;
     address WEETH_ORACLE = 0x8751F736E94F6CD167e8C5B97E245680FbD9CC36;
 
     uint256 ethUsdStalenessThreshold = _24_HOURS;
     uint256 weethEthUsdStalenessThreshold = _48_HOURS;
+
+    struct LiquityContracts {
+        IAddressesRegistry addressesRegistry;
+        IActivePool activePool;
+        IBorrowerOperations borrowerOperations;
+        ICollSurplusPool collSurplusPool;
+        IDefaultPool defaultPool;
+        ISortedTroves sortedTroves;
+        IStabilityPool stabilityPool;
+        ITroveManager troveManager;
+        ITroveNFT troveNFT;
+        IPriceFeed priceFeed;
+        GasPool gasPool;
+        IInterestRouter interestRouter;
+        IERC20Metadata collToken;
+    }
 
     struct LiquityContractsTestnet {
         IAddressesRegistry addressesRegistry;
@@ -83,9 +120,17 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         address interestRouter;
     }
 
+    struct UniV3Vars {
+        IExchange uniV3Exchange;
+        uint256 price;
+        address[2] tokens;
+    }
+
     struct Zappers {
         WETHZapper wethZapper;
         GasCompZapper gasCompZapper;
+        ILeverageZapper leverageZapperCurve;
+        ILeverageZapper leverageZapperUniV3;
     }
 
     struct TroveManagerParams {
@@ -360,8 +405,6 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             r.contractsArray[vars.i] = vars.contracts;
         }
 
-        _deployWeethBranch();
-
         WEETHPriceFeed weethPriceFeed = new WEETHPriceFeed(
             address(this),
             ETHOracle,
@@ -371,34 +414,23 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             weethEthUsdStalenessThreshold
         );
 
+        LiquityContractsTestnet memory contracts;
+
         _deployAndConnectCollateralContractsMainnet(
-            WEETH_ADDRESS,
+            IERC20Metadata(WEETH_ADDRESS),
             weethPriceFeed,
             r.boldToken,
             r.collateralRegistry,
             _WETH,
             vars.addressesRegistries[2],
-            vars.troveManagers[2],
+            address(vars.troveManagers[2]),
             r.hintHelpers,
             r.multiTroveGetter
         );
 
         r.boldToken.setCollateralRegistry(address(r.collateralRegistry));
     }
-    function _deployWeethBranch() internal {
 
-
-        WEETHPriceFeed weethPriceFeed = new WEETHPriceFeed(
-            address(this),
-            ETHOracle,
-            WEETH_ORACLE,
-            WEETH_ADDRESS,
-            ethUsdStalenessThreshold,
-            weethEthUsdStalenessThreshold
-        );
-
-
-    }
     function _deployAddressesRegistry(TroveManagerParams memory _troveManagerParams)
     internal
     returns (IAddressesRegistry, address)
@@ -523,12 +555,14 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             address(contracts.activePool)
         );
 
+        console.log("setting borrower address to priceFeed: ", addresses.borrowerOperations);
         // TODO: remove this and set address in constructor as per the CREATE2 approach above
         _priceFeed.setAddresses(addresses.borrowerOperations);
 
         // deploy zappers
         (zappers.gasCompZapper, zappers.wethZapper, zappers.leverageZapperCurve, zappers.leverageZapperUniV3) =
-        _deployZappers(contracts.addressesRegistry, contracts.collToken, _boldToken, _weth, contracts.priceFeed, true);
+        _deployZappersMainnet(contracts.addressesRegistry, contracts.collToken, _boldToken, _weth, contracts.priceFeed, true);
+
     }
 
     function _deployAndConnectCollateralContractsTestnet(
@@ -556,6 +590,17 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
 
         if (address(_collToken) == WEETH_ADDRESS) {
             contracts.priceFeed = new PriceFeedWeethTestnet(WEETH_ORACLE);
+
+//            contracts.priceFeed = new WEETHPriceFeed(
+//                address(this),
+//                ETHOracle,
+//                WEETH_ORACLE,
+//                WEETH_ADDRESS,
+//                ethUsdStalenessThreshold,
+//                weethEthUsdStalenessThreshold
+//            );
+
+
         } else {
             contracts.priceFeed = new PriceFeedTestnet();
         }
@@ -641,7 +686,91 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         (contracts.gasCompZapper, contracts.wethZapper) =
         _deployZappers(contracts.addressesRegistry, contracts.collToken, _weth);
     }
+    function _deployZappersMainnet(
+        IAddressesRegistry _addressesRegistry,
+        IERC20 _collToken,
+        IBoldToken _boldToken,
+        IWETH _weth,
+        IPriceFeed _priceFeed,
+        bool mainnet
+    )
+    internal
+    returns (
+        GasCompZapper gasCompZapper,
+        WETHZapper wethZapper,
+        ILeverageZapper leverageZapperCurve,
+        ILeverageZapper leverageZapperUniV3
+    )
+    {
+        bool lst = _collToken != _weth;
+        if (lst) {
+            gasCompZapper = new GasCompZapper(_addressesRegistry);
+        } else {
+            wethZapper = new WETHZapper(_addressesRegistry);
+        }
 
+        if (mainnet) {
+            (leverageZapperCurve, leverageZapperUniV3) =
+            _deployLeverageZappers(_addressesRegistry, _collToken, _boldToken, _priceFeed, lst);
+        }
+
+        return (gasCompZapper, wethZapper, leverageZapperCurve, leverageZapperUniV3);
+    }
+
+    function _deployLeverageZappers(
+        IAddressesRegistry _addressesRegistry,
+        IERC20 _collToken,
+        IBoldToken _boldToken,
+        IPriceFeed _priceFeed,
+        bool _lst
+    ) internal returns (ILeverageZapper, ILeverageZapper) {
+        IFlashLoanProvider flashLoanProvider = new BalancerFlashLoan();
+
+        ILeverageZapper leverageZapperCurve =
+                        _deployCurveLeverageZapper(_addressesRegistry, _collToken, _boldToken, _priceFeed, flashLoanProvider, _lst);
+        ILeverageZapper leverageZapperUniV3 =
+                        _deployUniV3LeverageZapper(_addressesRegistry, _collToken, _boldToken, _priceFeed, flashLoanProvider, _lst);
+
+        return (leverageZapperCurve, leverageZapperUniV3);
+    }
+
+    function _deployUniV3LeverageZapper(
+        IAddressesRegistry _addressesRegistry,
+        IERC20 _collToken,
+        IBoldToken _boldToken,
+        IPriceFeed _priceFeed,
+        IFlashLoanProvider _flashLoanProvider,
+        bool _lst
+    ) internal returns (ILeverageZapper) {
+        UniV3Vars memory vars;
+        vars.uniV3Exchange = new UniV3Exchange(_collToken, _boldToken, UNIV3_FEE, uniV3Router, uniV3Quoter);
+        ILeverageZapper leverageZapperUniV3;
+        if (_lst) {
+            leverageZapperUniV3 = new LeverageLSTZapper(_addressesRegistry, _flashLoanProvider, vars.uniV3Exchange);
+        } else {
+            leverageZapperUniV3 = new LeverageWETHZapper(_addressesRegistry, _flashLoanProvider, vars.uniV3Exchange);
+        }
+
+        // Create Uni V3 pool
+        (vars.price,) = _priceFeed.fetchPrice();
+        if (address(_boldToken) < address(_collToken)) {
+            //console2.log("b < c");
+            vars.tokens[0] = address(_boldToken);
+            vars.tokens[1] = address(_collToken);
+        } else {
+            //console2.log("c < b");
+            vars.tokens[0] = address(_collToken);
+            vars.tokens[1] = address(_boldToken);
+        }
+        uniV3PositionManager.createAndInitializePoolIfNecessary(
+            vars.tokens[0], // token0,
+            vars.tokens[1], // token1,
+            UNIV3_FEE, // fee,
+            UniV3Exchange(address(vars.uniV3Exchange)).priceToSqrtPrice(_boldToken, _collToken, vars.price) // sqrtPriceX96
+        );
+
+        return leverageZapperUniV3;
+    }
     function _deployZappers(
         IAddressesRegistry _addressesRegistry,
         IERC20 _collToken,
@@ -681,4 +810,52 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         }
         return string.concat(whole, ".", fractional);
     }
+
+    function getAddress(address _deployer, bytes memory _bytecode, bytes32 _salt) public pure returns (address) {
+        bytes32 hash = keccak256(abi.encodePacked(bytes1(0xff), _deployer, _salt, keccak256(_bytecode)));
+
+        // NOTE: cast last 20 bytes of hash to address
+        return address(uint160(uint256(hash)));
+    }
+    function _deployCurveLeverageZapper(
+        IAddressesRegistry _addressesRegistry,
+        IERC20 _collToken,
+        IBoldToken _boldToken,
+        IPriceFeed _priceFeed,
+        IFlashLoanProvider _flashLoanProvider,
+        bool _lst
+    ) internal returns (ILeverageZapper) {
+        (uint256 price,) = _priceFeed.fetchPrice();
+
+        // deploy Curve Twocrypto NG pool
+        address[2] memory coins;
+        coins[0] = address(_boldToken);
+        coins[1] = address(_collToken);
+        ICurvePool curvePool = curveFactory.deploy_pool(
+            "LST-Bold pool",
+            "LBLD",
+            coins,
+            0, // implementation id
+            400000, // A
+            145000000000000, // gamma
+            26000000, // mid_fee
+            45000000, // out_fee
+            230000000000000, // fee_gamma
+            2000000000000, // allowed_extra_profit
+            146000000000000, // adjustment_step
+            600, // ma_exp_time
+            price // initial_price
+        );
+
+        IExchange curveExchange = new CurveExchange(_collToken, _boldToken, curvePool, 1, 0);
+        ILeverageZapper leverageZapperCurve;
+        if (_lst) {
+            leverageZapperCurve = new LeverageLSTZapper(_addressesRegistry, _flashLoanProvider, curveExchange);
+        } else {
+            leverageZapperCurve = new LeverageWETHZapper(_addressesRegistry, _flashLoanProvider, curveExchange);
+        }
+
+        return leverageZapperCurve;
+    }
+
 }

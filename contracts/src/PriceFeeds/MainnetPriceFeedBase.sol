@@ -6,7 +6,7 @@ import "../Dependencies/Ownable.sol";
 import "../Dependencies/AggregatorV3Interface.sol";
 import "../Interfaces/IMainnetPriceFeed.sol";
 import "../BorrowerOperations.sol";
-
+import "forge-std/console.sol";
 // import "forge-std/console2.sol";
 
 abstract contract MainnetPriceFeedBase is IMainnetPriceFeed, Ownable {
@@ -63,10 +63,13 @@ abstract contract MainnetPriceFeedBase is IMainnetPriceFeed, Ownable {
 
         uint256 scaledPrice;
         bool oracleIsDown;
+
         // Check oracle is serving an up-to-date and sensible price. If not, shut down this collateral branch.
         if (!_isValidChainlinkPrice(chainlinkResponse, _oracle.stalenessThreshold)) {
+            console.log("Oracle is down: ", address(_oracle.aggregator));
             oracleIsDown = true;
         } else {
+            console.log("Oracle is up: ", address(_oracle.aggregator));
             scaledPrice = _scaleChainlinkPriceTo18decimals(chainlinkResponse.answer, _oracle.decimals);
         }
 
@@ -74,9 +77,12 @@ abstract contract MainnetPriceFeedBase is IMainnetPriceFeed, Ownable {
     }
 
     function _shutDownAndSwitchToLastGoodPrice(address _failedOracleAddr) internal returns (uint256) {
+        console.log("here testing: ",address(borrowerOperations));
         // Shut down the branch
         borrowerOperations.shutdownFromOracleFailure();
-       
+
+        console.log("here testing2");
+
         priceSource = PriceSource.lastGoodPrice;
 
         emit ShutDownFromOracleFailure(_failedOracleAddr);
@@ -114,6 +120,12 @@ abstract contract MainnetPriceFeedBase is IMainnetPriceFeed, Ownable {
         view
         returns (bool)
     {
+        console.log("chainlinkResponse.success: ",chainlinkResponse.success);
+        console.log("block.timestamp: ",block.timestamp);
+        console.log("chainlinkResponse.timestamp: ",chainlinkResponse.timestamp);
+        console.log("chainlinkResponse.answer: ",uint256(chainlinkResponse.answer));
+        console.log("_stalenessThreshold: ",_stalenessThreshold);
+
         return chainlinkResponse.success && block.timestamp - chainlinkResponse.timestamp < _stalenessThreshold
             && chainlinkResponse.answer > 0;
     }
