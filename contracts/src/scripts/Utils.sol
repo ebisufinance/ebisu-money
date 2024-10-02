@@ -20,7 +20,7 @@ import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/exten
 import {WETHZapper} from "../Zappers/WETHZapper.sol";
 import {GasCompZapper} from "../Zappers/GasCompZapper.sol";
 import {ILeverageZapper} from "../Zappers/Interfaces/ILeverageZapper.sol";
-
+    
 
     struct  TroveManagerParams {
         uint256 CCR;
@@ -58,7 +58,7 @@ import {ILeverageZapper} from "../Zappers/Interfaces/ILeverageZapper.sol";
 
     struct ExternalAddresses {
         address ETHOracle;
-        address WEETHETHOracle;
+        address WEETHOracle;
         address WEETHToken;
     }
 
@@ -68,3 +68,37 @@ import {ILeverageZapper} from "../Zappers/Interfaces/ILeverageZapper.sol";
         ILeverageZapper leverageZapperCurve;
         ILeverageZapper leverageZapperUniV3;
     }
+
+    struct DeploymentVarsMainnet {
+        OracleParams oracleParams;
+        uint256 numCollaterals;
+        IERC20Metadata[] collaterals;
+        IAddressesRegistry[] addressesRegistries;
+        ITroveManager[] troveManagers;
+        IPriceFeed[] priceFeeds;
+        bytes bytecode;
+        address boldTokenAddress;
+        uint256 i;
+    }
+
+    struct OracleParams {
+        uint256 ethUsdStalenessThreshold;
+        uint256 weEthUsdStalenessThreshold;
+        uint256 weEthEthStalenessThreshold;
+    }
+
+    struct LiquityContractAddresses {
+        address activePool;
+        address borrowerOperations;
+        address collSurplusPool;
+        address defaultPool;
+        address sortedTroves;
+        address stabilityPool;
+        address troveManager;
+        address troveNFT;
+        address metadataNFT;
+        address priceFeed;
+        address gasPool;
+        address interestRouter;
+    } 
+    
