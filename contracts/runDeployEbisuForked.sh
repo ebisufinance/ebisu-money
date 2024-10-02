@@ -15,4 +15,7 @@ fi
 # echo "Using RPC_URL: $RPC_URL"
 # echo "Using PRIVATE_KEY: $PRIVATE_KEY"
 
-forge script src/scripts/DeployEbisu_forked.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow
+#forge script src/scripts/DeployEbisu_forked.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow
+
+# deploy testnet script
+forge script src/scripts/DeployEbisu_Testnet.s.sol:DeployEbisuTestnet --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow --broadcast
