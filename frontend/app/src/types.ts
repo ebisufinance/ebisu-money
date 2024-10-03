@@ -1,8 +1,8 @@
-import type { Address, CollateralSymbol, Token } from "@liquity2/uikit";
+import type { Address, CollateralSymbol, Token, TokenSymbol } from "@liquity2/uikit";
 import type { Dnum } from "dnum";
 import type { ReactNode } from "react";
 
-export type { Address, CollateralSymbol, Dnum, Token };
+export type { Address, CollateralSymbol, Dnum, Token, TokenSymbol };
 
 export type RiskLevel = "low" | "medium" | "high";
 
@@ -56,7 +56,7 @@ export function isPositionLoan(position: Position): position is PositionLoan {
 export type PositionEarn = {
   type: "earn";
   apr: Dnum;
-  collateral: CollateralSymbol;
+  collIndex: CollIndex;
   deposit: Dnum;
   rewards: {
     bold: Dnum;

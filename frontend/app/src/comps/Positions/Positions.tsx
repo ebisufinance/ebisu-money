@@ -1,4 +1,4 @@
-import type { PositionEarn, PositionLoan, PositionStake } from "@/src/types";
+import type { Address, PositionEarn, PositionLoan, PositionStake } from "@/src/types";
 import type { ReactNode } from "react";
 
 import { ActionCard } from "@/src/comps/ActionCard/ActionCard";
@@ -9,9 +9,9 @@ import { DEMO_MODE } from "@/src/env";
 import { formatLiquidationRisk, formatRedemptionRisk } from "@/src/formatting";
 import { fmtnum } from "@/src/formatting";
 import { getLiquidationRisk, getLtv, getRedemptionRisk } from "@/src/liquity-math";
-import { useAccount } from "@/src/services/Ethereum";
+import { useCollateral } from "@/src/liquity-utils";
 import { usePrice } from "@/src/services/Prices";
-import { useLoansByAccount } from "@/src/subgraph-hooks";
+import { useEarnPositionsByAccount, useLoansByAccount } from "@/src/subgraph-hooks";
 import { riskLevelToStatusMode } from "@/src/uikit-utils";
 import { sleep } from "@/src/utils";
 import { css } from "@/styled-system/css";
@@ -36,31 +36,55 @@ import { NewPositionCard } from "./NewPositionCard";
 
 type Mode = "positions" | "loading" | "actions";
 
-export function Positions() {
-  const account = useAccount();
-  const loans = useLoansByAccount(account.address);
+export function Positions({
+  address,
+  columns,
+  showNewPositionCard = true,
+  title = (mode) => (
+    mode === "actions"
+      ? content.home.openPositionTitle
+      : content.home.myPositionsTitle
+  ),
+}: {
+  address: null | Address;
+  columns?: number;
+  showNewPositionCard?: boolean;
+  title?: (mode: Mode) => ReactNode;
+}) {
+  const loans = useLoansByAccount(address);
+  const earnPositions = useEarnPositionsByAccount(address);
 
   const positions = useQuery({
-    enabled: account.isConnected && !loans.isLoading,
-    queryKey: ["CombinedPositions", account.address],
+    enabled: Boolean(address && !loans.isPending && !earnPositions.isPending),
+    queryKey: ["CombinedPositions", address],
     queryFn: async () => {
       await sleep(300);
-      return DEMO_MODE ? ACCOUNT_POSITIONS : loans.data ?? [];
+      if (DEMO_MODE) {
+        return ACCOUNT_POSITIONS;
+      }
+      return [
+        ...loans.data ?? [],
+        ...earnPositions.data ?? [],
+      ];
     },
   });
 
-  const positionsLoading = loans.isLoading || positions.isLoading;
+  const positionsPending = Boolean(
+    address && (
+      loans.isPending || earnPositions.isPending || positions.isPending
+    ),
+  );
 
-  let mode: Mode = account.isConnected && positions.data && positions.data.length > 0
+  let mode: Mode = address && positions.data && positions.data.length > 0
     ? "positions"
-    : positionsLoading
+    : positionsPending
     ? "loading"
     : "actions";
 
   const cards = match(mode)
     .returnType<Array<[number, ReactNode]>>()
-    .with("positions", () => [
-      ...(positions.data?.map((position, index) => (
+    .with("positions", () => {
+      const cards = positions.data?.map((position, index) => (
         match(position)
           .returnType<[number, ReactNode]>()
           .with({ type: "borrow" }, (props) => [index, <PositionBorrow {...props} />])
@@ -68,9 +92,12 @@ export function Positions() {
           .with({ type: "leverage" }, (props) => [index, <PositionLeverage {...props} />])
           .with({ type: "stake" }, (props) => [index, <PositionStake {...props} />])
           .exhaustive()
-      )) ?? []),
-      [positions.data?.length ?? -1, <NewPositionCard />],
-    ])
+      )) ?? [];
+      if (showNewPositionCard) {
+        cards.push([positions.data?.length ?? -1, <NewPositionCard />]);
+      }
+      return cards;
+    })
     .with("loading", () => [
       [0, <LoadingCard />],
       [1, <LoadingCard />],
@@ -96,7 +123,11 @@ export function Positions() {
   });
 
   return (
-    <PositionsGroup mode={mode}>
+    <PositionsGroup
+      columns={columns}
+      mode={mode}
+      title={title}
+    >
       {positionTransitions((style, [_, card]) => (
         <a.div
           className={css({
@@ -115,38 +146,38 @@ export function Positions() {
 
 function PositionsGroup({
   children,
+  columns = 3,
   mode,
   onTitleClick,
+  title,
 }: {
   children: ReactNode;
+  columns?: number;
   mode: Mode;
   onTitleClick?: () => void;
+  title: (mode: Mode) => ReactNode;
 }) {
   const paddingBottom = mode === "actions" ? 48 : 32;
-
-  const title = mode === "actions"
-    ? content.home.openPositionTitle
-    : content.home.myPositionsTitle;
-
   const cardsHeight = mode === "actions" ? undefined : 185;
-
-  const columns = mode === "actions" ? 4 : 3;
+  const title_ = title(mode);
 
   return (
     <div>
-      <h1
-        className={css({
-          fontSize: 32,
-          color: "content",
-          userSelect: "none",
-        })}
-        style={{
-          paddingBottom,
-        }}
-        onClick={onTitleClick}
-      >
-        {title}
-      </h1>
+      {title_ && (
+        <h1
+          className={css({
+            fontSize: 32,
+            color: "content",
+            userSelect: "none",
+          })}
+          style={{
+            paddingBottom,
+          }}
+          onClick={onTitleClick}
+        >
+          {title_}
+        </h1>
+      )}
       <div
         className={css({
           position: "relative",
@@ -161,7 +192,7 @@ function PositionsGroup({
             gap: 24,
           })}
           style={{
-            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gridTemplateColumns: `repeat(${mode === "actions" ? 4 : columns}, 1fr)`,
             gridAutoRows: cardsHeight,
           }}
         >
@@ -565,18 +596,18 @@ function PositionLeverage({
 
 function PositionEarn({
   apr,
-  collateral,
+  collIndex,
   deposit,
   rewards,
 }: Pick<
   PositionEarn,
   | "apr"
-  | "collateral"
+  | "collIndex"
   | "deposit"
   | "rewards"
 >) {
-  const token = TOKENS_BY_SYMBOL[collateral];
-  return (
+  const token = useCollateral(collIndex);
+  return token && (
     <Link
       href={`/earn/${token.symbol.toLowerCase()}`}
       legacyBehavior

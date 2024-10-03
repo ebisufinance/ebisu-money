@@ -1,5 +1,7 @@
 import type { FlowDeclaration } from "@/src/services/TransactionFlow";
 
+import { ETH_GAS_COMPENSATION } from "@/src/constants";
+import { dnum18 } from "@/src/dnum-utils";
 import { ADDRESS_ZERO } from "@/src/eth-utils";
 import { fmtnum } from "@/src/formatting";
 import { useCollateral } from "@/src/liquity-utils";
@@ -9,6 +11,7 @@ import { usePrice } from "@/src/services/Prices";
 import { vAddress, vCollIndex, vDnum } from "@/src/valibot-utils";
 import * as dn from "dnum";
 import * as v from "valibot";
+import { readContract } from "wagmi/actions";
 
 const FlowIdSchema = v.literal("openLoanPosition");
 
@@ -40,10 +43,15 @@ const RequestSchema = v.object({
 
 export type Request = v.InferOutput<typeof RequestSchema>;
 
-type Step = "openTrove";
+type Step =
+  | "approveLst"
+  | "openTroveEth"
+  | "openTroveLst";
 
 const stepNames: Record<Step, string> = {
-  openTrove: "Open Position",
+  approveLst: "Approve",
+  openTroveEth: "Open Position",
+  openTroveLst: "Open Position",
 };
 
 export const openLoanPosition: FlowDeclaration<Request, Step> = {
@@ -51,8 +59,8 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
   subtitle: "Please review your borrow position before confirming",
 
   Summary({ flow }) {
-    const { symbol } = useCollateral(flow.request.collIndex);
-    return (
+    const collateral = useCollateral(flow.request.collIndex);
+    return collateral && (
       <LoanCard
         leverageMode={false}
         loadingState="success"
@@ -60,7 +68,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           troveId: "0x",
           borrowed: flow.request.boldAmount,
           collIndex: flow.request.collIndex,
-          collateral: symbol,
+          collateral: collateral.symbol,
           deposit: flow.request.collAmount,
           interestRate: flow.request.annualInterestRate,
           type: "borrow",
@@ -73,9 +81,9 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
   Details({ flow }) {
     const { request } = flow;
     const collateral = useCollateral(flow.request.collIndex);
-    const collPrice = usePrice(collateral.symbol);
+    const collPrice = usePrice(collateral?.symbol ?? null);
     const boldPrice = usePrice("BOLD");
-    return (
+    return collateral && (
       <>
         <TransactionDetailsRow
           label="You deposit"
@@ -102,8 +110,47 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
     );
   },
 
-  async getSteps() {
-    return ["openTrove"];
+  async getSteps({
+    account,
+    contracts,
+    request,
+    wagmiConfig,
+  }) {
+    const collateral = contracts.collaterals[request.collIndex];
+
+    if (collateral.symbol === "ETH") {
+      return ["openTroveEth"];
+    }
+
+    const { GasCompZapper, CollToken } = collateral.contracts;
+
+    if (!GasCompZapper || !CollToken) {
+      throw new Error(`Collateral ${collateral.symbol} not supported`);
+    }
+
+    const allowance = dnum18(
+      await readContract(wagmiConfig, {
+        ...CollToken,
+        functionName: "allowance",
+        args: [
+          account.address ?? ADDRESS_ZERO,
+          GasCompZapper.address,
+        ],
+      }),
+    );
+
+    const isApproved = !dn.gt(
+      dn.add(request.collAmount, ETH_GAS_COMPENSATION),
+      allowance,
+    );
+
+    const steps: Step[] = [];
+
+    if (!isApproved) {
+      steps.push("approveLst");
+    }
+
+    return [...steps, "openTroveLst"];
   },
 
   getStepName(stepId) {
@@ -117,8 +164,25 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
   async writeContractParams(stepId, { contracts, request }) {
     const collateral = contracts.collaterals[request.collIndex];
 
-    // WETHZapper mode
-    if (collateral.symbol === "ETH" && stepId === "openTrove") {
+    const { GasCompZapper, CollToken } = collateral.contracts;
+    if (!GasCompZapper || !CollToken) {
+      throw new Error(`Collateral ${collateral.symbol} not supported`);
+    }
+
+    if (stepId === "approveLst") {
+      const amount = dn.add(request.collAmount, ETH_GAS_COMPENSATION);
+      return {
+        ...CollToken,
+        functionName: "approve" as const,
+        args: [
+          GasCompZapper.address,
+          amount[0],
+        ],
+      };
+    }
+
+    // WETHZapper (WETH) mode
+    if (stepId === "openTroveEth") {
       return {
         ...collateral.contracts.WETHZapper,
         functionName: "openTroveWithRawETH" as const,
@@ -134,7 +198,29 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           removeManager: ADDRESS_ZERO,
           receiver: ADDRESS_ZERO,
         }],
-        value: request.collAmount[0],
+        value: request.collAmount[0] + ETH_GAS_COMPENSATION[0],
+      };
+    }
+
+    // GasCompZapper (LST) mode
+    if (stepId === "openTroveLst") {
+      return {
+        ...collateral.contracts.GasCompZapper,
+        functionName: "openTroveWithRawETH" as const,
+        args: [{
+          owner: request.owner ?? ADDRESS_ZERO,
+          ownerIndex: BigInt(request.ownerIndex),
+          collAmount: request.collAmount[0],
+          boldAmount: request.boldAmount[0],
+          upperHint: request.upperHint[0],
+          lowerHint: request.lowerHint[0],
+          annualInterestRate: request.annualInterestRate[0],
+          maxUpfrontFee: request.maxUpfrontFee[0],
+          addManager: ADDRESS_ZERO,
+          removeManager: ADDRESS_ZERO,
+          receiver: ADDRESS_ZERO,
+        }],
+        value: ETH_GAS_COMPENSATION[0],
       };
     }
 
