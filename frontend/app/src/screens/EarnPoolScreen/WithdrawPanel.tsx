@@ -13,16 +13,7 @@ import { useAccount } from "@/src/services/Ethereum";
 import { useTransactionFlow } from "@/src/services/TransactionFlow";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { css } from "@/styled-system/css";
-import {
-  Button,
-  Checkbox,
-  HFlex,
-  InfoTooltip,
-  InputField,
-  TextButton,
-  TokenIcon,
-  TOKENS_BY_SYMBOL,
-} from "@liquity2/uikit";
+import { Button, Checkbox, HFlex, InfoTooltip, InputField, TextButton, TokenIcon } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -186,7 +177,7 @@ export function WithdrawPanel({
                     color: "contentAlt",
                   })}
                 >
-                  {TOKENS_BY_SYMBOL[position.collateral].name}
+                  {/* {TOKENS_BY_SYMBOL[position.rewards].name} */}
                 </span>
               </div>
             </div>

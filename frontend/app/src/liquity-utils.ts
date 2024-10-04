@@ -62,6 +62,9 @@ export function getCollateralFromTroveSymbol(symbol: string): null | CollateralS
   if (symbol.startsWith("STETH")) {
     return "STETH";
   }
+  if (symbol.startsWith("WEETH")) {
+    return "WEETH";
+  }
   return null;
 }
 

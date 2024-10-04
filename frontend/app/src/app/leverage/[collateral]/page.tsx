@@ -3,6 +3,7 @@ export function generateStaticParams() {
     { collateral: "eth" },
     { collateral: "reth" },
     { collateral: "steth" },
+    { collateral: "weeth" },
   ];
 }
 
