@@ -7,6 +7,7 @@ export const CollateralSymbolSchema = v.union([
   v.literal("ETH"),
   v.literal("RETH"),
   v.literal("STETH"),
+  v.literal("WEETH")
 ]);
 
 export const EnvSchema = v.pipe(
