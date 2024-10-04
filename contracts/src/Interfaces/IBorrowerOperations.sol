@@ -67,7 +67,7 @@ interface IBorrowerOperations is ILiquityBase, IAddRemoveManagers {
         uint256 _maxUpfrontFee
     ) external;
 
-    function adjustUnredeemableTrove(
+    function adjustZombieTrove(
         uint256 _troveId,
         uint256 _collChange,
         bool _isCollIncrease,
@@ -94,7 +94,7 @@ interface IBorrowerOperations is ILiquityBase, IAddRemoveManagers {
 
     function hasBeenShutDown() external view returns (bool);
     function shutdown() external;
-    function shutdownFromOracleFailure(address _failedOracleAddr) external;
+    function shutdownFromOracleFailure() external;
 
     function checkBatchManagerExists(address _batchMananger) external view returns (bool);
 

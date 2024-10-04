@@ -244,8 +244,8 @@ export default {
 			currentApr: [
 				"Average annualized return for BOLD deposits over the past 7 days.",
 			],
-			rewardsEth: [
-				"ETH rewards",
+			rewardsColl: [
+				"COLL rewards",
 				"Your proceeds from liquidations conducted by this stability pool.",
 			],
 			rewardsBold: [

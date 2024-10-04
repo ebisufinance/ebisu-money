@@ -26,11 +26,13 @@ const ABIS = [
   ["BorrowerOperations"],
   ["CollSurplusPool"],
   ["DefaultPool"],
+  ["GasCompZapper"],
   ["GasPool"],
   ["PriceFeed", "PriceFeedTestNet", "PriceFeedMock"],
   ["SortedTroves"],
   ["StabilityPool"],
   ["TroveManager"],
+  ["WETHZapper"],
 ];
 
 const ArtifactSchema = v.object({
