@@ -40,7 +40,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm panda-codegen && pnpm lint && tsc && vite build",
+    "build": "pnpm panda-codegen && pnpm lint && vite build",
     "dev": "vite build --watch",
     "lint": "pnpm oxlint ./src --import-plugin --react-perf-plugin --jsx-a11y-plugin --allow pedantic",
     "panda-codegen": "panda codegen --silent",

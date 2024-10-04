@@ -1,7 +1,6 @@
 import type { FlowDeclaration } from "@/src/services/TransactionFlow";
 
 import { ETH_GAS_COMPENSATION } from "@/src/constants";
-import { dnum18 } from "@/src/dnum-utils";
 import { ADDRESS_ZERO } from "@/src/eth-utils";
 import { fmtnum } from "@/src/formatting";
 import { useCollateral } from "@/src/liquity-utils";
@@ -11,7 +10,6 @@ import { usePrice } from "@/src/services/Prices";
 import { vAddress, vCollIndex, vDnum } from "@/src/valibot-utils";
 import * as dn from "dnum";
 import * as v from "valibot";
-import { readContract } from "wagmi/actions";
 
 const FlowIdSchema = v.literal("openLoanPosition");
 
@@ -143,7 +141,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
 			return {
 				...CollToken,
 				functionName: "approve" as const,
-				args: ["0x884355d0C41Fc61026b43A9e315b26487A874F62", amount[0]],
+				args: [BorrowerOperations.address, amount[0]],
 			};
 		}
 

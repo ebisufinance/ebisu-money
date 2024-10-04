@@ -21,7 +21,6 @@ import {
 	InputField,
 	TextButton,
 	TokenIcon,
-	TOKENS_BY_SYMBOL,
 } from "@liquity2/uikit";
 import * as dn from "dnum";
 import { useRouter } from "next/navigation";
@@ -188,7 +187,7 @@ export function WithdrawPanel({
 										color: "contentAlt",
 									})}
 								>
-									{TOKENS_BY_SYMBOL[position.collateral].name}
+									{/* {TOKENS_BY_SYMBOL[position.rewards].name} */}
 								</span>
 							</div>
 						</div>

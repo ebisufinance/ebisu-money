@@ -10,7 +10,7 @@ import { useAccount } from "@/src/services/Ethereum";
 import { usePrice } from "@/src/services/Prices";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { css } from "@/styled-system/css";
-import { Button, InfoTooltip, TOKENS_BY_SYMBOL } from "@liquity2/uikit";
+import { Button, InfoTooltip } from "@liquity2/uikit";
 import * as dn from "dnum";
 
 export function RewardsPanel({
