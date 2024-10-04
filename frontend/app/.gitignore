@@ -31,5 +31,5 @@ next-env.d.ts
 
 # cosmos
 /cosmos.imports.ts
-
+.env
 .vercel

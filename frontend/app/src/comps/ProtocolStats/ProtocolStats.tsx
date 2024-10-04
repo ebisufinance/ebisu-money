@@ -33,12 +33,10 @@ export function ProtocolStats() {
       <div>{content.home.statsBar.label}</div>
       <HFlex gap={32}>
         <HFlex gap={8}>
-          <span>TVL</span>{" "}
-          <span>
-            ${dn.format(totalTvl, { compact: true })}
-          </span>
+          <span>TVL</span> <span>${dn.format(totalTvl, { compact: true })}</span>
         </HFlex>
-        {prices.map(([symbol, price]) => {
+        {
+          /* {prices.map(([symbol, price]) => {
           return (
             <HFlex
               key={symbol}
@@ -59,7 +57,8 @@ export function ProtocolStats() {
               </HFlex>
             </HFlex>
           );
-        })}
+        })} */
+        }
       </HFlex>
     </div>
   );

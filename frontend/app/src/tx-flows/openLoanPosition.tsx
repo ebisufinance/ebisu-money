@@ -43,10 +43,7 @@ const RequestSchema = v.object({
 
 export type Request = v.InferOutput<typeof RequestSchema>;
 
-type Step =
-  | "approveLst"
-  | "openTroveEth"
-  | "openTroveLst";
+type Step = "approveLst" | "openTroveEth" | "openTroveLst";
 
 const stepNames: Record<Step, string> = {
   approveLst: "Approve",
@@ -60,21 +57,23 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
 
   Summary({ flow }) {
     const collateral = useCollateral(flow.request.collIndex);
-    return collateral && (
-      <LoanCard
-        leverageMode={false}
-        loadingState="success"
-        loan={{
-          troveId: "0x",
-          borrowed: flow.request.boldAmount,
-          collIndex: flow.request.collIndex,
-          collateral: collateral.symbol,
-          deposit: flow.request.collAmount,
-          interestRate: flow.request.annualInterestRate,
-          type: "borrow",
-        }}
-        onRetry={() => {}}
-      />
+    return (
+      collateral && (
+        <LoanCard
+          leverageMode={false}
+          loadingState="success"
+          loan={{
+            troveId: "0x",
+            borrowed: flow.request.boldAmount,
+            collIndex: flow.request.collIndex,
+            collateral: collateral.symbol,
+            deposit: flow.request.collAmount,
+            interestRate: flow.request.annualInterestRate,
+            type: "borrow",
+          }}
+          onRetry={() => {}}
+        />
+      )
     );
   },
 
@@ -83,39 +82,36 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
     const collateral = useCollateral(flow.request.collIndex);
     const collPrice = usePrice(collateral?.symbol ?? null);
     const boldPrice = usePrice("BOLD");
-    return collateral && (
-      <>
-        <TransactionDetailsRow
-          label="You deposit"
-          value={[
-            `${fmtnum(request.collAmount)} ${collateral.name}`,
-            collPrice && `$${fmtnum(dn.mul(request.collAmount, collPrice))}`,
-          ]}
-        />
-        <TransactionDetailsRow
-          label="You borrow"
-          value={[
-            `${fmtnum(request.boldAmount)} BOLD`,
-            boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
-          ]}
-        />
-        <TransactionDetailsRow
-          label="Interest rate"
-          value={[
-            `${fmtnum(request.annualInterestRate, 2, 100)}%`,
-            `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
-          ]}
-        />
-      </>
+    return (
+      collateral && (
+        <>
+          <TransactionDetailsRow
+            label="You deposit"
+            value={[
+              `${fmtnum(request.collAmount)} ${collateral.name}`,
+              collPrice && `$${fmtnum(dn.mul(request.collAmount, collPrice))}`,
+            ]}
+          />
+          <TransactionDetailsRow
+            label="You borrow"
+            value={[
+              `${fmtnum(request.boldAmount)} BOLD`,
+              boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
+            ]}
+          />
+          <TransactionDetailsRow
+            label="Interest rate"
+            value={[
+              `${fmtnum(request.annualInterestRate, 2, 100)}%`,
+              `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
+            ]}
+          />
+        </>
+      )
     );
   },
 
-  async getSteps({
-    account,
-    contracts,
-    request,
-    wagmiConfig,
-  }) {
+  async getSteps({ account, contracts, request, wagmiConfig }) {
     const collateral = contracts.collaterals[request.collIndex];
 
     if (collateral.symbol === "ETH") {
@@ -132,10 +128,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
       await readContract(wagmiConfig, {
         ...CollToken,
         functionName: "allowance",
-        args: [
-          account.address ?? ADDRESS_ZERO,
-          GasCompZapper.address,
-        ],
+        args: [account.address ?? ADDRESS_ZERO, GasCompZapper.address],
       }),
     );
 
@@ -170,56 +163,56 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
     }
 
     if (stepId === "approveLst") {
-      const amount = dn.add(request.collAmount, ETH_GAS_COMPENSATION);
+      const amount = request.collAmount;
+
       return {
         ...CollToken,
         functionName: "approve" as const,
-        args: [
-          GasCompZapper.address,
-          amount[0],
-        ],
+        args: [GasCompZapper.address, amount[0]],
       };
     }
 
-    // WETHZapper (WETH) mode
     if (stepId === "openTroveEth") {
       return {
         ...collateral.contracts.WETHZapper,
         functionName: "openTroveWithRawETH" as const,
-        args: [{
-          owner: request.owner ?? ADDRESS_ZERO,
-          ownerIndex: BigInt(request.ownerIndex),
-          boldAmount: request.boldAmount[0],
-          upperHint: request.upperHint[0],
-          lowerHint: request.lowerHint[0],
-          annualInterestRate: request.annualInterestRate[0],
-          maxUpfrontFee: request.maxUpfrontFee[0],
-          addManager: ADDRESS_ZERO,
-          removeManager: ADDRESS_ZERO,
-          receiver: ADDRESS_ZERO,
-        }],
+        args: [
+          {
+            owner: request.owner ?? ADDRESS_ZERO,
+            ownerIndex: BigInt(request.ownerIndex),
+            boldAmount: request.boldAmount[0],
+            upperHint: request.upperHint[0],
+            lowerHint: request.lowerHint[0],
+            annualInterestRate: request.annualInterestRate[0],
+            maxUpfrontFee: request.maxUpfrontFee[0],
+            addManager: ADDRESS_ZERO,
+            removeManager: ADDRESS_ZERO,
+            receiver: ADDRESS_ZERO,
+          },
+        ],
         value: request.collAmount[0] + ETH_GAS_COMPENSATION[0],
       };
     }
 
-    // GasCompZapper (LST) mode
     if (stepId === "openTroveLst") {
       return {
         ...collateral.contracts.GasCompZapper,
         functionName: "openTroveWithRawETH" as const,
-        args: [{
-          owner: request.owner ?? ADDRESS_ZERO,
-          ownerIndex: BigInt(request.ownerIndex),
-          collAmount: request.collAmount[0],
-          boldAmount: request.boldAmount[0],
-          upperHint: request.upperHint[0],
-          lowerHint: request.lowerHint[0],
-          annualInterestRate: request.annualInterestRate[0],
-          maxUpfrontFee: request.maxUpfrontFee[0],
-          addManager: ADDRESS_ZERO,
-          removeManager: ADDRESS_ZERO,
-          receiver: ADDRESS_ZERO,
-        }],
+        args: [
+          {
+            owner: request.owner ?? ADDRESS_ZERO,
+            ownerIndex: BigInt(request.ownerIndex),
+            collAmount: request.collAmount[0],
+            boldAmount: request.boldAmount[0],
+            upperHint: request.upperHint[0],
+            lowerHint: request.lowerHint[0],
+            annualInterestRate: request.annualInterestRate[0],
+            maxUpfrontFee: request.maxUpfrontFee[0],
+            addManager: ADDRESS_ZERO,
+            removeManager: ADDRESS_ZERO,
+            receiver: ADDRESS_ZERO,
+          },
+        ],
         value: ETH_GAS_COMPENSATION[0],
       };
     }

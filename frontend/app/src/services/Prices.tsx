@@ -14,6 +14,7 @@ import {
   PRICE_UPDATE_VARIATION as DEMO_PRICE_UPDATE_VARIATION,
   RETH_PRICE as DEMO_RETH_PRICE,
   STETH_PRICE as DEMO_STETH_PRICE,
+  WEETH_PRICE as DEMO_WEETH_PRICE,
 } from "@/src/demo-mode";
 import { dnum18, jsonStringifyWithDnum } from "@/src/dnum-utils";
 import { DEMO_MODE } from "@/src/env";
@@ -34,6 +35,7 @@ const initialPrices: Prices = {
   ETH: null,
   RETH: null,
   STETH: null,
+  WEETH: null,
 };
 
 function useWatchCollateralPrice(collateral: CollateralSymbol) {
@@ -54,6 +56,7 @@ let useWatchPrices = function useWatchPrices(
   const ethPrice = useWatchCollateralPrice("ETH");
   const rethPrice = useWatchCollateralPrice("RETH");
   const stethPrice = useWatchCollateralPrice("STETH");
+  const weethPrice = useWatchCollateralPrice("WEETH");
 
   const prevPrices = useRef<Prices>({
     BOLD: null,
@@ -61,6 +64,7 @@ let useWatchPrices = function useWatchPrices(
     ETH: null,
     RETH: null,
     STETH: null,
+    WEETH: null,
   });
 
   useEffect(() => {
@@ -72,6 +76,7 @@ let useWatchPrices = function useWatchPrices(
       ETH: ethPrice.data ? dnum18(ethPrice.data) : null,
       RETH: rethPrice.data ? dnum18(rethPrice.data) : null,
       STETH: stethPrice.data ? dnum18(stethPrice.data) : null,
+      WEETH: weethPrice.data ? dnum18(weethPrice.data) : null,
     };
 
     const hasChanged = jsonStringifyWithDnum(newPrices)
@@ -81,7 +86,7 @@ let useWatchPrices = function useWatchPrices(
       callback(newPrices);
       prevPrices.current = newPrices;
     }
-  }, [callback, ethPrice, rethPrice, stethPrice]);
+  }, [callback, ethPrice, rethPrice, stethPrice, weethPrice]);
 };
 
 // in demo mode, simulate a variation of the prices
@@ -100,6 +105,10 @@ if (DEMO_MODE) {
           STETH: dn.add(
             DEMO_STETH_PRICE,
             dn.mul(DEMO_STETH_PRICE, variation()),
+          ),
+          WEETH: dn.add(
+            DEMO_WEETH_PRICE,
+            dn.mul(DEMO_WEETH_PRICE, variation()),
           ),
         });
       };
