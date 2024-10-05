@@ -72,7 +72,7 @@ contract GasCompZapper is AddRemoveManagers {
         vars.troveId = vars.borrowerOperations.openTrove(
             _params.owner,
             _params.ownerIndex,
-            _params.collAmount,
+                _params.collAmount,
             _params.boldAmount,
             _params.upperHint,
             _params.lowerHint,

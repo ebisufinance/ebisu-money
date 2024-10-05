@@ -146,7 +146,7 @@ contract WETHInvariants is SoladyTest, InvariantTest {
     }
 }
 
-contract WETHTester {
+    contract WETHTester {
     WETH weth;
 
     constructor(WETH _weth) payable {

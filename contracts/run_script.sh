@@ -17,5 +17,8 @@ fi
 
 #forge script src/scripts/DeployEbisu_forked.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow
 
+#forge script src/scripts/wrapETH.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow --broadcast
+#forge script src/scripts/SendWETH.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow --broadcast
 # deploy testnet script
-forge script src/scripts/DeployEbisu_Testnet.s.sol:DeployEbisuTestnet --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow --broadcast
+#forge script src/scripts/DeployEbisu_Testnet.s.sol:DeployEbisuTestnet --rpc-url $RPC_URL --private-key $PRIVATE_KEY --slow --broadcast
+

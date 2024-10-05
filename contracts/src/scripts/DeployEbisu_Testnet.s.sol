@@ -181,11 +181,9 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vm.startBroadcast(privateKey);
         }
 
-        TroveManagerParams[] memory troveManagerParamsArray = new TroveManagerParams[](3);
+        TroveManagerParams[] memory troveManagerParamsArray = new TroveManagerParams[](1);
 
-        troveManagerParamsArray[0] = TroveManagerParams(150e16, 110e16, 110e16, 5e16, 10e16); // WETH
-        troveManagerParamsArray[1] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // stETH
-        troveManagerParamsArray[2] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
+        troveManagerParamsArray[0] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
         console.log("after troveManagerParamsArray");
         // used for gas compensation and as collateral of the first branch
         IWETH WETH = new WETHTester({_tapAmount: 100 ether, _tapPeriod: 1 days});
@@ -314,22 +312,12 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         vars.addressesRegistries = new IAddressesRegistry[](vars.numCollaterals);
         vars.troveManagers = new ITroveManager[](vars.numCollaterals);
 
-        // Use WETH as collateral for the first branch
-        vars.collaterals[0] = _WETH;
-        vars.collaterals[1] = new ERC20Faucet(
-            string.concat("Staked ETH", string(abi.encode(vars.i))), // _name
-            string.concat("stETH", string(abi.encode(vars.i))), // _symbol
-            100 ether, //     _tapAmount
-            1 days //         _tapPeriod
-        );
-
-        vars.collaterals[2] = new ERC20Faucet(
+        vars.collaterals[0] = new ERC20Faucet(
             string.concat("Mock weETH", string(abi.encode(vars.i))), // _name
             string.concat("weETH", string(abi.encode(vars.i))), // _symbol
             100 ether, //     _tapAmount
             1 days //         _tapPeriod
         );
-
 
         // Deploy AddressesRegistries and get TroveManager addresses
         for (vars.i = 0; vars.i < vars.numCollaterals; vars.i++) {

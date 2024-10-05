@@ -19,7 +19,7 @@ import {MultiTroveGetter} from "../MultiTroveGetter.sol";
 import "../PriceFeeds/WETHPriceFeed.sol";
 import "../PriceFeeds/WEETHPriceFeed.sol";
 import "../MockInterestRouter.sol";
-
+import "../test/TestContracts/MetadataDeployment.sol";
 import "forge-std/console.sol";
 
 
@@ -28,7 +28,7 @@ uint256 constant _24_HOURS = 86400;
 uint256 constant _48_HOURS = 172800;
 uint256 constant _2_MONTHS = 5184000;
 
-contract DeployEbisuForked is Script {
+contract DeployEbisuForked is MetadataDeployment {
     using Strings for *;
     using StringFormatting for *;
 
@@ -73,6 +73,7 @@ contract DeployEbisuForked is Script {
 
         vars.oracleParams.ethUsdStalenessThreshold = _2_MONTHS;
         vars.oracleParams.weEthUsdStalenessThreshold = _2_MONTHS;
+        vars.oracleParams.weEthEthStalenessThreshold = _2_MONTHS;
 
         vars.numCollaterals = 2;
         result.contractsArray = new LiquityContracts[](vars.numCollaterals);
@@ -186,6 +187,7 @@ contract DeployEbisuForked is Script {
         IHintHelpers _hintHelpers,
         IMultiTroveGetter _multiTroveGetter
     ) internal returns (LiquityContracts memory contracts, Zappers memory zappers) {
+
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
         contracts.priceFeed = _priceFeed;
@@ -193,7 +195,12 @@ contract DeployEbisuForked is Script {
 
         contracts.addressesRegistry = _addressesRegistry;
 
-
+        // Deploy Metadata
+        MetadataNFT metadataNFT = deployMetadata(SALT);
+        addresses.metadataNFT = getAddress(
+            address(this), getBytecode(type(MetadataNFT).creationCode, address(initializedFixedAssetReader)), SALT
+        );
+        assert(address(metadataNFT) == addresses.metadataNFT);
 
     }
 

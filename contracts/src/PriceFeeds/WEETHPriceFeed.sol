@@ -34,6 +34,7 @@ contract WEETHPriceFeed is CompositePriceFeed, IWEETHPriceFeed {
     function _fetchPricePrimary() internal override returns (uint256, bool) {
         assert(priceSource == PriceSource.primary);
         (uint256 ethUsdPrice, bool ethUsdOracleDown) = _getOracleAnswer(ethUsdOracle);
+        console.log("weEthEthOracle decimals: ", weEthEthOracle.stalenessThreshold);
         (uint256 weEthEthPrice, bool weEthEthOracleDown) = _getOracleAnswer(weEthEthOracle);
         console.log("before2");
         (uint256 weEthPerEth, bool exchangeRateIsDown) = _getCanonicalRate();
@@ -45,12 +46,12 @@ contract WEETHPriceFeed is CompositePriceFeed, IWEETHPriceFeed {
             console.log("exchangeRateIsDown: ",exchangeRateIsDown);
             return (_shutDownAndSwitchToLastGoodPrice(address(ethUsdOracle.aggregator)), true);
         }
-        console.log("before4");
+        console.log("before4s");
         // If the ETH-USD feed is live but the WEETH-ETH oracle is down, shutdown and substitute WEETH-ETH with the canonical rate
         if (weEthEthOracleDown) {
             return (_shutDownAndSwitchToETHUSDxCanonical(address(weEthEthOracle.aggregator), ethUsdPrice), true);
         }
-        console.log("before4");
+        console.log("before5");
         // Otherwise, use the primary price calculation:
 
         // Calculate the market LRT-USD price: USD_per_WEETH = USD_per_ETH * ETH_per_WEETH
