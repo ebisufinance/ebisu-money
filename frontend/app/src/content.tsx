@@ -3,7 +3,7 @@ import type { ReactNode as N } from "react";
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   // Used in the top bar and other places
-  appName: "Liquity v2",
+  appName: "Ebisu",
 
   // Menu bar
   menu: {
@@ -34,7 +34,8 @@ export default {
           target="_blank"
         >
           redeemed
-        </a>. Redemptions start from the lowest interest rate loans. Raise the interest rate on your loan to reduce the
+        </a>
+        . Redemptions start from the lowest interest rate loans. Raise the interest rate on your loan to reduce the
         risk.
       </>,
     ],
@@ -132,11 +133,7 @@ export default {
 
   // Leverage screen
   leverageScreen: {
-    headline: (tokensIcons: N) => (
-      <>
-        Leverage your exposure to {tokensIcons}
-      </>
-    ),
+    headline: (tokensIcons: N) => <>Leverage your exposure to {tokensIcons}</>,
     depositField: {
       label: "You deposit",
     },
@@ -244,8 +241,8 @@ export default {
       currentApr: [
         "Average annualized return for BOLD deposits over the past 7 days.",
       ],
-      rewardsEth: [
-        "ETH rewards",
+      rewardsColl: [
+        "COLL rewards",
         "Your proceeds from liquidations conducted by this stability pool.",
       ],
       rewardsBold: [

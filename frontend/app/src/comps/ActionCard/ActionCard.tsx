@@ -16,11 +16,7 @@ export function ActionCard({
   const [active, setActive] = useState(false);
 
   const hintSpring = useSpring({
-    transform: active
-      ? "scale(1.01)"
-      : hint
-      ? "scale(1.02)"
-      : "scale(1)",
+    transform: active ? "scale(1.01)" : hint ? "scale(1.02)" : "scale(1)",
     boxShadow: hint && !active
       ? "0 2px 4px rgba(0, 0, 0, 0.1)"
       : "0 2px 4px rgba(0, 0, 0, 0)",
@@ -36,9 +32,9 @@ export function ActionCard({
   const { description, path, title, colors } = match(type)
     .with("borrow", () => ({
       colors: {
-        background: token("colors.brandDarkBlue"),
-        foreground: token("colors.brandDarkBlueContent"),
-        foregroundAlt: token("colors.brandDarkBlueContentAlt"),
+        background: token("colors.brandPink"),
+        foreground: token("colors.brandPinkContent"),
+        foregroundAlt: token("colors.brandPinkContentAlt"),
       },
       description: ac.borrow.description,
       path: "/borrow",
@@ -46,9 +42,9 @@ export function ActionCard({
     }))
     .with("leverage", () => ({
       colors: {
-        background: token("colors.brandGreen"),
-        foreground: token("colors.brandGreenContent"),
-        foregroundAlt: token("colors.brandGreenContentAlt"),
+        background: token("colors.brandLightPink"),
+        foreground: token("colors.brandLightPinkContent"),
+        foregroundAlt: token("colors.brandLightPinkContentAlt"),
       },
       description: ac.leverage.description,
       path: "/leverage",
@@ -56,9 +52,9 @@ export function ActionCard({
     }))
     .with("earn", () => ({
       colors: {
-        background: token("colors.brandBlue"),
-        foreground: token("colors.brandBlueContent"),
-        foregroundAlt: token("colors.brandBlueContentAlt"),
+        background: token("colors.brandPink"),
+        foreground: token("colors.brandPinkContent"),
+        foregroundAlt: token("colors.brandPinkContentAlt"),
       },
       description: ac.earn.description,
       path: "/earn",
@@ -66,9 +62,9 @@ export function ActionCard({
     }))
     .with("stake", () => ({
       colors: {
-        background: token("colors.brandGolden"),
-        foreground: token("colors.brandGoldenContent"),
-        foregroundAlt: token("colors.brandGoldenContentAlt"),
+        background: token("colors.brandLightPink"),
+        foreground: token("colors.brandLightPinkContent"),
+        foregroundAlt: token("colors.brandLightPinkContentAlt"),
       },
       description: ac.stake.description,
       path: "/stake",
@@ -103,7 +99,7 @@ export function ActionCard({
           gap: 16,
           width: "100%",
           padding: "20px 24px",
-          borderRadius: 8,
+          border: "2px solid token(colors.border)",
           _groupFocusVisible: {
             outline: "2px solid token(colors.focused)",
             outlineOffset: 2,

@@ -91,7 +91,7 @@ export function BorrowScreen() {
   const loanDetails = getLoanDetails(
     deposit.isEmpty ? null : deposit.parsed,
     debt.isEmpty ? null : debt.parsed,
-    interestRate && dn.div(interestRate, 100),
+    interestRate,
     collateral.collateralRatio,
     collPrice,
   );
@@ -216,7 +216,7 @@ export function BorrowScreen() {
               secondary={{
                 start: `$${
                   debt.parsed
-                    ? fmtnum(dn.mul(collPrice, debt.parsed), "2z")
+                    ? fmtnum(debt.parsed, "2z")
                     : "0.00"
                 }`,
                 end: debtSuggestions && (

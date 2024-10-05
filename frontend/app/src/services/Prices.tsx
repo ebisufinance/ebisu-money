@@ -14,9 +14,13 @@ import {
   PRICE_UPDATE_VARIATION as DEMO_PRICE_UPDATE_VARIATION,
   RETH_PRICE as DEMO_RETH_PRICE,
   STETH_PRICE as DEMO_STETH_PRICE,
+  WEETH_PRICE as DEMO_WEETH_PRICE,
 } from "@/src/demo-mode";
+import { dnum18, jsonStringifyWithDnum } from "@/src/dnum-utils";
+import { DEMO_MODE } from "@/src/env";
 import * as dn from "dnum";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useRef } from "react";
 import { useReadContract } from "wagmi";
 
 type PriceToken = "LQTY" | "BOLD" | CollateralSymbol;
@@ -31,41 +35,62 @@ const initialPrices: Prices = {
   ETH: null,
   RETH: null,
   STETH: null,
+  WEETH: null,
 };
 
 function useWatchCollateralPrice(collateral: CollateralSymbol) {
   const PriceFeed = useCollateralContract(collateral, "PriceFeed");
-  const price = useReadContract(
-    PriceFeed
-      ? { ...PriceFeed, functionName: "lastGoodPrice" }
-      : {},
-  );
-  return PriceFeed && price.data ? price : { data: null, loading: false };
+  return useReadContract({
+    ...(PriceFeed as NonNullable<typeof PriceFeed>),
+    functionName: "lastGoodPrice",
+    query: {
+      enabled: PriceFeed !== null,
+      refetchInterval: 10_000,
+    },
+  });
 }
 
-let useWatchPrices = function useWatchPrices(callback: (prices: Prices) => void): void {
+let useWatchPrices = function useWatchPrices(
+  callback: (prices: Prices) => void,
+): void {
   const ethPrice = useWatchCollateralPrice("ETH");
   const rethPrice = useWatchCollateralPrice("RETH");
   const stethPrice = useWatchCollateralPrice("STETH");
+  const weethPrice = useWatchCollateralPrice("WEETH");
 
-  const memoizedCallback = useCallback(() => {
-    callback({
-      // TODO: fetch prices for LQTY & BOLD
-      ...initialPrices,
-      ETH: ethPrice.data ? [ethPrice.data, 18] : null,
-      RETH: rethPrice.data ? [rethPrice.data, 18] : null,
-      STETH: stethPrice.data ? [stethPrice.data, 18] : null,
-    });
-  }, [callback, ethPrice.data, rethPrice.data, stethPrice.data]);
+  const prevPrices = useRef<Prices>({
+    BOLD: null,
+    LQTY: null,
+    ETH: null,
+    RETH: null,
+    STETH: null,
+    WEETH: null,
+  });
 
   useEffect(() => {
-    memoizedCallback();
-  }, [memoizedCallback]);
+    const newPrices = {
+      // TODO: check BOLD and LQTY prices
+      BOLD: dn.from(1, 18),
+      LQTY: dn.from(1, 18),
+
+      ETH: ethPrice.data ? dnum18(ethPrice.data) : null,
+      RETH: rethPrice.data ? dnum18(rethPrice.data) : null,
+      STETH: stethPrice.data ? dnum18(stethPrice.data) : null,
+      WEETH: weethPrice.data ? dnum18(weethPrice.data) : null,
+    };
+
+    const hasChanged = jsonStringifyWithDnum(newPrices)
+      !== jsonStringifyWithDnum(prevPrices.current);
+
+    if (hasChanged) {
+      callback(newPrices);
+      prevPrices.current = newPrices;
+    }
+  }, [callback, ethPrice, rethPrice, stethPrice, weethPrice]);
 };
 
-// if (DEMO_MODE) {
-if (true) { // TODO: fix useWatchPrices above so we only use this if DEMO_MODE=true
-  // in demo mode, simulate a variation of the prices
+// in demo mode, simulate a variation of the prices
+if (DEMO_MODE) {
   useWatchPrices = (callback) => {
     const memoizedCallback = useCallback(callback, []);
 
@@ -77,7 +102,14 @@ if (true) { // TODO: fix useWatchPrices above so we only use this if DEMO_MODE=t
           ETH: dn.add(DEMO_ETH_PRICE, dn.mul(DEMO_ETH_PRICE, variation())),
           LQTY: dn.add(DEMO_LQTY_PRICE, dn.mul(DEMO_LQTY_PRICE, variation())),
           RETH: dn.add(DEMO_RETH_PRICE, dn.mul(DEMO_RETH_PRICE, variation())),
-          STETH: dn.add(DEMO_STETH_PRICE, dn.mul(DEMO_STETH_PRICE, variation())),
+          STETH: dn.add(
+            DEMO_STETH_PRICE,
+            dn.mul(DEMO_STETH_PRICE, variation()),
+          ),
+          WEETH: dn.add(
+            DEMO_WEETH_PRICE,
+            dn.mul(DEMO_WEETH_PRICE, variation()),
+          ),
         });
       };
 
@@ -85,9 +117,9 @@ if (true) { // TODO: fix useWatchPrices above so we only use this if DEMO_MODE=t
         ? undefined
         : setInterval(update, DEMO_PRICE_UPDATE_INTERVAL);
 
-        update();
+      update();
 
-        return () => clearInterval(timer);
+      return () => clearInterval(timer);
     }, [memoizedCallback]);
   };
 }
@@ -103,9 +135,12 @@ const PriceContext = createContext<{
 export function Prices({ children }: { children: ReactNode }) {
   const [prices, setPrices] = useState<Prices>(initialPrices);
 
-  const memoizedSetPrices = useCallback((newPrices: Prices | ((prevPrices: Prices) => Prices)) => {
-    setPrices(newPrices);
-  }, []);
+  const memoizedSetPrices = useCallback(
+    (newPrices: Prices | ((prevPrices: Prices) => Prices)) => {
+      setPrices(newPrices);
+    },
+    [],
+  );
 
   useWatchPrices(memoizedSetPrices);
 

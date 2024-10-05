@@ -8,4 +8,3 @@ export default function Page() {
   // see layout in the parent folder
   return null;
 }
-

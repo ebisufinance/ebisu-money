@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { buildASTSchema } from 'graphql';
+import { buildASTSchema } from "graphql";
 
 const schemaAST = {
   "kind": "Document",
@@ -14,9 +14,9 @@ const schemaAST = {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Query"
-            }
-          }
+              "value": "Query",
+            },
+          },
         },
         {
           "kind": "OperationTypeDefinition",
@@ -25,50 +25,51 @@ const schemaAST = {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Subscription"
-            }
-          }
-        }
+              "value": "Subscription",
+            },
+          },
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "DirectiveDefinition",
       "description": {
         "kind": "StringValue",
-        "value": "Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive.",
-        "block": true
+        "value":
+          "Marks the GraphQL type as indexable entity.  Each type that should be an entity is required to be annotated with this directive.",
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "entity"
+        "value": "entity",
       },
       "arguments": [],
       "repeatable": false,
       "locations": [
         {
           "kind": "Name",
-          "value": "OBJECT"
-        }
-      ]
+          "value": "OBJECT",
+        },
+      ],
     },
     {
       "kind": "DirectiveDefinition",
       "description": {
         "kind": "StringValue",
         "value": "Defined a Subgraph ID for an object type",
-        "block": true
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "subgraphId"
+        "value": "subgraphId",
       },
       "arguments": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NonNullType",
@@ -76,38 +77,39 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "repeatable": false,
       "locations": [
         {
           "kind": "Name",
-          "value": "OBJECT"
-        }
-      ]
+          "value": "OBJECT",
+        },
+      ],
     },
     {
       "kind": "DirectiveDefinition",
       "description": {
         "kind": "StringValue",
-        "value": "creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.",
-        "block": true
+        "value":
+          "creates a virtual field on the entity that may be queried but cannot be set manually through the mappings API.",
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "derivedFrom"
+        "value": "derivedFrom",
       },
       "arguments": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "field"
+            "value": "field",
           },
           "type": {
             "kind": "NonNullType",
@@ -115,75 +117,75 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "repeatable": false,
       "locations": [
         {
           "kind": "Name",
-          "value": "FIELD_DEFINITION"
-        }
-      ]
+          "value": "FIELD_DEFINITION",
+        },
+      ],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Aggregation_interval"
+        "value": "Aggregation_interval",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "hour"
+            "value": "hour",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "day"
+            "value": "day",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ScalarTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BigDecimal"
+        "value": "BigDecimal",
       },
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ScalarTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BigInt"
+        "value": "BigInt",
       },
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BlockChangedFilter"
+        "value": "BlockChangedFilter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "number_gte"
+            "value": "number_gte",
           },
           "type": {
             "kind": "NonNullType",
@@ -191,82 +193,82 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Block_height"
+        "value": "Block_height",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "hash"
+            "value": "hash",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Bytes"
-            }
+              "value": "Bytes",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "number"
+            "value": "number",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "number_gte"
+            "value": "number_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BorrowerInfo"
+        "value": "BorrowerInfo",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -275,17 +277,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
           "arguments": [],
           "type": {
@@ -294,17 +296,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral"
+            "value": "trovesByCollateral",
           },
           "arguments": [],
           "type": {
@@ -317,120 +319,120 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Int"
-                  }
-                }
-              }
-            }
+                    "value": "Int",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BorrowerInfo_filter"
+        "value": "BorrowerInfo_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -440,18 +442,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -461,108 +463,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_not"
+            "value": "troves_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_gt"
+            "value": "troves_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_lt"
+            "value": "troves_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_gte"
+            "value": "troves_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_lte"
+            "value": "troves_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_in"
+            "value": "troves_in",
           },
           "type": {
             "kind": "ListType",
@@ -572,18 +574,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_not_in"
+            "value": "troves_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -593,18 +595,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral"
+            "value": "trovesByCollateral",
           },
           "type": {
             "kind": "ListType",
@@ -614,18 +616,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral_not"
+            "value": "trovesByCollateral_not",
           },
           "type": {
             "kind": "ListType",
@@ -635,18 +637,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral_contains"
+            "value": "trovesByCollateral_contains",
           },
           "type": {
             "kind": "ListType",
@@ -656,18 +658,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral_contains_nocase"
+            "value": "trovesByCollateral_contains_nocase",
           },
           "type": {
             "kind": "ListType",
@@ -677,18 +679,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral_not_contains"
+            "value": "trovesByCollateral_not_contains",
           },
           "type": {
             "kind": "ListType",
@@ -698,18 +700,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral_not_contains_nocase"
+            "value": "trovesByCollateral_not_contains_nocase",
           },
           "type": {
             "kind": "ListType",
@@ -719,38 +721,38 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -758,17 +760,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BorrowerInfo_filter"
-              }
-            }
+                "value": "BorrowerInfo_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -776,69 +778,69 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BorrowerInfo_filter"
-              }
-            }
+                "value": "BorrowerInfo_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "BorrowerInfo_orderBy"
+        "value": "BorrowerInfo_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "trovesByCollateral"
+            "value": "trovesByCollateral",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ScalarTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Bytes"
+        "value": "Bytes",
       },
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Collateral"
+        "value": "Collateral",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -847,17 +849,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex"
+            "value": "collIndex",
           },
           "arguments": [],
           "type": {
@@ -866,17 +868,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
           "arguments": [],
           "type": {
@@ -885,17 +887,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Token"
-              }
-            }
+                "value": "Token",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio"
+            "value": "minCollRatio",
           },
           "arguments": [],
           "type": {
@@ -904,102 +906,102 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_orderBy"
-                }
+                  "value": "Trove_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_filter"
-                }
+                  "value": "Trove_filter",
+                },
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -1011,19 +1013,19 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Trove"
-                  }
-                }
-              }
-            }
+                    "value": "Trove",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses"
+            "value": "addresses",
           },
           "arguments": [],
           "type": {
@@ -1032,17 +1034,126 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "CollateralAddresses"
-              }
-            }
+                "value": "CollateralAddresses",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited"
+            "value": "stabilityPoolDeposits",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_filter",
+                },
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "ListType",
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "StabilityPoolDeposit",
+                  },
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited",
           },
           "arguments": [],
           "type": {
@@ -1051,17 +1162,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDebt",
           },
           "arguments": [],
           "type": {
@@ -1070,28 +1181,47 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "BigInt",
+              },
+            },
+          },
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "CollateralAddresses"
+        "value": "CollateralAddresses",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -1100,17 +1230,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerOperations"
+            "value": "borrowerOperations",
           },
           "arguments": [],
           "type": {
@@ -1119,17 +1249,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
           "arguments": [],
           "type": {
@@ -1138,17 +1268,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Collateral"
-              }
-            }
+                "value": "Collateral",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "sortedTroves"
+            "value": "sortedTroves",
           },
           "arguments": [],
           "type": {
@@ -1157,17 +1287,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "stabilityPool"
+            "value": "stabilityPool",
           },
           "arguments": [],
           "type": {
@@ -1176,17 +1306,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
           "arguments": [],
           "type": {
@@ -1195,17 +1325,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveManager"
+            "value": "troveManager",
           },
           "arguments": [],
           "type": {
@@ -1214,17 +1344,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveNft"
+            "value": "troveNft",
           },
           "arguments": [],
           "type": {
@@ -1233,139 +1363,118 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "CollateralAddresses_filter"
+        "value": "CollateralAddresses_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
-          },
-          "type": {
-            "kind": "ListType",
-            "type": {
-              "kind": "NonNullType",
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -1375,108 +1484,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerOperations"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -1486,18 +1505,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerOperations_not_in"
+            "value": "borrowerOperations",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_in",
           },
           "type": {
             "kind": "ListType",
@@ -1507,138 +1616,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerOperations_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrowerOperations_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_in"
+            "value": "borrowerOperations_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -1648,18 +1637,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_in"
+            "value": "borrowerOperations_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrowerOperations_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_in",
           },
           "type": {
             "kind": "ListType",
@@ -1669,303 +1778,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Collateral_filter"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_in"
+            "value": "collateral_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -1975,18 +1799,303 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "sortedTroves_not_in"
+            "value": "collateral_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Collateral_filter",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_in",
           },
           "type": {
             "kind": "ListType",
@@ -1996,138 +2105,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "sortedTroves_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "sortedTroves_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_in"
+            "value": "sortedTroves_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -2137,18 +2126,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stabilityPool_not_in"
+            "value": "sortedTroves_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "sortedTroves_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_in",
           },
           "type": {
             "kind": "ListType",
@@ -2158,138 +2267,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stabilityPool_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stabilityPool_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_in"
+            "value": "stabilityPool_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -2299,18 +2288,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_in"
+            "value": "stabilityPool_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_in",
           },
           "type": {
             "kind": "ListType",
@@ -2320,138 +2429,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "token_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_in"
+            "value": "token_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -2461,18 +2450,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveManager_not_in"
+            "value": "token_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "token_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_in",
           },
           "type": {
             "kind": "ListType",
@@ -2482,138 +2591,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveManager_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveManager_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveNft_in"
+            "value": "troveManager_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -2623,18 +2612,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveNft_not_in"
+            "value": "troveManager_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveManager_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_in",
           },
           "type": {
             "kind": "ListType",
@@ -2644,68 +2753,89 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveNft_contains"
+            "value": "troveNft_not_in",
           },
           "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveNft_not_contains"
+            "value": "troveNft_contains",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Bytes"
-            }
+              "value": "Bytes",
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -2713,17 +2843,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "CollateralAddresses_filter"
-              }
-            }
+                "value": "CollateralAddresses_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -2731,231 +2861,239 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "CollateralAddresses_filter"
-              }
-            }
+                "value": "CollateralAddresses_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "CollateralAddresses_orderBy"
+        "value": "CollateralAddresses_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerOperations"
+            "value": "borrowerOperations",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__id"
+            "value": "collateral__id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__collIndex"
+            "value": "collateral__collIndex",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__minCollRatio"
+            "value": "collateral__minCollRatio",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDeposited"
+            "value": "collateral__totalDeposited",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDebt"
+            "value": "collateral__totalDebt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "sortedTroves"
+            "value": "collateral__price",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stabilityPool"
+            "value": "sortedTroves",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "stabilityPool",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveManager"
+            "value": "token",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveNft"
+            "value": "troveManager",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveNft",
+          },
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Collateral_filter"
+        "value": "Collateral_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -2965,18 +3103,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -2986,108 +3124,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex"
+            "value": "collIndex",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_not"
+            "value": "collIndex_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_gt"
+            "value": "collIndex_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_lt"
+            "value": "collIndex_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_gte"
+            "value": "collIndex_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_lte"
+            "value": "collIndex_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_in"
+            "value": "collIndex_in",
           },
           "type": {
             "kind": "ListType",
@@ -3097,18 +3235,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex_not_in"
+            "value": "collIndex_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -3118,108 +3256,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not"
+            "value": "token_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_gt"
+            "value": "token_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_lt"
+            "value": "token_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_gte"
+            "value": "token_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_lte"
+            "value": "token_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_in"
+            "value": "token_in",
           },
           "type": {
             "kind": "ListType",
@@ -3229,18 +3367,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_in"
+            "value": "token_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -3250,303 +3388,303 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_contains"
+            "value": "token_contains",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_contains_nocase"
+            "value": "token_contains_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_contains"
+            "value": "token_not_contains",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_contains_nocase"
+            "value": "token_not_contains_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_starts_with"
+            "value": "token_starts_with",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_starts_with_nocase"
+            "value": "token_starts_with_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_starts_with"
+            "value": "token_not_starts_with",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_starts_with_nocase"
+            "value": "token_not_starts_with_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_ends_with"
+            "value": "token_ends_with",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_ends_with_nocase"
+            "value": "token_ends_with_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_ends_with"
+            "value": "token_not_ends_with",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_not_ends_with_nocase"
+            "value": "token_not_ends_with_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token_"
+            "value": "token_",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Token_filter"
-            }
+              "value": "Token_filter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio"
+            "value": "minCollRatio",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_not"
+            "value": "minCollRatio_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_gt"
+            "value": "minCollRatio_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_lt"
+            "value": "minCollRatio_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_gte"
+            "value": "minCollRatio_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_lte"
+            "value": "minCollRatio_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_in"
+            "value": "minCollRatio_in",
           },
           "type": {
             "kind": "ListType",
@@ -3556,18 +3694,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio_not_in"
+            "value": "minCollRatio_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -3577,138 +3715,153 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves_"
+            "value": "troves_",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Trove_filter"
-            }
+              "value": "Trove_filter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses_"
+            "value": "addresses_",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "CollateralAddresses_filter"
-            }
+              "value": "CollateralAddresses_filter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited"
+            "value": "stabilityPoolDeposits_",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "StabilityPoolDeposit_filter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_not"
+            "value": "totalDeposited",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_gt"
+            "value": "totalDeposited_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_lt"
+            "value": "totalDeposited_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_gte"
+            "value": "totalDeposited_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_lte"
+            "value": "totalDeposited_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_in"
+            "value": "totalDeposited_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_in",
           },
           "type": {
             "kind": "ListType",
@@ -3718,18 +3871,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited_not_in"
+            "value": "totalDeposited_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -3739,108 +3892,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDebt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_not"
+            "value": "totalDebt_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_gt"
+            "value": "totalDebt_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_lt"
+            "value": "totalDebt_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_gte"
+            "value": "totalDebt_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_lte"
+            "value": "totalDebt_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_in"
+            "value": "totalDebt_in",
           },
           "type": {
             "kind": "ListType",
@@ -3850,18 +4003,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_not_in"
+            "value": "totalDebt_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -3871,38 +4024,170 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -3910,17 +4195,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Collateral_filter"
-              }
-            }
+                "value": "Collateral_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -3928,202 +4213,218 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Collateral_filter"
-              }
-            }
+                "value": "Collateral_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Collateral_orderBy"
+        "value": "Collateral_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collIndex"
+            "value": "collIndex",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token__id"
+            "value": "token__id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token__name"
+            "value": "token__name",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token__symbol"
+            "value": "token__symbol",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "token__decimals"
+            "value": "token__decimals",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "minCollRatio"
+            "value": "minCollRatio",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses"
+            "value": "addresses",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__id"
+            "value": "addresses__id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__borrowerOperations"
+            "value": "addresses__borrowerOperations",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__sortedTroves"
+            "value": "addresses__sortedTroves",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__stabilityPool"
+            "value": "addresses__stabilityPool",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__token"
+            "value": "addresses__token",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__troveManager"
+            "value": "addresses__troveManager",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "addresses__troveNft"
+            "value": "addresses__troveNft",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDeposited"
+            "value": "stabilityPoolDeposits",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDeposited",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDebt",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "price",
+          },
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ScalarTypeDefinition",
       "description": {
         "kind": "StringValue",
         "value": "8 bytes signed integer\n",
-        "block": true
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "Int8"
+        "value": "Int8",
       },
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "InterestRateBracket"
+        "value": "InterestRateBracket",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -4132,17 +4433,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate"
+            "value": "rate",
           },
           "arguments": [],
           "type": {
@@ -4151,17 +4452,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDebt",
           },
           "arguments": [],
           "type": {
@@ -4170,17 +4471,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves"
+            "value": "totalTroves",
           },
           "arguments": [],
           "type": {
@@ -4189,118 +4490,118 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "InterestRateBracket_filter"
+        "value": "InterestRateBracket_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -4310,18 +4611,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -4331,108 +4632,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate"
+            "value": "rate",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_not"
+            "value": "rate_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_gt"
+            "value": "rate_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_lt"
+            "value": "rate_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_gte"
+            "value": "rate_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_lte"
+            "value": "rate_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_in"
+            "value": "rate_in",
           },
           "type": {
             "kind": "ListType",
@@ -4442,18 +4743,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate_not_in"
+            "value": "rate_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -4463,108 +4764,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDebt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_not"
+            "value": "totalDebt_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_gt"
+            "value": "totalDebt_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_lt"
+            "value": "totalDebt_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_gte"
+            "value": "totalDebt_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_lte"
+            "value": "totalDebt_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_in"
+            "value": "totalDebt_in",
           },
           "type": {
             "kind": "ListType",
@@ -4574,18 +4875,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt_not_in"
+            "value": "totalDebt_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -4595,108 +4896,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves"
+            "value": "totalTroves",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_not"
+            "value": "totalTroves_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_gt"
+            "value": "totalTroves_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_lt"
+            "value": "totalTroves_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_gte"
+            "value": "totalTroves_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_lte"
+            "value": "totalTroves_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_in"
+            "value": "totalTroves_in",
           },
           "type": {
             "kind": "ListType",
@@ -4706,18 +5007,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves_not_in"
+            "value": "totalTroves_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -4727,38 +5028,38 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -4766,17 +5067,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "InterestRateBracket_filter"
-              }
-            }
+                "value": "InterestRateBracket_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -4784,107 +5085,107 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "InterestRateBracket_filter"
-              }
-            }
+                "value": "InterestRateBracket_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "InterestRateBracket_orderBy"
+        "value": "InterestRateBracket_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "rate"
+            "value": "rate",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalDebt"
+            "value": "totalDebt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "totalTroves"
+            "value": "totalTroves",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "description": {
         "kind": "StringValue",
         "value": "Defines the order direction, either ascending or descending",
-        "block": true
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "OrderDirection"
+        "value": "OrderDirection",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "asc"
+            "value": "asc",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "desc"
+            "value": "desc",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Query"
+        "value": "Query",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -4892,42 +5193,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -4935,146 +5237,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Collateral"
-            }
+              "value": "Collateral",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collaterals"
+            "value": "collaterals",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Collateral_orderBy"
-                }
+                  "value": "Collateral_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Collateral_filter"
-                }
+                  "value": "Collateral_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5082,16 +5385,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -5103,26 +5406,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Collateral"
-                  }
-                }
-              }
-            }
+                    "value": "Collateral",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5130,42 +5433,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5173,146 +5477,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Token"
-            }
+              "value": "Token",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "tokens"
+            "value": "tokens",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Token_orderBy"
-                }
+                  "value": "Token_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Token_filter"
-                }
+                  "value": "Token_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5320,16 +5625,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -5341,26 +5646,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Token"
-                  }
-                }
-              }
-            }
+                    "value": "Token",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateralAddresses"
+            "value": "collateralAddresses",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5368,42 +5673,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5411,146 +5717,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "CollateralAddresses"
-            }
+              "value": "CollateralAddresses",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateralAddresses_collection"
+            "value": "collateralAddresses_collection",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "CollateralAddresses_orderBy"
-                }
+                  "value": "CollateralAddresses_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "CollateralAddresses_filter"
-                }
+                  "value": "CollateralAddresses_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5558,16 +5865,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -5579,26 +5886,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "CollateralAddresses"
-                  }
-                }
-              }
-            }
+                    "value": "CollateralAddresses",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRateBracket"
+            "value": "interestRateBracket",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5606,42 +5913,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5649,146 +5957,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "InterestRateBracket"
-            }
+              "value": "InterestRateBracket",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRateBrackets"
+            "value": "interestRateBrackets",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "InterestRateBracket_orderBy"
-                }
+                  "value": "InterestRateBracket_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "InterestRateBracket_filter"
-                }
+                  "value": "InterestRateBracket_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5796,16 +6105,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -5817,26 +6126,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "InterestRateBracket"
-                  }
-                }
-              }
-            }
+                    "value": "InterestRateBracket",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "trove"
+            "value": "trove",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5844,42 +6153,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -5887,146 +6197,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Trove"
-            }
+              "value": "Trove",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_orderBy"
-                }
+                  "value": "Trove_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_filter"
-                }
+                  "value": "Trove_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6034,16 +6345,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -6055,26 +6366,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Trove"
-                  }
-                }
-              }
-            }
+                    "value": "Trove",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerInfo"
+            "value": "borrowerInfo",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6082,42 +6393,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6125,146 +6437,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BorrowerInfo"
-            }
+              "value": "BorrowerInfo",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerInfos"
+            "value": "borrowerInfos",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BorrowerInfo_orderBy"
-                }
+                  "value": "BorrowerInfo_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BorrowerInfo_filter"
-                }
+                  "value": "BorrowerInfo_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6272,16 +6585,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -6293,264 +6606,2273 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "BorrowerInfo"
-                  }
-                }
-              }
-            }
+                    "value": "BorrowerInfo",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "id",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "ID",
+                  },
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "StabilityPool",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPools",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPool_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPool_filter",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "ListType",
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "StabilityPool",
+                  },
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPoolDeposit",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "id",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "ID",
+                  },
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "StabilityPoolDeposit",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPoolDeposits",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_filter",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "ListType",
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "StabilityPoolDeposit",
+                  },
+                },
+              },
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Access to subgraph metadata",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_meta"
+            "value": "_meta",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "_Meta_"
-            }
+              "value": "_Meta_",
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Subscription"
+        "value": "StabilityPool",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "id",
           },
-          "arguments": [
-            {
-              "kind": "InputValueDefinition",
-              "name": {
-                "kind": "Name",
-                "value": "id"
-              },
-              "type": {
-                "kind": "NonNullType",
-                "type": {
-                  "kind": "NamedType",
-                  "name": {
-                    "kind": "Name",
-                    "value": "ID"
-                  }
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "description": {
-                "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
-              },
-              "name": {
-                "kind": "Name",
-                "value": "block"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Block_height"
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "description": {
-                "kind": "StringValue",
-                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
-              },
-              "name": {
-                "kind": "Name",
-                "value": "subgraphError"
-              },
-              "type": {
-                "kind": "NonNullType",
-                "type": {
-                  "kind": "NamedType",
-                  "name": {
-                    "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
-              },
-              "defaultValue": {
-                "kind": "EnumValue",
-                "value": "deny"
-              },
-              "directives": []
-            }
-          ],
+          "arguments": [],
           "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Collateral"
-            }
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collaterals"
+            "value": "totalDeposited",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "BigInt",
+              },
+            },
+          },
+          "directives": [],
+        },
+      ],
+      "interfaces": [],
+      "directives": [],
+    },
+    {
+      "kind": "ObjectTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "StabilityPoolDeposit",
+      },
+      "fields": [
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "ID",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "BigInt",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "BigInt",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "Collateral",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "BigInt",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor",
+          },
+          "arguments": [],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "Bytes",
+              },
+            },
+          },
+          "directives": [],
+        },
+      ],
+      "interfaces": [],
+      "directives": [],
+    },
+    {
+      "kind": "InputObjectTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "StabilityPoolDeposit_filter",
+      },
+      "fields": [
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "ID",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "ID",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "String",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "String",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Collateral_filter",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Bytes",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Bytes",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "description": {
+            "kind": "StringValue",
+            "value": "Filter for the block changed event.",
+            "block": true,
+          },
+          "name": {
+            "kind": "Name",
+            "value": "_change_block",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BlockChangedFilter",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "and",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "StabilityPoolDeposit_filter",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "or",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "StabilityPoolDeposit_filter",
+              },
+            },
+          },
+          "directives": [],
+        },
+      ],
+      "directives": [],
+    },
+    {
+      "kind": "EnumTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "StabilityPoolDeposit_orderBy",
+      },
+      "values": [
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "boldGain",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collGain",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__id",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__collIndex",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__minCollRatio",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__totalDeposited",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__totalDebt",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__price",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "depositor",
+          },
+          "directives": [],
+        },
+      ],
+      "directives": [],
+    },
+    {
+      "kind": "InputObjectTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "StabilityPool_filter",
+      },
+      "fields": [
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "ID",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "ID",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "ID",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "description": {
+            "kind": "StringValue",
+            "value": "Filter for the block changed event.",
+            "block": true,
+          },
+          "name": {
+            "kind": "Name",
+            "value": "_change_block",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BlockChangedFilter",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "and",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "StabilityPool_filter",
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "or",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NamedType",
+              "name": {
+                "kind": "Name",
+                "value": "StabilityPool_filter",
+              },
+            },
+          },
+          "directives": [],
+        },
+      ],
+      "directives": [],
+    },
+    {
+      "kind": "EnumTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "StabilityPool_orderBy",
+      },
+      "values": [
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "id",
+          },
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "totalDeposited",
+          },
+          "directives": [],
+        },
+      ],
+      "directives": [],
+    },
+    {
+      "kind": "ObjectTypeDefinition",
+      "name": {
+        "kind": "Name",
+        "value": "Subscription",
+      },
+      "fields": [
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Int"
-                }
-              },
-              "defaultValue": {
-                "kind": "IntValue",
-                "value": "0"
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "name": {
-                "kind": "Name",
-                "value": "first"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Int"
-                }
-              },
-              "defaultValue": {
-                "kind": "IntValue",
-                "value": "100"
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "name": {
-                "kind": "Name",
-                "value": "orderBy"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Collateral_orderBy"
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "name": {
-                "kind": "Name",
-                "value": "orderDirection"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "OrderDirection"
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "name": {
-                "kind": "Name",
-                "value": "where"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Collateral_filter"
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "description": {
-                "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
-              },
-              "name": {
-                "kind": "Name",
-                "value": "block"
-              },
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Block_height"
-                }
-              },
-              "directives": []
-            },
-            {
-              "kind": "InputValueDefinition",
-              "description": {
-                "kind": "StringValue",
-                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
-              },
-              "name": {
-                "kind": "Name",
-                "value": "subgraphError"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6558,16 +8880,208 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Collateral",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collaterals",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Collateral_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Collateral_filter",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -6579,26 +9093,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Collateral"
-                  }
-                }
-              }
-            }
+                    "value": "Collateral",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "token"
+            "value": "token",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6606,42 +9120,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6649,146 +9164,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Token"
-            }
+              "value": "Token",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "tokens"
+            "value": "tokens",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Token_orderBy"
-                }
+                  "value": "Token_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Token_filter"
-                }
+                  "value": "Token_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6796,16 +9312,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -6817,26 +9333,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Token"
-                  }
-                }
-              }
-            }
+                    "value": "Token",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateralAddresses"
+            "value": "collateralAddresses",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6844,42 +9360,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -6887,146 +9404,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "CollateralAddresses"
-            }
+              "value": "CollateralAddresses",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateralAddresses_collection"
+            "value": "collateralAddresses_collection",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "CollateralAddresses_orderBy"
-                }
+                  "value": "CollateralAddresses_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "CollateralAddresses_filter"
-                }
+                  "value": "CollateralAddresses_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7034,16 +9552,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -7055,26 +9573,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "CollateralAddresses"
-                  }
-                }
-              }
-            }
+                    "value": "CollateralAddresses",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRateBracket"
+            "value": "interestRateBracket",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7082,42 +9600,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7125,146 +9644,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "InterestRateBracket"
-            }
+              "value": "InterestRateBracket",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRateBrackets"
+            "value": "interestRateBrackets",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "InterestRateBracket_orderBy"
-                }
+                  "value": "InterestRateBracket_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "InterestRateBracket_filter"
-                }
+                  "value": "InterestRateBracket_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7272,16 +9792,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -7293,26 +9813,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "InterestRateBracket"
-                  }
-                }
-              }
-            }
+                    "value": "InterestRateBracket",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "trove"
+            "value": "trove",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7320,42 +9840,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7363,146 +9884,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Trove"
-            }
+              "value": "Trove",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troves"
+            "value": "troves",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_orderBy"
-                }
+                  "value": "Trove_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Trove_filter"
-                }
+                  "value": "Trove_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7510,16 +10032,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -7531,26 +10053,26 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "Trove"
-                  }
-                }
-              }
-            }
+                    "value": "Trove",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerInfo"
+            "value": "borrowerInfo",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "id"
+                "value": "id",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7558,42 +10080,43 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "ID"
-                  }
-                }
+                    "value": "ID",
+                  },
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7601,146 +10124,147 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BorrowerInfo"
-            }
+              "value": "BorrowerInfo",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrowerInfos"
+            "value": "borrowerInfos",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "skip"
+                "value": "skip",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "0"
+                "value": "0",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "first"
+                "value": "first",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
+                  "value": "Int",
+                },
               },
               "defaultValue": {
                 "kind": "IntValue",
-                "value": "100"
+                "value": "100",
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderBy"
+                "value": "orderBy",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BorrowerInfo_orderBy"
-                }
+                  "value": "BorrowerInfo_orderBy",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "orderDirection"
+                "value": "orderDirection",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "OrderDirection"
-                }
+                  "value": "OrderDirection",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "where"
+                "value": "where",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BorrowerInfo_filter"
-                }
+                  "value": "BorrowerInfo_filter",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
-                "value": "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
-                "block": true
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
+              "directives": [],
             },
             {
               "kind": "InputValueDefinition",
               "description": {
                 "kind": "StringValue",
                 "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
-                "block": true
+                "block": true,
               },
               "name": {
                 "kind": "Name",
-                "value": "subgraphError"
+                "value": "subgraphError",
               },
               "type": {
                 "kind": "NonNullType",
@@ -7748,16 +10272,16 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "_SubgraphErrorPolicy_"
-                  }
-                }
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
               },
               "defaultValue": {
                 "kind": "EnumValue",
-                "value": "deny"
+                "value": "deny",
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NonNullType",
@@ -7769,80 +10293,560 @@ const schemaAST = {
                   "kind": "NamedType",
                   "name": {
                     "kind": "Name",
-                    "value": "BorrowerInfo"
-                  }
-                }
-              }
-            }
+                    "value": "BorrowerInfo",
+                  },
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPool",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "id",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "ID",
+                  },
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "StabilityPool",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPools",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPool_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPool_filter",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "ListType",
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "StabilityPool",
+                  },
+                },
+              },
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPoolDeposit",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "id",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "ID",
+                  },
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "StabilityPoolDeposit",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "FieldDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stabilityPoolDeposits",
+          },
+          "arguments": [
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "skip",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "0",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "first",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+              "defaultValue": {
+                "kind": "IntValue",
+                "value": "100",
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderBy",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_orderBy",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "orderDirection",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "OrderDirection",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "name": {
+                "kind": "Name",
+                "value": "where",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "StabilityPoolDeposit_filter",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value":
+                  "The block at which the query should be executed. Can either be a `{ hash: Bytes }` value containing a block hash, a `{ number: Int }` containing the block number, or a `{ number_gte: Int }` containing the minimum block number. In the case of `number_gte`, the query will be executed on the latest block only if the subgraph has progressed to or past the minimum block number. Defaults to the latest block when omitted.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "block",
+              },
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Block_height",
+                },
+              },
+              "directives": [],
+            },
+            {
+              "kind": "InputValueDefinition",
+              "description": {
+                "kind": "StringValue",
+                "value": "Set to `allow` to receive data even if the subgraph has skipped over errors while syncing.",
+                "block": true,
+              },
+              "name": {
+                "kind": "Name",
+                "value": "subgraphError",
+              },
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "_SubgraphErrorPolicy_",
+                  },
+                },
+              },
+              "defaultValue": {
+                "kind": "EnumValue",
+                "value": "deny",
+              },
+              "directives": [],
+            },
+          ],
+          "type": {
+            "kind": "NonNullType",
+            "type": {
+              "kind": "ListType",
+              "type": {
+                "kind": "NonNullType",
+                "type": {
+                  "kind": "NamedType",
+                  "name": {
+                    "kind": "Name",
+                    "value": "StabilityPoolDeposit",
+                  },
+                },
+              },
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Access to subgraph metadata",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_meta"
+            "value": "_meta",
           },
           "arguments": [
             {
               "kind": "InputValueDefinition",
               "name": {
                 "kind": "Name",
-                "value": "block"
+                "value": "block",
               },
               "type": {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Block_height"
-                }
+                  "value": "Block_height",
+                },
               },
-              "directives": []
-            }
+              "directives": [],
+            },
           ],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "_Meta_"
-            }
+              "value": "_Meta_",
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ScalarTypeDefinition",
       "description": {
         "kind": "StringValue",
         "value": "A string representation of microseconds UNIX timestamp (16 digits)\n",
-        "block": true
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "Timestamp"
+        "value": "Timestamp",
       },
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Token"
+        "value": "Token",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -7851,17 +10855,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
           "arguments": [],
           "type": {
@@ -7870,17 +10874,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Collateral"
-              }
-            }
+                "value": "Collateral",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "name"
+            "value": "name",
           },
           "arguments": [],
           "type": {
@@ -7889,17 +10893,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "symbol"
+            "value": "symbol",
           },
           "arguments": [],
           "type": {
@@ -7908,17 +10912,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "decimals"
+            "value": "decimals",
           },
           "arguments": [],
           "type": {
@@ -7927,139 +10931,118 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Token_filter"
+        "value": "Token_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
-          },
-          "type": {
-            "kind": "ListType",
-            "type": {
-              "kind": "NonNullType",
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -8069,108 +11052,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -8180,18 +11073,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_in"
+            "value": "collateral",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_in",
           },
           "type": {
             "kind": "ListType",
@@ -8201,303 +11184,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Collateral_filter"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_in"
+            "value": "collateral_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -8507,18 +11205,303 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "name_not_in"
+            "value": "collateral_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Collateral_filter",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_in",
           },
           "type": {
             "kind": "ListType",
@@ -8528,288 +11511,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "name_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "name_not_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_in"
+            "value": "name_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -8819,18 +11532,288 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "symbol_not_in"
+            "value": "name_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "name_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_in",
           },
           "type": {
             "kind": "ListType",
@@ -8840,288 +11823,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "symbol_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_contains_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "symbol_not_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Int"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "decimals_in"
+            "value": "symbol_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -9131,18 +11844,288 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "decimals_not_in"
+            "value": "symbol_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "symbol_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Int",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_in",
           },
           "type": {
             "kind": "ListType",
@@ -9152,38 +12135,59 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Int"
-                }
-              }
-            }
+                  "value": "Int",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals_not_in",
+          },
+          "type": {
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "Int",
+                },
+              },
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -9191,17 +12195,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Token_filter"
-              }
-            }
+                "value": "Token_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -9209,117 +12213,125 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Token_filter"
-              }
-            }
+                "value": "Token_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Token_orderBy"
+        "value": "Token_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__id"
+            "value": "collateral__id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__collIndex"
+            "value": "collateral__collIndex",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__minCollRatio"
+            "value": "collateral__minCollRatio",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDeposited"
+            "value": "collateral__totalDeposited",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDebt"
+            "value": "collateral__totalDebt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "name"
+            "value": "collateral__price",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "symbol"
+            "value": "name",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "decimals"
+            "value": "symbol",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "decimals",
+          },
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Trove"
+        "value": "Trove",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "arguments": [],
           "type": {
@@ -9328,17 +12340,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "ID"
-              }
-            }
+                "value": "ID",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId"
+            "value": "troveId",
           },
           "arguments": [],
           "type": {
@@ -9347,17 +12359,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrower"
+            "value": "borrower",
           },
           "arguments": [],
           "type": {
@@ -9366,17 +12378,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Bytes"
-              }
-            }
+                "value": "Bytes",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "debt"
+            "value": "debt",
           },
           "arguments": [],
           "type": {
@@ -9385,17 +12397,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "deposit"
+            "value": "deposit",
           },
           "arguments": [],
           "type": {
@@ -9404,17 +12416,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "stake"
+            "value": "stake",
           },
           "arguments": [],
           "type": {
@@ -9423,17 +12435,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRate"
+            "value": "interestRate",
           },
           "arguments": [],
           "type": {
@@ -9442,17 +12454,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "createdAt"
+            "value": "createdAt",
           },
           "arguments": [],
           "type": {
@@ -9461,33 +12473,33 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "BigInt"
-              }
-            }
+                "value": "BigInt",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "closedAt"
+            "value": "closedAt",
           },
           "arguments": [],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BigInt"
-            }
+              "value": "BigInt",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
           "arguments": [],
           "type": {
@@ -9496,139 +12508,118 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Collateral"
-              }
-            }
+                "value": "Collateral",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "InputObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Trove_filter"
+        "value": "Trove_filter",
       },
       "fields": [
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_not"
+            "value": "id_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gt"
+            "value": "id_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lt"
+            "value": "id_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_gte"
+            "value": "id_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_lte"
+            "value": "id_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "ID"
-            }
+              "value": "ID",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id_in"
-          },
-          "type": {
-            "kind": "ListType",
-            "type": {
-              "kind": "NonNullType",
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "id_not_in"
+            "value": "id_in",
           },
           "type": {
             "kind": "ListType",
@@ -9638,108 +12629,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "ID"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_in"
+            "value": "id_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -9749,309 +12650,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "ID",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_not_in"
-          },
-          "type": {
-            "kind": "ListType",
-            "type": {
-              "kind": "NonNullType",
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_contains"
+            "value": "troveId",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_contains_nocase"
+            "value": "troveId_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_not_contains"
+            "value": "troveId_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_not_contains_nocase"
+            "value": "troveId_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_starts_with"
+            "value": "troveId_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_starts_with_nocase"
+            "value": "troveId_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId_not_starts_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_not_starts_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_not_ends_with"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "troveId_not_ends_with_nocase"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_in"
+            "value": "troveId_in",
           },
           "type": {
             "kind": "ListType",
@@ -10061,159 +12761,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrower_not_in"
-          },
-          "type": {
-            "kind": "ListType",
-            "type": {
-              "kind": "NonNullType",
-              "type": {
-                "kind": "NamedType",
-                "name": {
-                  "kind": "Name",
-                  "value": "Bytes"
-                }
-              }
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "borrower_not_contains"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "Bytes"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "debt_in"
+            "value": "troveId_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10223,18 +12782,288 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "debt_not_in"
+            "value": "troveId_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_contains_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "troveId_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_in",
           },
           "type": {
             "kind": "ListType",
@@ -10244,108 +13073,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "deposit"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "deposit_in"
+            "value": "borrower_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10355,18 +13094,138 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "Bytes",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "deposit_not_in"
+            "value": "borrower_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "borrower_not_contains",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Bytes",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "debt_in",
           },
           "type": {
             "kind": "ListType",
@@ -10376,108 +13235,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stake"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "stake_in"
+            "value": "debt_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10487,18 +13256,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stake_not_in"
+            "value": "deposit",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "deposit_in",
           },
           "type": {
             "kind": "ListType",
@@ -10508,108 +13367,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRate"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "interestRate_in"
+            "value": "deposit_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10619,18 +13388,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRate_not_in"
+            "value": "stake",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "stake_in",
           },
           "type": {
             "kind": "ListType",
@@ -10640,108 +13499,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "createdAt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "createdAt_in"
+            "value": "stake_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10751,18 +13520,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "createdAt_not_in"
+            "value": "interestRate",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "interestRate_in",
           },
           "type": {
             "kind": "ListType",
@@ -10772,108 +13631,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "closedAt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "BigInt"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "closedAt_in"
+            "value": "interestRate_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -10883,18 +13652,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "closedAt_not_in"
+            "value": "createdAt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "createdAt_in",
           },
           "type": {
             "kind": "ListType",
@@ -10904,108 +13763,18 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "BigInt"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_not"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lt"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_gte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_lte"
-          },
-          "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
-          },
-          "directives": []
-        },
-        {
-          "kind": "InputValueDefinition",
-          "name": {
-            "kind": "Name",
-            "value": "collateral_in"
+            "value": "createdAt_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -11015,18 +13784,108 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_in"
+            "value": "closedAt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_not",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_gt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_lt",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_gte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_lte",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "BigInt",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "closedAt_in",
           },
           "type": {
             "kind": "ListType",
@@ -11036,233 +13895,386 @@ const schemaAST = {
                 "kind": "NamedType",
                 "name": {
                   "kind": "Name",
-                  "value": "String"
-                }
-              }
-            }
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_contains"
+            "value": "closedAt_not_in",
           },
           "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "BigInt",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_contains_nocase"
+            "value": "collateral",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_contains"
+            "value": "collateral_not",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_contains_nocase"
+            "value": "collateral_gt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_starts_with"
+            "value": "collateral_lt",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_starts_with_nocase"
+            "value": "collateral_gte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_starts_with"
+            "value": "collateral_lte",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_starts_with_nocase"
+            "value": "collateral_in",
           },
           "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_ends_with"
+            "value": "collateral_not_in",
           },
           "type": {
-            "kind": "NamedType",
-            "name": {
-              "kind": "Name",
-              "value": "String"
-            }
+            "kind": "ListType",
+            "type": {
+              "kind": "NonNullType",
+              "type": {
+                "kind": "NamedType",
+                "name": {
+                  "kind": "Name",
+                  "value": "String",
+                },
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_ends_with_nocase"
+            "value": "collateral_contains",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_ends_with"
+            "value": "collateral_contains_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_not_ends_with_nocase"
+            "value": "collateral_not_contains",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "String"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral_"
+            "value": "collateral_not_contains_nocase",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Collateral_filter"
-            }
+              "value": "String",
+            },
           },
-          "directives": []
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_starts_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_not_ends_with_nocase",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "String",
+            },
+          },
+          "directives": [],
+        },
+        {
+          "kind": "InputValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral_",
+          },
+          "type": {
+            "kind": "NamedType",
+            "name": {
+              "kind": "Name",
+              "value": "Collateral_filter",
+            },
+          },
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Filter for the block changed event.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "_change_block"
+            "value": "_change_block",
           },
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "BlockChangedFilter"
-            }
+              "value": "BlockChangedFilter",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "and"
+            "value": "and",
           },
           "type": {
             "kind": "ListType",
@@ -11270,17 +14282,17 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Trove_filter"
-              }
-            }
+                "value": "Trove_filter",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "or"
+            "value": "or",
           },
           "type": {
             "kind": "ListType",
@@ -11288,150 +14300,158 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Trove_filter"
-              }
-            }
+                "value": "Trove_filter",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "Trove_orderBy"
+        "value": "Trove_orderBy",
       },
       "values": [
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "id"
+            "value": "id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "troveId"
+            "value": "troveId",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "borrower"
+            "value": "borrower",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "debt"
+            "value": "debt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "deposit"
+            "value": "deposit",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "stake"
+            "value": "stake",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "interestRate"
+            "value": "interestRate",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "createdAt"
+            "value": "createdAt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "closedAt"
+            "value": "closedAt",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral"
+            "value": "collateral",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__id"
+            "value": "collateral__id",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__collIndex"
+            "value": "collateral__collIndex",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__minCollRatio"
+            "value": "collateral__minCollRatio",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDeposited"
+            "value": "collateral__totalDeposited",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "collateral__totalDebt"
+            "value": "collateral__totalDebt",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
+        {
+          "kind": "EnumValueDefinition",
+          "name": {
+            "kind": "Name",
+            "value": "collateral__price",
+          },
+          "directives": [],
+        },
       ],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "_Block_"
+        "value": "_Block_",
       },
       "fields": [
         {
@@ -11439,32 +14459,32 @@ const schemaAST = {
           "description": {
             "kind": "StringValue",
             "value": "The hash of the block",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "hash"
+            "value": "hash",
           },
           "arguments": [],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Bytes"
-            }
+              "value": "Bytes",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "The block number",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "number"
+            "value": "number",
           },
           "arguments": [],
           "type": {
@@ -11473,80 +14493,81 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Int"
-              }
-            }
+                "value": "Int",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "Integer representation of the timestamp stored in blocks for the chain",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "timestamp"
+            "value": "timestamp",
           },
           "arguments": [],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Int"
-            }
+              "value": "Int",
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "The hash of the parent block",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "parentHash"
+            "value": "parentHash",
           },
           "arguments": [],
           "type": {
             "kind": "NamedType",
             "name": {
               "kind": "Name",
-              "value": "Bytes"
-            }
+              "value": "Bytes",
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "ObjectTypeDefinition",
       "description": {
         "kind": "StringValue",
         "value": "The type for the top-level _meta field",
-        "block": true
+        "block": true,
       },
       "name": {
         "kind": "Name",
-        "value": "_Meta_"
+        "value": "_Meta_",
       },
       "fields": [
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
-            "value": "Information about a specific subgraph block. The hash of the block\nwill be null if the _meta field has a block constraint that asks for\na block number. It will be filled if the _meta field has no block constraint\nand therefore asks for the latest  block\n",
-            "block": true
+            "value":
+              "Information about a specific subgraph block. The hash of the block\nwill be null if the _meta field has a block constraint that asks for\na block number. It will be filled if the _meta field has no block constraint\nand therefore asks for the latest  block\n",
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "block"
+            "value": "block",
           },
           "arguments": [],
           "type": {
@@ -11555,22 +14576,22 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "_Block_"
-              }
-            }
+                "value": "_Block_",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "The deployment ID",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "deployment"
+            "value": "deployment",
           },
           "arguments": [],
           "type": {
@@ -11579,22 +14600,22 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "String"
-              }
-            }
+                "value": "String",
+              },
+            },
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "FieldDefinition",
           "description": {
             "kind": "StringValue",
             "value": "If `true`, the subgraph encountered indexing errors at some past block",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "hasIndexingErrors"
+            "value": "hasIndexingErrors",
           },
           "arguments": [],
           "type": {
@@ -11603,21 +14624,21 @@ const schemaAST = {
               "kind": "NamedType",
               "name": {
                 "kind": "Name",
-                "value": "Boolean"
-              }
-            }
+                "value": "Boolean",
+              },
+            },
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
       "interfaces": [],
-      "directives": []
+      "directives": [],
     },
     {
       "kind": "EnumTypeDefinition",
       "name": {
         "kind": "Name",
-        "value": "_SubgraphErrorPolicy_"
+        "value": "_SubgraphErrorPolicy_",
       },
       "values": [
         {
@@ -11625,34 +14646,34 @@ const schemaAST = {
           "description": {
             "kind": "StringValue",
             "value": "Data will be returned even if the subgraph has indexing errors",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "allow"
+            "value": "allow",
           },
-          "directives": []
+          "directives": [],
         },
         {
           "kind": "EnumValueDefinition",
           "description": {
             "kind": "StringValue",
             "value": "If the subgraph has indexing errors, data will be omitted. The default.",
-            "block": true
+            "block": true,
           },
           "name": {
             "kind": "Name",
-            "value": "deny"
+            "value": "deny",
           },
-          "directives": []
-        }
+          "directives": [],
+        },
       ],
-      "directives": []
-    }
-  ]
+      "directives": [],
+    },
+  ],
 };
 
 export default buildASTSchema(schemaAST, {
   assumeValid: true,
-  assumeValidSDL: true
+  assumeValidSDL: true,
 });

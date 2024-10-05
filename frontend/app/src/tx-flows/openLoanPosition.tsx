@@ -43,12 +43,12 @@ const RequestSchema = v.object({
 
 export type Request = v.InferOutput<typeof RequestSchema>;
 
-type Step = "wrapEth" | "approve" | "openTrove";
+type Step = "approveLst" | "openTroveEth" | "openTroveLst";
 
 const stepNames: Record<Step, string> = {
-  wrapEth: "Wrap ETH",
-  approve: "Approve",
-  openTrove: "Open Position",
+  approveLst: "Approve",
+  openTroveEth: "Open Position",
+  openTroveLst: "Open Position",
 };
 
 export const openLoanPosition: FlowDeclaration<Request, Step> = {
@@ -56,86 +56,79 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
   subtitle: "Please review your borrow position before confirming",
 
   Summary({ flow }) {
-    const { symbol } = useCollateral(flow.request.collIndex);
+    const collateral = useCollateral(flow.request.collIndex);
     return (
-      <LoanCard
-        leverageMode={false}
-        loadingState="success"
-        loan={{
-          troveId: "0x",
-          borrowed: flow.request.boldAmount,
-          collIndex: flow.request.collIndex,
-          collateral: symbol,
-          deposit: flow.request.collAmount,
-          interestRate: flow.request.annualInterestRate,
-          type: "borrow",
-        }}
-        onRetry={() => {}}
-      />
+      collateral && (
+        <LoanCard
+          leverageMode={false}
+          loadingState="success"
+          loan={{
+            troveId: "0x",
+            borrowed: flow.request.boldAmount,
+            collIndex: flow.request.collIndex,
+            collateral: collateral.symbol,
+            deposit: flow.request.collAmount,
+            interestRate: flow.request.annualInterestRate,
+            type: "borrow",
+          }}
+          onRetry={() => {}}
+        />
+      )
     );
   },
 
   Details({ flow }) {
     const { request } = flow;
     const collateral = useCollateral(flow.request.collIndex);
-    const collPrice = usePrice(collateral.symbol);
+    const collPrice = usePrice(collateral?.symbol ?? null);
     const boldPrice = usePrice("BOLD");
     return (
-      <>
-        <TransactionDetailsRow
-          label="You deposit"
-          value={[
-            `${fmtnum(request.collAmount)} ${collateral.name}`,
-            collPrice && `$${fmtnum(dn.mul(request.collAmount, collPrice))}`,
-          ]}
-        />
-        <TransactionDetailsRow
-          label="You borrow"
-          value={[
-            `${fmtnum(request.boldAmount)} BOLD`,
-            boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
-          ]}
-        />
-        <TransactionDetailsRow
-          label="Interest rate"
-          value={[
-            `${fmtnum(request.annualInterestRate, 2, 100)}%`,
-            `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
-          ]}
-        />
-      </>
+      collateral && (
+        <>
+          <TransactionDetailsRow
+            label="You deposit"
+            value={[
+              `${fmtnum(request.collAmount)} ${collateral.name}`,
+              collPrice && `$${fmtnum(dn.mul(request.collAmount, collPrice))}`,
+            ]}
+          />
+          <TransactionDetailsRow
+            label="You borrow"
+            value={[
+              `${fmtnum(request.boldAmount)} BOLD`,
+              boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
+            ]}
+          />
+          <TransactionDetailsRow
+            label="Interest rate"
+            value={[
+              `${fmtnum(request.annualInterestRate, 2, 100)}%`,
+              `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
+            ]}
+          />
+        </>
+      )
     );
   },
 
-  async getSteps({
-    account,
-    contracts,
-    request,
-    wagmiConfig,
-  }) {
+  async getSteps({ account, contracts, request, wagmiConfig }) {
     const collateral = contracts.collaterals[request.collIndex];
-    const { BorrowerOperations, Token } = collateral.contracts;
 
-    if (!BorrowerOperations || !Token) {
+    if (collateral.symbol === "ETH") {
+      return ["openTroveEth"];
+    }
+
+    const { GasCompZapper, CollToken } = collateral.contracts;
+
+    if (!GasCompZapper || !CollToken) {
       throw new Error(`Collateral ${collateral.symbol} not supported`);
     }
 
     const allowance = dnum18(
       await readContract(wagmiConfig, {
-        ...Token,
+        ...CollToken,
         functionName: "allowance",
-        args: [
-          account.address ?? ADDRESS_ZERO,
-          BorrowerOperations.address,
-        ],
-      }),
-    );
-
-    const wethBalance = collateral.symbol !== "ETH" ? null : dnum18(
-      await readContract(wagmiConfig, {
-        ...Token,
-        functionName: "balanceOf",
-        args: [account.address ?? ADDRESS_ZERO],
+        args: [account.address ?? ADDRESS_ZERO, GasCompZapper.address],
       }),
     );
 
@@ -146,15 +139,11 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
 
     const steps: Step[] = [];
 
-    if (wethBalance && dn.lt(wethBalance, request.collAmount)) {
-      steps.push("wrapEth");
-    }
-
     if (!isApproved) {
-      steps.push("approve");
+      steps.push("approveLst");
     }
 
-    return [...steps, "openTrove"];
+    return [...steps, "openTroveLst"];
   },
 
   getStepName(stepId) {
@@ -165,54 +154,69 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
     return v.parse(RequestSchema, request);
   },
 
-  async writeContractParams({ contracts, request, stepId }) {
+  async writeContractParams(stepId, { contracts, request }) {
     const collateral = contracts.collaterals[request.collIndex];
-    const { BorrowerOperations, Token } = collateral.contracts;
 
-    if (!BorrowerOperations || !Token) {
+    const { GasCompZapper, CollToken } = collateral.contracts;
+    if (!GasCompZapper || !CollToken) {
       throw new Error(`Collateral ${collateral.symbol} not supported`);
     }
 
-    if (stepId === "wrapEth") {
-      return {
-        ...contracts.WETH,
-        functionName: "deposit" as const,
-        args: [],
-        value: request.collAmount[0],
-      };
-    }
+    if (stepId === "approveLst") {
+      const amount = request.collAmount;
 
-    if (stepId === "approve") {
-      const amount = dn.add(request.collAmount, ETH_GAS_COMPENSATION);
       return {
-        ...Token,
+        ...CollToken,
         functionName: "approve" as const,
-        args: [
-          BorrowerOperations.address,
-          amount[0],
-        ],
+        args: [GasCompZapper.address, amount[0]],
       };
     }
 
-    if (stepId === "openTrove") {
+    if (stepId === "openTroveEth") {
       return {
-        ...BorrowerOperations,
-        functionName: "openTrove" as const,
+        ...collateral.contracts.WETHZapper,
+        functionName: "openTroveWithRawETH" as const,
         args: [
-          request.owner ?? ADDRESS_ZERO,
-          request.ownerIndex,
-          request.collAmount[0],
-          request.boldAmount[0],
-          request.upperHint[0],
-          request.lowerHint[0],
-          request.annualInterestRate[0],
-          request.maxUpfrontFee[0],
-          ADDRESS_ZERO,
-          ADDRESS_ZERO,
-          ADDRESS_ZERO,
+          {
+            owner: request.owner ?? ADDRESS_ZERO,
+            ownerIndex: BigInt(request.ownerIndex),
+            boldAmount: request.boldAmount[0],
+            upperHint: request.upperHint[0],
+            lowerHint: request.lowerHint[0],
+            annualInterestRate: request.annualInterestRate[0],
+            maxUpfrontFee: request.maxUpfrontFee[0],
+            addManager: ADDRESS_ZERO,
+            removeManager: ADDRESS_ZERO,
+            receiver: ADDRESS_ZERO,
+          },
         ],
+        value: request.collAmount[0] + ETH_GAS_COMPENSATION[0],
       };
     }
-    return null;
+
+    if (stepId === "openTroveLst") {
+      return {
+        ...collateral.contracts.GasCompZapper,
+        functionName: "openTroveWithRawETH" as const,
+        args: [
+          {
+            owner: request.owner ?? ADDRESS_ZERO,
+            ownerIndex: BigInt(request.ownerIndex),
+            collAmount: request.collAmount[0],
+            boldAmount: request.boldAmount[0],
+            upperHint: request.upperHint[0],
+            lowerHint: request.lowerHint[0],
+            annualInterestRate: request.annualInterestRate[0],
+            maxUpfrontFee: request.maxUpfrontFee[0],
+            addManager: ADDRESS_ZERO,
+            removeManager: ADDRESS_ZERO,
+            receiver: ADDRESS_ZERO,
+          },
+        ],
+        value: ETH_GAS_COMPENSATION[0],
+      };
+    }
+
+    throw new Error("Not implemented");
   },
 };

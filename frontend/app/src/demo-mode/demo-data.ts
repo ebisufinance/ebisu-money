@@ -15,6 +15,7 @@ export const LQTY_PRICE = dn.from(0.64832, 18);
 export const ETH_PRICE = dn.from(2_580.293872, 18);
 export const RETH_PRICE = dn.from(2_884.72294, 18);
 export const STETH_PRICE = dn.from(2_579.931, 18);
+export const WEETH_PRICE = dn.from(2_579.931, 18);
 export const BOLD_PRICE = dn.from(1.0031, 18);
 
 export const STAKED_LQTY_TOTAL = [43_920_716_739_092_664_364_409_174n, 18] as const;
@@ -31,6 +32,7 @@ export const ACCOUNT_BALANCES = {
   LQTY: dn.from(2008.217, 18),
   RETH: dn.from(1.3732, 18),
   STETH: dn.from(17.912, 18),
+  WEETH: dn.from(17.912, 18),
   LUSD: dn.from(1_200, 18),
 } as const;
 
@@ -56,11 +58,11 @@ export const ACCOUNT_POSITIONS: Position[] = [
   {
     type: "earn",
     apr: dn.from(0.078, 18),
-    collateral: "STETH",
     deposit: dn.from(5_000, 18),
+    collIndex: 0,
     rewards: {
       bold: dn.from(789.438, 18),
-      eth: dn.from(0.943, 18),
+      coll: dn.from(0.943, 18),
     },
   },
   {
@@ -89,6 +91,11 @@ export const BORROW_STATS = {
     tvl: dn.from(45_037_108.91, 18),
     maxLtv: dn.div(dn.from(1, 18), 1.2),
   },
+  WEETH: {
+    borrowRate: dn.from(0.055, 18),
+    tvl: dn.from(45_037_108.91, 18),
+    maxLtv: dn.div(dn.from(1, 18), 1.2),
+  },
 } as const;
 
 export const EARN_POOLS: Record<
@@ -104,6 +111,10 @@ export const EARN_POOLS: Record<
     boldQty: [44_100_000n, 0],
   },
   STETH: {
+    apr: dn.from(0.054, 18),
+    boldQty: [25_700_000n, 0],
+  },
+  WEETH: {
     apr: dn.from(0.054, 18),
     boldQty: [25_700_000n, 0],
   },

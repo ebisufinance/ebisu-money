@@ -7,10 +7,10 @@ import tokenLusd from "./token-icons/lusd.svg";
 import tokenReth from "./token-icons/reth.svg";
 import tokenSteth from "./token-icons/wsteth.svg";
 
-export type CollateralSymbol = "ETH" | "RETH" | "STETH";
+export type CollateralSymbol = "ETH" | "RETH" | "STETH"| "WEETH";
 
 export function isCollateralSymbol(symbol: string): symbol is CollateralSymbol {
-  return symbol === "ETH" || symbol === "RETH" || symbol === "STETH";
+  return symbol === "ETH" || symbol === "RETH" || symbol === "STETH" || symbol === "WEETH";
 }
 
 export type CollateralToken = Token & {
@@ -57,10 +57,18 @@ export const STETH: CollateralToken = {
   symbol: "STETH" as const,
 } as const;
 
+export const WEETH: CollateralToken = {
+  collateralRatio: 1.2,
+  icon: tokenEth,
+  name: "weETH",
+  symbol: "WEETH" as const,
+} as const;
+
 export const COLLATERALS: CollateralToken[] = [
   ETH,
   RETH,
   STETH,
+  WEETH
 ];
 
 export const TOKENS_BY_SYMBOL = {
@@ -69,5 +77,6 @@ export const TOKENS_BY_SYMBOL = {
   LQTY,
   RETH,
   STETH,
+  WEETH,
   LUSD,
 } as const;

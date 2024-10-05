@@ -61,7 +61,6 @@ export function TopBar() {
           })}
         >
           <Logo />
-          {content.appName}
         </Link>
         <Menu menuItems={menuItems} />
         <AccountButton />

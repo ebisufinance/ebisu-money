@@ -11,7 +11,7 @@ export function ProtocolStats() {
   const prices = [
     ["LQTY", usePrice("LQTY")],
     ["BOLD", usePrice("BOLD")],
-    ["ETH", usePrice("ETH")],
+    ["WEETH", usePrice("WEETH")],
   ] as const;
 
   const totalTvl = Object.values(BORROW_STATS).reduce(
@@ -33,28 +33,21 @@ export function ProtocolStats() {
       <div>{content.home.statsBar.label}</div>
       <HFlex gap={32}>
         <HFlex gap={8}>
-          <span>TVL</span>{" "}
-          <span>
-            ${dn.format(totalTvl, { compact: true })}
-          </span>
+          <span>TVL</span> <span>${dn.format(totalTvl, { compact: true })}</span>
         </HFlex>
         {prices.map(([symbol, price]) => {
           return (
-            <HFlex
-              key={symbol}
-              gap={16}
-            >
-              <TokenIcon
-                size={16}
-                symbol={symbol}
-              />
+            <HFlex key={symbol} gap={16}>
+              <TokenIcon size={16} symbol={symbol} />
               <HFlex gap={8}>
                 <span>{symbol}</span>
                 <span>
-                  ${price && dn.format(price, {
-                    digits: 2,
-                    trailingZeros: true,
-                  })}
+                  $
+                  {price
+                    && dn.format(price, {
+                      digits: 2,
+                      trailingZeros: true,
+                    })}
                 </span>
               </HFlex>
             </HFlex>
