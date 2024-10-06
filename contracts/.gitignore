@@ -37,4 +37,4 @@ testMatrix.json
 /counterexamples
 
 # run scripts bash file
-run-scripts.sh
+run_scripts.sh
