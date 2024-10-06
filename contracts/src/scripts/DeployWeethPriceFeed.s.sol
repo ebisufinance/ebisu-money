@@ -26,6 +26,8 @@ contract DeployWeethPriceFeed is Script {
         );
 
         console.log("WEETHPriceFeed deployed at: ", address(weethPriceFeed));
+        uint256 lastGoodPrice = weethPriceFeed.lastGoodPrice();
+        console.log("Last good price: ", lastGoodPrice);
 
     }
 }
