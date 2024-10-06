@@ -120,7 +120,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         return string.concat(
             "{",
             string.concat(
-            // Avoid stack too deep by chunking concats
+                // Avoid stack too deep by chunking concats
                 string.concat(
                     string.concat('"addressesRegistry":"', address(c.addressesRegistry).toHexString(), '",'),
                     string.concat('"activePool":"', address(c.activePool).toHexString(), '",'),
@@ -253,7 +253,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
     }
 
     function openDemoTroves(DemoTroveParams[] memory demoTroves, LiquityContractsTestnet[] memory contractsArray)
-    internal
+        internal
     {
         for (uint256 i = 0; i < demoTroves.length; i++) {
             DemoTroveParams memory trove = demoTroves[i];
@@ -296,8 +296,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
     }
 
     function _deployAndConnectContracts(TroveManagerParams[] memory troveManagerParamsArray, IWETH _WETH)
-    internal
-    returns (DeploymentResult memory r)
+        internal
+        returns (DeploymentResult memory r)
     {
         DeploymentVarsTestnet memory vars;
         vars.numCollaterals = troveManagerParamsArray.length;
@@ -322,7 +322,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         // Deploy AddressesRegistries and get TroveManager addresses
         for (vars.i = 0; vars.i < vars.numCollaterals; vars.i++) {
             (IAddressesRegistry addressesRegistry, address troveManagerAddress) =
-                            _deployAddressesRegistry(troveManagerParamsArray[vars.i]);
+                _deployAddressesRegistry(troveManagerParamsArray[vars.i]);
             vars.addressesRegistries[vars.i] = addressesRegistry;
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
@@ -350,8 +350,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
     }
 
     function _deployAddressesRegistry(TroveManagerParams memory _troveManagerParams)
-    internal
-    returns (IAddressesRegistry, address)
+        internal
+        returns (IAddressesRegistry, address)
     {
         IAddressesRegistry addressesRegistry = new AddressesRegistry(
             deployer,
@@ -471,19 +471,12 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         // deploy zappers
         (contracts.gasCompZapper, contracts.wethZapper) =
-        _deployZappers(contracts.addressesRegistry, contracts.collToken, _weth);
+            _deployZappers(contracts.addressesRegistry, contracts.collToken, _weth);
     }
 
-    function _deployZappers(
-        IAddressesRegistry _addressesRegistry,
-        IERC20 _collToken,
-        IWETH _weth
-    )
-    internal
-    returns (
-        GasCompZapper gasCompZapper,
-        WETHZapper wethZapper
-    )
+    function _deployZappers(IAddressesRegistry _addressesRegistry, IERC20 _collToken, IWETH _weth)
+        internal
+        returns (GasCompZapper gasCompZapper, WETHZapper wethZapper)
     {
         bool lst = _collToken != _weth;
         if (lst) {
