@@ -181,9 +181,10 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vm.startBroadcast(privateKey);
         }
 
-        TroveManagerParams[] memory troveManagerParamsArray = new TroveManagerParams[](1);
+        TroveManagerParams[] memory troveManagerParamsArray = new TroveManagerParams[](2);
 
         troveManagerParamsArray[0] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
+        troveManagerParamsArray[1] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
         console.log("after troveManagerParamsArray");
         // used for gas compensation and as collateral of the first branch
         IWETH WETH = new WETHTester({_tapAmount: 100 ether, _tapPeriod: 1 days});
@@ -192,47 +193,6 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         vm.writeFile("deployment-manifest.json", _getManifestJson(deployed));
 
-        if (vm.envOr("OPEN_DEMO_TROVES", false)) {
-            // Anvil default accounts
-            // TODO: get accounts from env
-            uint256[] memory demoAccounts = new uint256[](8);
-            demoAccounts[0] = 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80;
-            demoAccounts[1] = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
-            demoAccounts[2] = 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a;
-            demoAccounts[3] = 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6;
-            demoAccounts[4] = 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a;
-            demoAccounts[5] = 0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba;
-            demoAccounts[6] = 0x92db14e403b83dfe3df233f83dfa3a0d7096f21ca9b0d6d6b8d88b2b4ec1564e;
-            demoAccounts[7] = 0x4bbbf85ce3377467afe5d46f804f221813b2bb87f24d81f60f1fcdbf7cbf4356;
-
-            DemoTroveParams[] memory demoTroves = new DemoTroveParams[](16);
-
-            demoTroves[0] = DemoTroveParams(0, demoAccounts[0], 0, 25e18, 2800e18, 5.0e16);
-            demoTroves[1] = DemoTroveParams(0, demoAccounts[1], 0, 37e18, 2400e18, 4.7e16);
-            demoTroves[2] = DemoTroveParams(0, demoAccounts[2], 0, 30e18, 4000e18, 3.3e16);
-            demoTroves[3] = DemoTroveParams(0, demoAccounts[3], 0, 65e18, 6000e18, 4.3e16);
-
-            demoTroves[4] = DemoTroveParams(0, demoAccounts[4], 0, 19e18, 2280e18, 5.0e16);
-            demoTroves[5] = DemoTroveParams(0, demoAccounts[5], 0, 48.37e18, 4400e18, 4.7e16);
-            demoTroves[6] = DemoTroveParams(0, demoAccounts[6], 0, 33.92e18, 5500e18, 3.8e16);
-            demoTroves[7] = DemoTroveParams(0, demoAccounts[7], 0, 47.2e18, 6000e18, 4.3e16);
-
-            demoTroves[8] = DemoTroveParams(1, demoAccounts[0], 1, 21e18, 2000e18, 3.3e16);
-            demoTroves[9] = DemoTroveParams(1, demoAccounts[1], 1, 16e18, 2000e18, 4.1e16);
-            demoTroves[10] = DemoTroveParams(1, demoAccounts[2], 1, 18e18, 2300e18, 3.8e16);
-            demoTroves[11] = DemoTroveParams(1, demoAccounts[3], 1, 22e18, 2200e18, 4.3e16);
-
-            demoTroves[12] = DemoTroveParams(1, demoAccounts[4], 1, 85e18, 12000e18, 7.0e16);
-            demoTroves[13] = DemoTroveParams(1, demoAccounts[5], 1, 87e18, 4000e18, 4.4e16);
-            demoTroves[14] = DemoTroveParams(1, demoAccounts[6], 1, 71e18, 11000e18, 3.3e16);
-            demoTroves[15] = DemoTroveParams(1, demoAccounts[7], 1, 84e18, 12800e18, 4.4e16);
-
-            for (uint256 i = 0; i < deployed.contractsArray.length; i++) {
-                tapFaucet(demoAccounts, deployed.contractsArray[i]);
-            }
-
-            openDemoTroves(demoTroves, deployed.contractsArray);
-        }
     }
 
     function tapFaucet(uint256[] memory accounts, LiquityContractsTestnet memory contracts) internal {
@@ -249,44 +209,6 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
                 vm.addr(accounts[i]),
                 string.concat(formatAmount(token.balanceOf(vm.addr(accounts[i])), 18, 2), " ", token.symbol())
             );
-        }
-    }
-
-    function openDemoTroves(DemoTroveParams[] memory demoTroves, LiquityContractsTestnet[] memory contractsArray)
-        internal
-    {
-        for (uint256 i = 0; i < demoTroves.length; i++) {
-            DemoTroveParams memory trove = demoTroves[i];
-            LiquityContractsTestnet memory contracts = contractsArray[trove.collIndex];
-
-            vm.startBroadcast(trove.owner);
-
-            IERC20 collToken = IERC20(contracts.collToken);
-            IERC20 wethToken = IERC20(contracts.addressesRegistry.WETH());
-
-            // Approve collToken to BorrowerOperations
-            if (collToken == wethToken) {
-                wethToken.approve(address(contracts.borrowerOperations), trove.coll + ETH_GAS_COMPENSATION);
-            } else {
-                wethToken.approve(address(contracts.borrowerOperations), ETH_GAS_COMPENSATION);
-                collToken.approve(address(contracts.borrowerOperations), trove.coll);
-            }
-
-            IBorrowerOperations(contracts.borrowerOperations).openTrove(
-                vm.addr(trove.owner), //     _owner
-                trove.ownerIndex, //         _ownerIndex
-                trove.coll, //               _collAmount
-                trove.debt, //               _boldAmount
-                0, //                        _upperHint
-                0, //                        _lowerHint
-                trove.annualInterestRate, // _annualInterestRate
-                type(uint256).max, //        _maxUpfrontFee
-                address(0), //               _addManager
-                address(0), //               _removeManager
-                address(0) //                _receiver
-            );
-
-            vm.stopBroadcast();
         }
     }
 
@@ -315,6 +237,13 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         vars.collaterals[0] = new ERC20Faucet(
             string.concat("Mock weETH", string(abi.encode(vars.i))), // _name
             string.concat("weETH", string(abi.encode(vars.i))), // _symbol
+            100 ether, //     _tapAmount
+            1 days //         _tapPeriod
+        );
+
+        vars.collaterals[1] = new ERC20Faucet(
+            string.concat("Mock ezETH", string(abi.encode(vars.i))), // _name
+            string.concat("ezETH", string(abi.encode(vars.i))), // _symbol
             100 ether, //     _tapAmount
             1 days //         _tapPeriod
         );
