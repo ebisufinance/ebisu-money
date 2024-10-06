@@ -35,3 +35,6 @@ testMatrix.json
 
 # Invariant test counterexamples
 /counterexamples
+
+# run scripts bash file
+/run-scripts.sh
