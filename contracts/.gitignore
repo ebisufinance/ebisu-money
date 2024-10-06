@@ -6,6 +6,9 @@ out/
 !/broadcast
 /broadcast/*/31337/
 /broadcast/*/1337/
+/broadcast/*/20164/
+/broadcast/*/84532/
+/broadcast/*/11155111/
 /broadcast/**/dry-run/
 
 # Created by `forge snapshot`
@@ -32,3 +35,6 @@ testMatrix.json
 
 # Invariant test counterexamples
 /counterexamples
+
+# run scripts bash file
+run_script.sh
