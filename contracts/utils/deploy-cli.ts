@@ -190,7 +190,7 @@ Deploying Liquity contracts with the following settings:
   }
 
   if ("CI" in process.env) {
-    echo("Workaround: deleting variable 'CI' from environment"); // See https://github.com/liquity/ebusd/pull/113
+    echo("Workaround: deleting variable 'CI' from environment"); // See https://github.com/liquity/bold/pull/113
     delete process.env.CI;
   }
 

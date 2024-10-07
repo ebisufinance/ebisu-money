@@ -3,9 +3,9 @@
   "private": true,
   "author": "Liquity AG",
   "license": "GPL-3.0",
-  "repository": "github:liquity/ebusd",
-  "bugs": "https://github.com/liquity/ebusd/issues",
-  "homepage": "https://github.com/liquity/ebusd#readme",
+  "repository": "github:liquity/bold",
+  "bugs": "https://github.com/liquity/bold/issues",
+  "homepage": "https://github.com/liquity/bold#readme",
   "devDependencies": {
     "dprint": "^0.47.2"
   },

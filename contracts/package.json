@@ -17,11 +17,11 @@
     "fuzz-monit": "pm2 monit",
     "fuzz-logs": "pm2 logs"
   },
-  "repository": "github:liquity/ebusd",
+  "repository": "github:liquity/bold",
   "author": "Liquity AG",
   "license": "GPL-3.0",
-  "bugs": "https://github.com/liquity/ebusd/issues",
-  "homepage": "https://github.com/liquity/ebusd#readme",
+  "bugs": "https://github.com/liquity/bold/issues",
+  "homepage": "https://github.com/liquity/bold#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-foundry": "^1.0.1",

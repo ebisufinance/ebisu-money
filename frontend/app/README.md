@@ -12,7 +12,7 @@
 ## Setup
 
 ```sh
-git clone git@github.com:liquity/ebusd.git
+git clone git@github.com:liquity/bold.git
 cd ebusd
 pnpm install
 ```

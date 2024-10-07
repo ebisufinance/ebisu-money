@@ -1089,10 +1089,10 @@ This is intended to catch some obvious oracle failure modes, as well as the scen
 
 ### Using `lastGoodPrice` if an oracle has been disabled
 
-If an oracle has failed, then the best the branch can do is use the last good price seen by the system. Using an out-of-date price obviously has undesirable consequences, but it’s the best that can be done in this extreme scenario. The impacts are addressed in [Known Issue 4](https://github.com/liquity/ebusd/blob/main/README.md#4---oracle-failure-and-urgent-redemptions-with-the-frozen-last-good-price).
+If an oracle has failed, then the best the branch can do is use the last good price seen by the system. Using an out-of-date price obviously has undesirable consequences, but it’s the best that can be done in this extreme scenario. The impacts are addressed in [Known Issue 4](https://github.com/liquity/bold/blob/main/README.md#4---oracle-failure-and-urgent-redemptions-with-the-frozen-last-good-price).
 
 However, as mentioned there, a possible improvement exists whereby the ETH-USD price can be used alongside the canonical LST rate as a price fallback.  See this PR:
-https://github.com/liquity/ebusd/pull/393
+https://github.com/liquity/bold/pull/393
 
 ### Protection against upward market price manipulation
 
@@ -1207,7 +1207,7 @@ When `lastGoodPrice` is used to price the LST, the _real_ market price may be hi
 No fix is implemented for this, for the following reasons:
 
 - In the second case, although urgent redemptions return too much value to the redeemer, they can still clear all debt from the branch.
-- In the first case, the final result is that some uncleared EBUSD debt remains on the shut down branch, and the system carries this unbacked debt burden going forward.  This is an inherent risk of a multicollateral system anyway, which relies on the economic health of the LST assets it integrates. A solution to clear bad debt is TODO, to be chosen and implemented - see [Branch shutdown and bad debt](https://github.com/liquity/ebusd?tab=readme-ov-file#10---branch-shutdown-and-bad-debt) section.
+- In the first case, the final result is that some uncleared EBUSD debt remains on the shut down branch, and the system carries this unbacked debt burden going forward.  This is an inherent risk of a multicollateral system anyway, which relies on the economic health of the LST assets it integrates. A solution to clear bad debt is TODO, to be chosen and implemented - see [Branch shutdown and bad debt](https://github.com/liquity/bold?tab=readme-ov-file#10---branch-shutdown-and-bad-debt) section.
 - Also an Oracle failure, if it occurs, will much more likely be due to a disabled Chainlink feed rather than hack or technical failure. A disabled LST oracle implies an LST with low liquidity/volume, which in turn probably implies that the LST constitutes a small fraction of total Liquity v2 collateral.
 
 #### Possible Improvement - use `ETH-USD * canonical_rate`
@@ -1226,7 +1226,7 @@ During shutdown no borrower ops are allowed, so the main risk of a manipulated c
 Additionally, if the _ETH-USD_ oracle fails after shut down, then the LST PriceFeed should finally switch to the `lastGoodPrice`, and the branch remains shut down.
 
 The full logic is implemented in this PR:
-https://github.com/liquity/ebusd/pull/393
+https://github.com/liquity/bold/pull/393
 
 ### 5 - Stale oracle price before shutdown triggered
 
@@ -1293,7 +1293,7 @@ Currently, the discrepancy between these 2 can be rather large, especially if yi
 
 Some imprecision in the StabilityPool arithmetic is inevitable, but we should avoid arithmetic underflow in `yieldGainsOwed` by ensuring the error stays positive. The root cause of the underflow is not yet clear, however it seems to be connected to our error feedback mechanism.
 
-[PR 261](https://github.com/liquity/ebusd/pull/261) contains a proof-of-concept patch that eliminates error correction while also simplifying the code in an effort make it easier to reason about. This fixes all currently known instances of arithmetic underflow.
+[PR 261](https://github.com/liquity/bold/pull/261) contains a proof-of-concept patch that eliminates error correction while also simplifying the code in an effort make it easier to reason about. This fixes all currently known instances of arithmetic underflow.
 
 **TODO**: we should analyze the issue more and understand the root cause better.
 
@@ -1444,7 +1444,7 @@ While this wouldn't result in the most accurate estimation of the average intere
 ## Setup
 
 ```sh
-git clone git@github.com:liquity/ebusd.git
+git clone git@github.com:liquity/bold.git
 cd ebusd
 pnpm install
 ```
