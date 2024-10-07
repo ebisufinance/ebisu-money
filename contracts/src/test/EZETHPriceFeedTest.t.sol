@@ -9,6 +9,9 @@ contract EZETHPriceFeedTest is DevTestSetup {
     EZETHPriceFeed ezethPriceFeed;
 
     function setUp() public override{
+        // Create a fork of the mainnet
+        vm.createSelectFork(vm.rpcUrl("mainnet"));
+
         ezethPriceFeed = new EZETHPriceFeed(
             address(this),
             address(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419),
