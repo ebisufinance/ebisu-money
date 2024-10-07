@@ -48,7 +48,7 @@ contract EZETHPriceFeed is CompositePriceFeed, IEZETHPriceFeed {
         // Calculate the market LRT-USD price: USD_per_EZETH = USD_per_ETH * ETH_per_EZETH
         uint256 lrtUsdMarketPrice = ethUsdPrice * ezEthEthPrice / 1e18;
 
-        // Calculate the canonical LST-USD price: USD_per_RETH = USD_per_ETH * ETH_per_RETH
+        // Calculate the canonical LRT-USD price: USD_per_EZETH = USD_per_ETH * ETH_per_EZETH
         uint256 lrtUsdCanonicalPrice = ethUsdPrice * ezEthPerEth / 1e18;
 
         // Take the minimum of (market, canonical) in order to mitigate against upward market price manipulation.
