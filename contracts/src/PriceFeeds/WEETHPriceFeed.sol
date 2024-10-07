@@ -52,7 +52,7 @@ contract WEETHPriceFeed is CompositePriceFeed, IWEETHPriceFeed {
         // Calculate the market LRT-USD price: USD_per_WEETH = USD_per_ETH * ETH_per_WEETH
         uint256 lrtUsdMarketPrice = ethUsdPrice * weEthEthPrice / 1e18;
 
-        // Calculate the canonical LST-USD price: USD_per_RETH = USD_per_ETH * ETH_per_RETH
+        // Calculate the canonical LST-USD price: USD_per_WEETH = USD_per_ETH * ETH_per_WEETH
         // TODO: Should we also shutdown if the call to the canonical rate reverts, or returns 0?
         uint256 lrtUsdCanonicalPrice = ethUsdPrice * weEthPerEth / 1e18;
 
