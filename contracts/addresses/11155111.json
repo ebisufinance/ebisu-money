@@ -1,6 +1,6 @@
 {
   "collateralRegistry": "0x709bdf7443d5cc658b5c6075ffb76761edd7f27a",
-  "boldToken": "0x21a6370b245c05fade18c601f5efa23e1a3c9833",
+  "ebusdToken": "0x21a6370b245c05fade18c601f5efa23e1a3c9833",
   "hintHelpers": "0x2e17e14535e053e197f82459152a70935ca7c409",
   "multiTroveGetter": "0xc7c3dcc499d4868623b0f12953ac9902c2374247",
   "branches": [

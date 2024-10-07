@@ -92,7 +92,7 @@ export const ActivePool = [
   },
   {
     "type": "function",
-    "name": "getBoldDebt",
+    "name": "getEbusdDebt",
     "inputs": [],
     "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
     "stateMutability": "view",
@@ -112,7 +112,7 @@ export const ActivePool = [
       "type": "tuple",
       "internalType": "struct TroveChange",
       "components": [
-        { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+        { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
         { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
         { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
         { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -166,7 +166,7 @@ export const ActivePool = [
       "type": "tuple",
       "internalType": "struct TroveChange",
       "components": [
-        { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+        { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
         { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
         { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
         { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -191,7 +191,7 @@ export const ActivePool = [
       "type": "tuple",
       "internalType": "struct TroveChange",
       "components": [
-        { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+        { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
         { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
         { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
         { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -245,7 +245,7 @@ export const ActivePool = [
     "type": "function",
     "name": "stabilityPool",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "contract IBoldRewardsReceiver" }],
+    "outputs": [{ "name": "", "type": "address", "internalType": "contract IEbusdRewardsReceiver" }],
     "stateMutability": "view",
   },
   {
@@ -257,7 +257,7 @@ export const ActivePool = [
   },
   {
     "type": "event",
-    "name": "ActivePoolBoldDebtUpdated",
+    "name": "ActivePoolEbusdDebtUpdated",
     "inputs": [{ "name": "_recordedDebtSum", "type": "uint256", "indexed": false, "internalType": "uint256" }],
     "anonymous": false,
   },

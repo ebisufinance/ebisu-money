@@ -2,7 +2,7 @@
 // please do not edit it manually
 export const CollateralRegistry = [{
   "type": "constructor",
-  "inputs": [{ "name": "_boldToken", "type": "address", "internalType": "contract IBoldToken" }, {
+  "inputs": [{ "name": "_ebusdToken", "type": "address", "internalType": "contract IEbusdToken" }, {
     "name": "_tokens",
     "type": "address[]",
     "internalType": "contract IERC20Metadata[]",
@@ -16,13 +16,13 @@ export const CollateralRegistry = [{
   "stateMutability": "view",
 }, {
   "type": "function",
-  "name": "boldToken",
+  "name": "ebusdToken",
   "inputs": [],
-  "outputs": [{ "name": "", "type": "address", "internalType": "contract IBoldToken" }],
+  "outputs": [{ "name": "", "type": "address", "internalType": "contract IEbusdToken" }],
   "stateMutability": "view",
 }, {
   "type": "function",
-  "name": "getEffectiveRedemptionFeeInBold",
+  "name": "getEffectiveRedemptionFeeInEbusd",
   "inputs": [{ "name": "_redeemAmount", "type": "uint256", "internalType": "uint256" }],
   "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
   "stateMutability": "view",
@@ -71,7 +71,7 @@ export const CollateralRegistry = [{
 }, {
   "type": "function",
   "name": "redeemCollateral",
-  "inputs": [{ "name": "_boldAmount", "type": "uint256", "internalType": "uint256" }, {
+  "inputs": [{ "name": "_ebusdAmount", "type": "uint256", "internalType": "uint256" }, {
     "name": "_maxIterationsPerCollateral",
     "type": "uint256",
     "internalType": "uint256",

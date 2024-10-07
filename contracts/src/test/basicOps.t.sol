@@ -48,8 +48,8 @@ contract BasicOps is DevTestSetup {
         borrowerOperations.openTrove(
             A, 0, 2e18, 2000e18, 0, 0, MIN_ANNUAL_INTEREST_RATE, 1000e18, address(0), address(0), address(0)
         );
-        // Transfer some Bold to B so that B can close Trove accounting for interest and upfront fee
-        boldToken.transfer(B, 100e18);
+        // Transfer some Ebusd to B so that B can close Trove accounting for interest and upfront fee
+        ebusdToken.transfer(B, 100e18);
         vm.stopPrank();
 
         vm.startPrank(B);
@@ -114,9 +114,9 @@ contract BasicOps is DevTestSetup {
         // B is now first in line to get redeemed, as they both have the same interest rate,
         // but B's Trove is younger.
 
-        uint256 redemptionAmount = 1000e18; // 1k BOLD
+        uint256 redemptionAmount = 1000e18; // 1k EBUSD
 
-        // A redeems 1k BOLD
+        // A redeems 1k EBUSD
         vm.startPrank(A);
         collateralRegistry.redeemCollateral(redemptionAmount, 10, 1e18);
 
@@ -175,9 +175,9 @@ contract BasicOps is DevTestSetup {
         makeSPDepositAndClaim(A, 100e18);
 
         // Check A's balance decreased and SP deposit increased (A gained some interest)
-        assertGt(boldToken.balanceOf(A), 1800e18, "Wrong bold balance");
-        assertLt(boldToken.balanceOf(A), 1801e18, "Wrong bold balance");
-        assertEq(stabilityPool.getCompoundedBoldDeposit(A), 200e18, "Wrong SP deposit");
+        assertGt(ebusdToken.balanceOf(A), 1800e18, "Wrong ebusd balance");
+        assertLt(ebusdToken.balanceOf(A), 1801e18, "Wrong ebusd balance");
+        assertEq(stabilityPool.getCompoundedEbusdDeposit(A), 200e18, "Wrong SP deposit");
     }
 
     function testSPWithdrawal() public {
@@ -194,15 +194,15 @@ contract BasicOps is DevTestSetup {
         vm.warp(block.timestamp + 7 days);
 
         // Check A's balance decreased and SP deposit increased
-        assertEq(boldToken.balanceOf(A), 1900e18);
-        assertEq(stabilityPool.getCompoundedBoldDeposit(A), 100e18);
+        assertEq(ebusdToken.balanceOf(A), 1900e18);
+        assertEq(stabilityPool.getCompoundedEbusdDeposit(A), 100e18);
 
         // A withdraws their full SP deposit
         makeSPWithdrawalAndClaim(A, 100e18);
 
         // Check A's balance increased and SP deposit decreased to 0 (A gained some interest)
-        assertGt(boldToken.balanceOf(A), 2000e18, "Wrong bold balance");
-        assertLt(boldToken.balanceOf(A), 2001e18, "Wrong bold balance");
-        assertEq(stabilityPool.getCompoundedBoldDeposit(A), 0, "Wrong SP deposit");
+        assertGt(ebusdToken.balanceOf(A), 2000e18, "Wrong ebusd balance");
+        assertLt(ebusdToken.balanceOf(A), 2001e18, "Wrong ebusd balance");
+        assertEq(stabilityPool.getCompoundedEbusdDeposit(A), 0, "Wrong SP deposit");
     }
 }

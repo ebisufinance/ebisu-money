@@ -13,11 +13,11 @@ contract MulticollateralTest is DevTestSetup {
         address _account,
         uint256 _index,
         uint256 _coll,
-        uint256 _boldAmount,
+        uint256 _ebusdAmount,
         uint256 _annualInterestRate
     ) public returns (uint256 troveId) {
         TroveChange memory troveChange;
-        troveChange.debtIncrease = _boldAmount;
+        troveChange.debtIncrease = _ebusdAmount;
         troveChange.newWeightedRecordedDebt = troveChange.debtIncrease * _annualInterestRate;
         uint256 avgInterestRate =
             contractsArray[_collIndex].activePool.getNewApproxAvgInterestRateFromTroveChange(troveChange);
@@ -29,7 +29,7 @@ contract MulticollateralTest is DevTestSetup {
             _account,
             _index,
             _coll,
-            _boldAmount,
+            _ebusdAmount,
             0, // _upperHint
             0, // _lowerHint
             _annualInterestRate,
@@ -74,7 +74,7 @@ contract MulticollateralTest is DevTestSetup {
 
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev[] memory _contractsArray;
-        (_contractsArray, collateralRegistry, boldToken,,, WETH,) =
+        (_contractsArray, collateralRegistry, ebusdToken,,, WETH,) =
             deployer.deployAndConnectContractsMultiColl(troveManagerParamsArray);
         // Unimplemented feature (...):Copying of type struct LiquityContracts memory[] memory to storage not yet supported.
         for (uint256 c = 0; c < NUM_COLLATERALS; c++) {
@@ -136,7 +136,7 @@ contract MulticollateralTest is DevTestSetup {
         uint256 redeemed;
         uint256 correspondingETH;
         uint256 ETHFee;
-        uint256 spBoldAmount;
+        uint256 spEbusdAmount;
     }
 
     function testMultiCollateralRedemption() public {
@@ -146,24 +146,24 @@ contract MulticollateralTest is DevTestSetup {
         TestValues memory testValues4;
         uint256 redeemAmount = 1600e18;
 
-        // First collateral unbacked Bold: 10k (SP empty)
+        // First collateral unbacked Ebusd: 10k (SP empty)
         testValues1.troveId = openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, 10000e18, 5e16);
 
-        // Second collateral unbacked Bold: 5k
+        // Second collateral unbacked Ebusd: 5k
         testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, 10000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(1, A, 5000e18);
 
-        // Third collateral unbacked Bold: 1k
+        // Third collateral unbacked Ebusd: 1k
         testValues3.troveId = openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, 10000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(2, A, 9000e18);
 
-        // Fourth collateral unbacked Bold: 0
+        // Fourth collateral unbacked Ebusd: 0
         testValues4.troveId = openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, 10000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(3, A, 10000e18);
 
         // Check A’s final bal
         // TODO: change when we switch to new gas compensation
-        assertEq(boldToken.balanceOf(A), 16000e18, "Wrong Bold balance before redemption");
+        assertEq(ebusdToken.balanceOf(A), 16000e18, "Wrong Ebusd balance before redemption");
 
         // initial balances
         testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(A);
@@ -189,7 +189,7 @@ contract MulticollateralTest is DevTestSetup {
         testValues4.redeemAmount = redeemAmount * testValues4.unbackedPortion / totalUnbacked;
 
         // fees
-        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount);
+        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInEbusd(redeemAmount);
         testValues1.fee = fee * testValues1.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues1.price;
         testValues2.fee = fee * testValues2.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues2.price;
         testValues3.fee = fee * testValues3.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues3.price;
@@ -198,9 +198,9 @@ contract MulticollateralTest is DevTestSetup {
         // A redeems 1.6k
         redeem(A, redeemAmount);
 
-        // Check bold balance
+        // Check ebusd balance
         // TODO: change when we switch to new gas compensation
-        assertApproxEqAbs(boldToken.balanceOf(A), 14400e18, 10, "Wrong Bold balance after redemption");
+        assertApproxEqAbs(ebusdToken.balanceOf(A), 14400e18, 10, "Wrong Ebusd balance after redemption");
 
         // Check collateral balances
         // final balances
@@ -236,46 +236,46 @@ contract MulticollateralTest is DevTestSetup {
     }
 
     function testMultiCollateralRedemptionFuzz(
-        uint256 _spBoldAmount1,
-        uint256 _spBoldAmount2,
-        uint256 _spBoldAmount3,
-        uint256 _spBoldAmount4,
+        uint256 _spEbusdAmount1,
+        uint256 _spEbusdAmount2,
+        uint256 _spEbusdAmount3,
+        uint256 _spEbusdAmount4,
         uint256 _redemptionFraction
     ) public {
-        uint256 boldAmount = 10000e18;
-        uint256 minBoldBalance = 1;
+        uint256 ebusdAmount = 10000e18;
+        uint256 minEbusdBalance = 1;
         // TODO: remove gas compensation
-        _spBoldAmount1 = bound(_spBoldAmount1, 0, boldAmount);
-        _spBoldAmount2 = bound(_spBoldAmount2, 0, boldAmount);
-        _spBoldAmount3 = bound(_spBoldAmount3, 0, boldAmount);
-        _spBoldAmount4 = bound(_spBoldAmount4, 0, boldAmount - minBoldBalance);
-        _redemptionFraction = bound(_redemptionFraction, DECIMAL_PRECISION / minBoldBalance, DECIMAL_PRECISION);
+        _spEbusdAmount1 = bound(_spEbusdAmount1, 0, ebusdAmount);
+        _spEbusdAmount2 = bound(_spEbusdAmount2, 0, ebusdAmount);
+        _spEbusdAmount3 = bound(_spEbusdAmount3, 0, ebusdAmount);
+        _spEbusdAmount4 = bound(_spEbusdAmount4, 0, ebusdAmount - minEbusdBalance);
+        _redemptionFraction = bound(_redemptionFraction, DECIMAL_PRECISION / minEbusdBalance, DECIMAL_PRECISION);
 
         _testMultiCollateralRedemption(
-            boldAmount, _spBoldAmount1, _spBoldAmount2, _spBoldAmount3, _spBoldAmount4, _redemptionFraction
+            ebusdAmount, _spEbusdAmount1, _spEbusdAmount2, _spEbusdAmount3, _spEbusdAmount4, _redemptionFraction
         );
     }
 
     function testMultiCollateralRedemptionMaxSPAmount() public {
-        uint256 boldAmount = 10000e18;
-        uint256 minBoldBalance = 1;
+        uint256 ebusdAmount = 10000e18;
+        uint256 minEbusdBalance = 1;
 
         _testMultiCollateralRedemption(
-            boldAmount,
-            boldAmount,
-            boldAmount,
-            boldAmount,
-            boldAmount - minBoldBalance,
-            DECIMAL_PRECISION / minBoldBalance
+            ebusdAmount,
+            ebusdAmount,
+            ebusdAmount,
+            ebusdAmount,
+            ebusdAmount - minEbusdBalance,
+            DECIMAL_PRECISION / minEbusdBalance
         );
     }
 
     function _testMultiCollateralRedemption(
-        uint256 _boldAmount,
-        uint256 _spBoldAmount1,
-        uint256 _spBoldAmount2,
-        uint256 _spBoldAmount3,
-        uint256 _spBoldAmount4,
+        uint256 _ebusdAmount,
+        uint256 _spEbusdAmount1,
+        uint256 _spEbusdAmount2,
+        uint256 _spEbusdAmount3,
+        uint256 _spEbusdAmount4,
         uint256 _redemptionFraction
     ) internal {
         TestValues memory testValues1;
@@ -289,29 +289,29 @@ contract MulticollateralTest is DevTestSetup {
         testValues4.price = contractsArray[3].priceFeed.getPrice();
 
         // First collateral
-        openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, _boldAmount, 5e16);
-        if (_spBoldAmount1 > 0) makeMulticollateralSPDepositAndClaim(0, A, _spBoldAmount1);
+        openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, _ebusdAmount, 5e16);
+        if (_spEbusdAmount1 > 0) makeMulticollateralSPDepositAndClaim(0, A, _spEbusdAmount1);
 
         // Second collateral
-        testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, _boldAmount, 5e16);
-        if (_spBoldAmount2 > 0) makeMulticollateralSPDepositAndClaim(1, A, _spBoldAmount2);
+        testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, _ebusdAmount, 5e16);
+        if (_spEbusdAmount2 > 0) makeMulticollateralSPDepositAndClaim(1, A, _spEbusdAmount2);
 
         // Third collateral
-        openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, _boldAmount, 5e16);
-        if (_spBoldAmount3 > 0) makeMulticollateralSPDepositAndClaim(2, A, _spBoldAmount3);
+        openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, _ebusdAmount, 5e16);
+        if (_spEbusdAmount3 > 0) makeMulticollateralSPDepositAndClaim(2, A, _spEbusdAmount3);
 
         // Fourth collateral
-        openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, _boldAmount, 5e16);
-        if (_spBoldAmount4 > 0) makeMulticollateralSPDepositAndClaim(3, A, _spBoldAmount4);
+        openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, _ebusdAmount, 5e16);
+        if (_spEbusdAmount4 > 0) makeMulticollateralSPDepositAndClaim(3, A, _spEbusdAmount4);
 
-        uint256 boldBalance = boldToken.balanceOf(A);
+        uint256 ebusdBalance = ebusdToken.balanceOf(A);
         // Check A’s final bal
         // TODO: change when we switch to new gas compensation
-        //assertEq(boldToken.balanceOf(A), _boldAmount * 4 - _spBoldAmount1 - _spBoldAmount2 - _spBoldAmount3 - _spBoldAmount4, "Wrong Bold balance before redemption");
+        //assertEq(ebusdToken.balanceOf(A), _ebusdAmount * 4 - _spEbusdAmount1 - _spEbusdAmount2 - _spEbusdAmount3 - _spEbusdAmount4, "Wrong Ebusd balance before redemption");
         // Stack too deep
-        //assertEq(boldBalance, _boldAmount * 4 - _spBoldAmount1 - _spBoldAmount2 - _spBoldAmount3 - _spBoldAmount4 - 800e18, "Wrong Bold balance before redemption");
+        //assertEq(ebusdBalance, _ebusdAmount * 4 - _spEbusdAmount1 - _spEbusdAmount2 - _spEbusdAmount3 - _spEbusdAmount4 - 800e18, "Wrong Ebusd balance before redemption");
 
-        uint256 redeemAmount = boldBalance * _redemptionFraction / DECIMAL_PRECISION;
+        uint256 redeemAmount = ebusdBalance * _redemptionFraction / DECIMAL_PRECISION;
 
         // initial balances
         testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(A);
@@ -319,10 +319,10 @@ contract MulticollateralTest is DevTestSetup {
         testValues3.collInitialBalance = contractsArray[2].collToken.balanceOf(A);
         testValues4.collInitialBalance = contractsArray[3].collToken.balanceOf(A);
 
-        testValues1.unbackedPortion = contractsArray[0].troveManager.getEntireSystemDebt() - _spBoldAmount1;
-        testValues2.unbackedPortion = contractsArray[1].troveManager.getEntireSystemDebt() - _spBoldAmount2;
-        testValues3.unbackedPortion = contractsArray[2].troveManager.getEntireSystemDebt() - _spBoldAmount3;
-        testValues4.unbackedPortion = contractsArray[3].troveManager.getEntireSystemDebt() - _spBoldAmount4;
+        testValues1.unbackedPortion = contractsArray[0].troveManager.getEntireSystemDebt() - _spEbusdAmount1;
+        testValues2.unbackedPortion = contractsArray[1].troveManager.getEntireSystemDebt() - _spEbusdAmount2;
+        testValues3.unbackedPortion = contractsArray[2].troveManager.getEntireSystemDebt() - _spEbusdAmount3;
+        testValues4.unbackedPortion = contractsArray[3].troveManager.getEntireSystemDebt() - _spEbusdAmount4;
         uint256 totalUnbacked = testValues1.unbackedPortion + testValues2.unbackedPortion + testValues3.unbackedPortion
             + testValues4.unbackedPortion;
 
@@ -332,7 +332,7 @@ contract MulticollateralTest is DevTestSetup {
         testValues4.redeemAmount = redeemAmount * testValues4.unbackedPortion / totalUnbacked;
 
         // fees
-        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount);
+        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInEbusd(redeemAmount);
         testValues1.fee = fee * testValues1.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues1.price;
         testValues2.fee = fee * testValues2.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues2.price;
         testValues3.fee = fee * testValues3.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues3.price;
@@ -348,8 +348,8 @@ contract MulticollateralTest is DevTestSetup {
         collateralRegistry.redeemCollateral(redeemAmount, 0, 1e18);
         vm.stopPrank();
 
-        // Check bold balance
-        assertApproxEqAbs(boldToken.balanceOf(A), boldBalance - redeemAmount, 10, "Wrong Bold balance after redemption");
+        // Check ebusd balance
+        assertApproxEqAbs(ebusdToken.balanceOf(A), ebusdBalance - redeemAmount, 10, "Wrong Ebusd balance after redemption");
 
         // Check collateral balances
         // final balances
@@ -394,11 +394,11 @@ contract MulticollateralTest is DevTestSetup {
         TestValues memory testValues2;
         TestValues memory testValues3;
 
-        uint256 boldAmount = 100000e18;
-        testValues0.spBoldAmount = boldAmount / 2;
-        testValues1.spBoldAmount = boldAmount / 4;
-        testValues2.spBoldAmount = boldAmount / 8;
-        testValues3.spBoldAmount = boldAmount / 16;
+        uint256 ebusdAmount = 100000e18;
+        testValues0.spEbusdAmount = ebusdAmount / 2;
+        testValues1.spEbusdAmount = ebusdAmount / 4;
+        testValues2.spEbusdAmount = ebusdAmount / 8;
+        testValues3.spEbusdAmount = ebusdAmount / 16;
 
         uint256 redemptionFraction = 25e16;
 
@@ -408,29 +408,29 @@ contract MulticollateralTest is DevTestSetup {
         testValues3.price = contractsArray[3].priceFeed.getPrice();
 
         // First collateral
-        openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 100e18, boldAmount, 5e16);
-        makeMulticollateralSPDepositAndClaim(0, A, testValues0.spBoldAmount);
+        openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 100e18, ebusdAmount, 5e16);
+        makeMulticollateralSPDepositAndClaim(0, A, testValues0.spEbusdAmount);
 
         // Second collateral
-        openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 1000e18, boldAmount, 5e16);
-        makeMulticollateralSPDepositAndClaim(1, A, testValues1.spBoldAmount);
+        openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 1000e18, ebusdAmount, 5e16);
+        makeMulticollateralSPDepositAndClaim(1, A, testValues1.spEbusdAmount);
 
         // Third collateral
-        openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 100e18, boldAmount, 5e16);
-        makeMulticollateralSPDepositAndClaim(2, A, testValues2.spBoldAmount);
+        openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 100e18, ebusdAmount, 5e16);
+        makeMulticollateralSPDepositAndClaim(2, A, testValues2.spEbusdAmount);
 
         // Fourth collateral
-        openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 100e18, boldAmount, 5e16);
-        makeMulticollateralSPDepositAndClaim(3, A, testValues3.spBoldAmount);
+        openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 100e18, ebusdAmount, 5e16);
+        makeMulticollateralSPDepositAndClaim(3, A, testValues3.spEbusdAmount);
 
-        uint256 boldBalance = boldToken.balanceOf(A);
+        uint256 ebusdBalance = ebusdToken.balanceOf(A);
 
-        uint256 redeemAmount = boldBalance * redemptionFraction / DECIMAL_PRECISION;
+        uint256 redeemAmount = ebusdBalance * redemptionFraction / DECIMAL_PRECISION;
         uint256 expectedFeePct =
-            collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount) * DECIMAL_PRECISION / redeemAmount;
+            collateralRegistry.getEffectiveRedemptionFeeInEbusd(redeemAmount) * DECIMAL_PRECISION / redeemAmount;
         assertGt(expectedFeePct, 0);
 
-        // Get BOLD debts from each branch
+        // Get EBUSD debts from each branch
         testValues0.branchDebt = contractsArray[0].troveManager.getEntireSystemDebt();
         testValues1.branchDebt = contractsArray[1].troveManager.getEntireSystemDebt();
         testValues2.branchDebt = contractsArray[2].troveManager.getEntireSystemDebt();
@@ -444,7 +444,7 @@ contract MulticollateralTest is DevTestSetup {
         // A redeems
         redeem(A, redeemAmount);
 
-        // Check how much BOLD was redeemed from each branch
+        // Check how much EBUSD was redeemed from each branch
         testValues0.redeemed = testValues0.branchDebt - contractsArray[0].troveManager.getEntireSystemDebt();
         testValues1.redeemed = testValues1.branchDebt - contractsArray[1].troveManager.getEntireSystemDebt();
         testValues2.redeemed = testValues2.branchDebt - contractsArray[2].troveManager.getEntireSystemDebt();
@@ -500,24 +500,24 @@ contract MulticollateralTest is DevTestSetup {
         TestValues memory testValues4;
         uint256 redeemAmount = 1600e18;
 
-        // First collateral unbacked Bold: 10k (SP empty) - will be shutdown
+        // First collateral unbacked Ebusd: 10k (SP empty) - will be shutdown
         testValues1.troveId = openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, 10000e18, 5e16);
 
-        // Second collateral unbacked Bold: 0
+        // Second collateral unbacked Ebusd: 0
         testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, 10000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(1, A, 10100e18); // we put some more for interest
 
-        // Third collateral unbacked Bold: 0
+        // Third collateral unbacked Ebusd: 0
         testValues3.troveId = openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, 4000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(2, A, 4100e18); // we put some more for interest
 
-        // Fourth collateral unbacked Bold: 0
+        // Fourth collateral unbacked Ebusd: 0
         testValues4.troveId = openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, 2000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(3, A, 2100e18); // we put some more for interest
 
         // Check A’s final bal
         // 10k of first branch - 3 * 100 in the other SPs
-        assertEq(boldToken.balanceOf(A), 9700e18, "Wrong Bold balance before redemption");
+        assertEq(ebusdToken.balanceOf(A), 9700e18, "Wrong Ebusd balance before redemption");
 
         // initial balances
         testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(A);
@@ -557,7 +557,7 @@ contract MulticollateralTest is DevTestSetup {
         testValues4.redeemAmount = redeemAmount * testValues4.unbackedPortion / totalUnbacked;
 
         // fees
-        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount);
+        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInEbusd(redeemAmount);
         testValues1.fee = fee * testValues1.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues1.price;
         testValues2.fee = fee * testValues2.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues2.price;
         testValues3.fee = fee * testValues3.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues3.price;
@@ -566,8 +566,8 @@ contract MulticollateralTest is DevTestSetup {
         // A redeems 1.6k
         redeem(A, redeemAmount);
 
-        // Check bold balance
-        assertApproxEqAbs(boldToken.balanceOf(A), 8100e18, 10, "Wrong Bold balance after redemption");
+        // Check ebusd balance
+        assertApproxEqAbs(ebusdToken.balanceOf(A), 8100e18, 10, "Wrong Ebusd balance after redemption");
 
         // Check collateral balances
         // final balances
@@ -609,24 +609,24 @@ contract MulticollateralTest is DevTestSetup {
         TestValues memory testValues4;
         uint256 redeemAmount = 1600e18;
 
-        // First collateral unbacked Bold: 10k (SP empty) - will become below SCR
+        // First collateral unbacked Ebusd: 10k (SP empty) - will become below SCR
         testValues1.troveId = openMulticollateralTroveNoHints100pctWithIndex(0, A, 0, 10e18, 10000e18, 5e16);
 
-        // Second collateral unbacked Bold: 0
+        // Second collateral unbacked Ebusd: 0
         testValues2.troveId = openMulticollateralTroveNoHints100pctWithIndex(1, A, 0, 100e18, 10000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(1, A, 10100e18); // we put some more for interest
 
-        // Third collateral unbacked Bold: 0
+        // Third collateral unbacked Ebusd: 0
         testValues3.troveId = openMulticollateralTroveNoHints100pctWithIndex(2, A, 0, 10e18, 4000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(2, A, 4100e18); // we put some more for interest
 
-        // Fourth collateral unbacked Bold: 0
+        // Fourth collateral unbacked Ebusd: 0
         testValues4.troveId = openMulticollateralTroveNoHints100pctWithIndex(3, A, 0, 10e18, 2000e18, 5e16);
         makeMulticollateralSPDepositAndClaim(3, A, 2100e18); // we put some more for interest
 
         // Check A’s final bal
         // 10k of first branch - 3 * 100 in the other SPs
-        assertEq(boldToken.balanceOf(A), 9700e18, "Wrong Bold balance before redemption");
+        assertEq(ebusdToken.balanceOf(A), 9700e18, "Wrong Ebusd balance before redemption");
 
         // initial balances
         testValues1.collInitialBalance = contractsArray[0].collToken.balanceOf(A);
@@ -670,7 +670,7 @@ contract MulticollateralTest is DevTestSetup {
         testValues4.redeemAmount = redeemAmount * testValues4.unbackedPortion / totalUnbacked;
 
         // fees
-        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInBold(redeemAmount);
+        uint256 fee = collateralRegistry.getEffectiveRedemptionFeeInEbusd(redeemAmount);
         testValues1.fee = fee * testValues1.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues1.price;
         testValues2.fee = fee * testValues2.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues2.price;
         testValues3.fee = fee * testValues3.redeemAmount / redeemAmount * DECIMAL_PRECISION / testValues3.price;
@@ -679,8 +679,8 @@ contract MulticollateralTest is DevTestSetup {
         // A redeems 1.6k
         redeem(A, redeemAmount);
 
-        // Check bold balance
-        assertApproxEqAbs(boldToken.balanceOf(A), 8100e18, 10, "Wrong Bold balance after redemption");
+        // Check ebusd balance
+        assertApproxEqAbs(ebusdToken.balanceOf(A), 8100e18, 10, "Wrong Ebusd balance after redemption");
 
         // Check collateral balances
         // final balances

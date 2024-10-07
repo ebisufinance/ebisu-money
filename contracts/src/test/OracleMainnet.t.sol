@@ -37,7 +37,7 @@ contract OraclesMainnet is TestAccounts {
 
     TestDeployer.LiquityContracts[] contractsArray;
     ICollateralRegistry collateralRegistry;
-    IBoldToken boldToken;
+    IEbusdToken ebusdToken;
 
     struct StoredOracle {
         AggregatorV3Interface aggregator;
@@ -67,7 +67,7 @@ contract OraclesMainnet is TestAccounts {
         TestDeployer.DeploymentResultMainnet memory result =
             deployer.deployAndConnectContractsMainnet(troveManagerParamsArray);
         collateralRegistry = result.collateralRegistry;
-        boldToken = result.boldToken;
+        ebusdToken = result.ebusdToken;
 
         ethOracle = AggregatorV3Interface(result.externalAddresses.ETHOracle);
         rethOracle = AggregatorV3Interface(result.externalAddresses.RETHOracle);

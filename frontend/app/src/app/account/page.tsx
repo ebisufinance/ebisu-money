@@ -97,17 +97,11 @@ export default function Page() {
               gridTemplateColumns: `repeat(${collSymbols.length + 1}, 1fr)`,
             }}
           >
-            <GridItem label="BOLD balance">
-              <Balance
-                address={accountAddress}
-                tokenSymbol="BOLD"
-              />
+            <GridItem label="EBUSD balance">
+              <Balance address={accountAddress} tokenSymbol="EBUSD" />
             </GridItem>
             {collSymbols.map((symbol) => (
-              <GridItem
-                key={symbol}
-                label={`${symbol} balance`}
-              >
+              <GridItem key={symbol} label={`${symbol} balance`}>
                 <Balance
                   address={accountAddress}
                   tokenSymbol={symbol}
@@ -120,7 +114,7 @@ export default function Page() {
         <Positions
           address={accountAddress}
           columns={1}
-          title={(mode) => mode === "actions" ? null : "Positions"}
+          title={(mode) => (mode === "actions" ? null : "Positions")}
           showNewPositionCard={false}
         />
       </VFlex>
@@ -139,9 +133,9 @@ function Balance({
 }) {
   const balance = useBalance(address, tokenSymbol);
 
-  const CollToken = useCollateralContracts()
-    .find((coll) => coll.symbol === tokenSymbol)
-    ?.contracts.CollToken;
+  const CollToken = useCollateralContracts().find(
+    (coll) => coll.symbol === tokenSymbol,
+  )?.contracts.CollToken;
 
   const { writeContract } = useWriteContract();
 
@@ -174,16 +168,19 @@ function Balance({
               return;
             }
 
-            writeContract({
-              abi: ERC20Faucet,
-              address: CollToken.address,
-              functionName: "tap",
-              args: [],
-            }, {
-              onError: (error) => {
-                alert(error.message);
+            writeContract(
+              {
+                abi: ERC20Faucet,
+                address: CollToken.address,
+                functionName: "tap",
+                args: [],
               },
-            });
+              {
+                onError: (error) => {
+                  alert(error.message);
+                },
+              },
+            );
           }}
           style={{
             padding: "0 6px",

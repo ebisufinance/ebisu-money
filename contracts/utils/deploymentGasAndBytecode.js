@@ -2,7 +2,7 @@
 const SortedTroves = artifacts.require("./SortedTroves.sol");
 const TroveManager = artifacts.require("./TroveManager.sol");
 const PriceFeed = artifacts.require("./PriceFeed.sol");
-const BoldToken = artifacts.require("./BoldToken.sol");
+const EbusdToken = artifacts.require("./EbusdToken.sol");
 const ActivePool = artifacts.require("./ActivePool.sol");
 const DefaultPool = artifacts.require("./DefaultPool.sol");
 const StabilityPool = artifacts.require("./StabilityPool.sol");
@@ -14,16 +14,16 @@ const CommunityIssuance = artifacts.require("./LQTY/CommunityIssuance.sol");
 const HintHelpers = artifacts.require("./HintHelpers.sol");
 
 const CommunityIssuanceTester = artifacts.require(
-  "./LQTY/CommunityIssuanceTester.sol",
+  "./LQTY/CommunityIssuanceTester.sol"
 );
 const ActivePoolTester = artifacts.require("./ActivePoolTester.sol");
 const DefaultPoolTester = artifacts.require("./DefaultPoolTester.sol");
 const LiquityMathTester = artifacts.require("./LiquityMathTester.sol");
 const BorrowerOperationsTester = artifacts.require(
-  "./BorrowerOperationsTester.sol",
+  "./BorrowerOperationsTester.sol"
 );
 const TroveManagerTester = artifacts.require("./TroveManagerTester.sol");
-// const BoldTokenTester = artifacts.require("./BoldTokenTester.sol");
+// const EbusdTokenTester = artifacts.require("./EbusdTokenTester.sol");
 
 const { TestHelper: th } = require("../utils/testHelpers.js");
 
@@ -33,7 +33,7 @@ const ARBITRARY_ADDRESS = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419"; // place
 const coreContractABIs = [
   BorrowerOperations,
   PriceFeed,
-  BoldToken,
+  EbusdToken,
   SortedTroves,
   TroveManager,
   ActivePool,
@@ -51,7 +51,7 @@ const LQTYContractABIs = [LQTYStaking, LQTYToken, CommunityIssuance];
 //   LiquityMathTester,
 //   BorrowerOperationsTester,
 //   TroveManagerTester,
-//   // BoldTokenTester,
+//   // EbusdTokenTester,
 // ];
 
 const getGasFromContractDeployment = async (contractObject, name) => {
@@ -73,11 +73,11 @@ const getBytecodeSize = (contractABI) => {
 const getUSDCostFromGasCost = (
   deploymentGasTotal,
   gasPriceInGwei,
-  ETHPrice,
+  ETHPrice
 ) => {
   const dollarCost = (deploymentGasTotal * gasPriceInGwei * ETHPrice) / 1e9;
   console.log(
-    `At gas price ${gasPriceInGwei} GWei, and ETH Price $${ETHPrice} per ETH, the total cost of deployment in USD is: $${dollarCost}`,
+    `At gas price ${gasPriceInGwei} GWei, and ETH Price $${ETHPrice} per ETH, the total cost of deployment in USD is: $${dollarCost}`
   );
 };
 
@@ -87,7 +87,7 @@ const logContractDeploymentCosts = async (contracts) => {
   for (contractName of Object.keys(contracts)) {
     const gasCost = await getGasFromContractDeployment(
       contracts[contractName],
-      contractName,
+      contractName
     );
     totalGasCost = totalGasCost + Number(gasCost);
   }
@@ -101,7 +101,7 @@ const logContractObjects = async (contracts) => {
   for (contractName of Object.keys(contracts)) {
     const gasCost = await getGasFromContractDeployment(
       contracts[contractName],
-      contractName,
+      contractName
     );
     totalGasCost = totalGasCost + Number(gasCost);
   }
@@ -119,7 +119,7 @@ async function main() {
   const coreContracts = await dh.deployLiquityCoreHardhat();
   const LQTYContracts = await dh.deployLQTYContractsHardhat(
     ARBITRARY_ADDRESS,
-    ARBITRARY_ADDRESS,
+    ARBITRARY_ADDRESS
   );
 
   await dh.connectCoreContracts(coreContracts, LQTYContracts);

@@ -10,7 +10,7 @@ import * as dn from "dnum";
 export function ProtocolStats() {
   const prices = [
     ["LQTY", usePrice("LQTY")],
-    ["BOLD", usePrice("BOLD")],
+    ["EBUSD", usePrice("EBUSD")],
     ["WEETH", usePrice("WEETH")],
   ] as const;
 

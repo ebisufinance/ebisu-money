@@ -23,8 +23,8 @@ contract BorrowerOperationsTester is BorrowerOperations, IBorrowerOperationsTest
         return sortedTroves;
     }
 
-    function getBoldToken() external view returns (IBoldToken) {
-        return boldToken;
+    function getEbusdToken() external view returns (IEbusdToken) {
+        return ebusdToken;
     }
 
     function applyPendingDebt(uint256 _troveId) external {

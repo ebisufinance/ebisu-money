@@ -30,9 +30,9 @@ export function EarnPoolsListScreen() {
         >
           {content.earnHome.headline(
             <TokenIcon.Group>
-              {["BOLD" as const, ...collSymbols].map((symbol) => <TokenIcon key={symbol} symbol={symbol} />)}
+              {["EBUSD" as const, ...collSymbols].map((symbol) => <TokenIcon key={symbol} symbol={symbol} />)}
             </TokenIcon.Group>,
-            <TokenIcon symbol="BOLD" />,
+            <TokenIcon symbol="EBUSD" />,
           )}
         </div>
       }
@@ -129,7 +129,7 @@ function Pool({
                 flexDirection: "column",
               })}
             >
-              <div>{title ?? `BOLD • ${collateral.name} stability pool`}</div>
+              <div>{title ?? `EBUSD • ${collateral.name} stability pool`}</div>
               <div
                 className={css({
                   display: "flex",
@@ -149,7 +149,7 @@ function Pool({
                   />
                 </div>
                 <InfoTooltip heading="Total Value Locked">
-                  Total amount of BOLD deposited in the stability pool.
+                  Total amount of EBUSD deposited in the stability pool.
                 </InfoTooltip>
               </div>
             </div>
@@ -213,7 +213,7 @@ function Pool({
                 </div>
                 <HFlex gap={4}>
                   <Amount value={earnPosition.data?.deposit} />
-                  <TokenIcon symbol="BOLD" size="mini" />
+                  <TokenIcon symbol="EBUSD" size="mini" />
                 </HFlex>
               </div>
             )}
@@ -235,8 +235,8 @@ function Pool({
                 ? (
                   <HFlex>
                     <HFlex gap={4}>
-                      <Amount value={earnPosition.data?.rewards.bold} />
-                      <TokenIcon symbol="BOLD" size="mini" />
+                      <Amount value={earnPosition.data?.rewards.ebusd} />
+                      <TokenIcon symbol="EBUSD" size="mini" />
                     </HFlex>
                     <HFlex gap={4}>
                       <Amount value={earnPosition.data?.rewards.coll} />
@@ -246,7 +246,7 @@ function Pool({
                 )
                 : (
                   <TokenIcon.Group size="mini">
-                    <TokenIcon symbol="BOLD" />
+                    <TokenIcon symbol="EBUSD" />
                     <TokenIcon symbol={collateral.symbol} />
                   </TokenIcon.Group>
                 )}

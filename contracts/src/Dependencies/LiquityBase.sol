@@ -44,8 +44,8 @@ contract LiquityBase is ILiquityBase {
     }
 
     function getEntireSystemDebt() public view returns (uint256 entireSystemDebt) {
-        uint256 activeDebt = activePool.getBoldDebt();
-        uint256 closedDebt = defaultPool.getBoldDebt();
+        uint256 activeDebt = activePool.getEbusdDebt();
+        uint256 closedDebt = defaultPool.getEbusdDebt();
 
         return activeDebt + closedDebt;
     }

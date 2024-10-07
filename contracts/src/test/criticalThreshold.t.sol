@@ -43,7 +43,7 @@ contract CriticalThresholdTest is DevTestSetup {
         this.adjustTrove100pct(A, ATroveId, 0, 1, false, true);
 
         vm.expectRevert(BorrowerOperations.BorrowingNotPermittedBelowCT.selector);
-        this.withdrawBold100pct(A, ATroveId, 1);
+        this.withdrawEbusd100pct(A, ATroveId, 1);
     }
 
     function testNoIncreaseDebtWithAddCollBelowCT() public {
@@ -131,10 +131,10 @@ contract CriticalThresholdTest is DevTestSetup {
 
         vm.startPrank(B);
         vm.expectRevert(BorrowerOperations.ICRBelowMCR.selector);
-        borrowerOperations.repayBold(BTroveId, 1000e18); // 1k bold is less than 1% of trove debt, so not enough to bring it back to 100%
+        borrowerOperations.repayEbusd(BTroveId, 1000e18); // 1k ebusd is less than 1% of trove debt, so not enough to bring it back to 100%
 
         // With sufficient repayment it works
-        borrowerOperations.repayBold(BTroveId, 15000e18);
+        borrowerOperations.repayEbusd(BTroveId, 15000e18);
     }
 
     function testNoAdjustmentIfFinalICRLtMCRFromBelow100AddingColl() public {
@@ -159,9 +159,9 @@ contract CriticalThresholdTest is DevTestSetup {
 
         vm.startPrank(B);
         vm.expectRevert(BorrowerOperations.ICRBelowMCR.selector);
-        borrowerOperations.repayBold(BTroveId, 1000e18); // 1k bold is less than 1% of trove debt, so not enough to bring it back to 100%
+        borrowerOperations.repayEbusd(BTroveId, 1000e18); // 1k ebusd is less than 1% of trove debt, so not enough to bring it back to 100%
 
         // With sufficient repayment it works
-        borrowerOperations.repayBold(BTroveId, 15000e18);
+        borrowerOperations.repayEbusd(BTroveId, 15000e18);
     }
 }

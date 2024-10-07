@@ -37,15 +37,15 @@ export function HomeScreen() {
         })}
       >
         <HomeTable
-          title="Borrow BOLD against ETH and staked ETH"
+          title="Borrow EBUSD against ETH and staked ETH"
           subtitle="You can adjust your loans, including your interest rate, at any time"
           icon={<IconBorrow />}
           columns={["Collateral", "Avg rate, p.a.", "Max LTV", null] as const}
           rows={collSymbols.map((symbol) => <BorrowingRow symbol={symbol} />)}
         />
         <HomeTable
-          title="Earn Rewards with BOLD"
-          subtitle="Earn BOLD & (staked) ETH rewards by putting your BOLD in a stability pool"
+          title="Earn Rewards with EBUSD"
+          subtitle="Earn EBUSD & (staked) ETH rewards by putting your EBUSD in a stability pool"
           icon={<IconEarn />}
           columns={["Pool", "Current APR", "Pool size", null] as const}
           rows={collSymbols.map((symbol) => <EarnRewardsRow symbol={symbol} />)}
@@ -112,7 +112,7 @@ function BorrowingRow({
                   })}
                 >
                   Borrow
-                  <TokenIcon symbol="BOLD" size="mini" />
+                  <TokenIcon symbol="EBUSD" size="mini" />
                 </div>
               }
               title={`Borrow ${collateral?.name} from ${symbol}`}
@@ -180,11 +180,7 @@ function EarnRewardsRow({
         />
       </td>
       <td>
-        <Link
-          href={`/earn/${symbol.toLowerCase()}`}
-          legacyBehavior
-          passHref
-        >
+        <Link href={`/earn/${symbol.toLowerCase()}`} legacyBehavior passHref>
           <AnchorTextButton
             label={
               <div
@@ -197,12 +193,12 @@ function EarnRewardsRow({
               >
                 Earn
                 <TokenIcon.Group size="mini">
-                  <TokenIcon symbol="BOLD" />
+                  <TokenIcon symbol="EBUSD" />
                   <TokenIcon symbol={symbol} />
                 </TokenIcon.Group>
               </div>
             }
-            title={`Earn BOLD with ${collateral?.name}`}
+            title={`Earn EBUSD with ${collateral?.name}`}
           />
         </Link>
       </td>

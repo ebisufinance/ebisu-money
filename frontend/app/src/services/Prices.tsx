@@ -6,7 +6,7 @@ import type { Dispatch, ReactNode, SetStateAction } from "react";
 
 import { useCollateralContract } from "@/src/contracts";
 import {
-  BOLD_PRICE as DEMO_BOLD_PRICE,
+  EBUSD_PRICE as DEMO_EBUSD_PRICE,
   ETH_PRICE as DEMO_ETH_PRICE,
   LQTY_PRICE as DEMO_LQTY_PRICE,
   PRICE_UPDATE_INTERVAL as DEMO_PRICE_UPDATE_INTERVAL,
@@ -23,12 +23,12 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 import { useRef } from "react";
 import { useReadContract } from "wagmi";
 
-type PriceToken = "LQTY" | "BOLD" | CollateralSymbol;
+type PriceToken = "LQTY" | "EBUSD" | CollateralSymbol;
 
 type Prices = Record<PriceToken, Dnum | null>;
 
 const initialPrices: Prices = {
-  BOLD: dn.from(1, 18),
+  EBUSD: dn.from(1, 18),
   LQTY: null,
 
   // collaterals
@@ -59,7 +59,7 @@ let useWatchPrices = function useWatchPrices(
   const weethPrice = useWatchCollateralPrice("WEETH");
 
   const prevPrices = useRef<Prices>({
-    BOLD: null,
+    EBUSD: null,
     LQTY: null,
     ETH: null,
     RETH: null,
@@ -69,8 +69,8 @@ let useWatchPrices = function useWatchPrices(
 
   useEffect(() => {
     const newPrices = {
-      // TODO: check BOLD and LQTY prices
-      BOLD: dn.from(1, 18),
+      // TODO: check EBUSD and LQTY prices
+      EBUSD: dn.from(1, 18),
       LQTY: dn.from(1, 18),
 
       ETH: ethPrice.data ? dnum18(ethPrice.data) : null,
@@ -98,7 +98,10 @@ if (DEMO_MODE) {
       const update = () => {
         const variation = () => dn.from((Math.random() - 0.5) * DEMO_PRICE_UPDATE_VARIATION, 18);
         callback({
-          BOLD: dn.add(DEMO_BOLD_PRICE, dn.mul(DEMO_BOLD_PRICE, variation())),
+          EBUSD: dn.add(
+            DEMO_EBUSD_PRICE,
+            dn.mul(DEMO_EBUSD_PRICE, variation()),
+          ),
           ETH: dn.add(DEMO_ETH_PRICE, dn.mul(DEMO_ETH_PRICE, variation())),
           LQTY: dn.add(DEMO_LQTY_PRICE, dn.mul(DEMO_LQTY_PRICE, variation())),
           RETH: dn.add(DEMO_RETH_PRICE, dn.mul(DEMO_RETH_PRICE, variation())),

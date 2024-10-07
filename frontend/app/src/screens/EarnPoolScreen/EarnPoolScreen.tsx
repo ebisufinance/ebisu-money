@@ -39,11 +39,13 @@ export function EarnPoolScreen() {
   const params = useParams();
 
   const account = useAccount();
-  const boldBalance = useBalance(account.address, "BOLD");
+  const ebusdBalance = useBalance(account.address, "EBUSD");
 
   const collateralSymbol = String(params.pool).toUpperCase();
   const isCollSymbolOk = isCollateralSymbol(collateralSymbol);
-  const collIndex = useCollIndexFromSymbol(isCollSymbolOk ? collateralSymbol : null);
+  const collIndex = useCollIndexFromSymbol(
+    isCollSymbolOk ? collateralSymbol : null,
+  );
 
   const earnPosition = useEarnPosition(account.address, collIndex ?? undefined);
   const stabilityPool = useStabilityPool(collIndex ?? undefined);
@@ -54,114 +56,128 @@ export function EarnPoolScreen() {
 
   const tab = TABS.find((tab) => tab.action === params.action) ?? TABS[0];
 
-  const share = earnPosition.data && stabilityPool.data && dn.gt(stabilityPool.data.totalDeposited, 0)
+  const share = earnPosition.data
+      && stabilityPool.data
+      && dn.gt(stabilityPool.data.totalDeposited, 0)
     ? dn.div(earnPosition.data.deposit, stabilityPool.data.totalDeposited)
     : dn.from(0, 18);
 
   const poolToken = TOKENS_BY_SYMBOL[collateralSymbol];
 
-  return stabilityPool.data && tab && (
-    <Screen>
-      <BackButton href="/earn" label={content.earnScreen.backButton} />
-      <PoolSummary
-        apr={stabilityPool.data.apr}
-        boldQty={stabilityPool.data.totalDeposited}
-        symbol={collateralSymbol}
-      />
-      {earnPosition.data && (
-        <Details
-          items={[
-            {
-              label: content.earnScreen.accountPosition.depositLabel,
-              value: <Amount value={earnPosition.data.deposit} suffix=" BOLD" />,
-            },
-            {
-              label: content.earnScreen.accountPosition.shareLabel,
-              value: <Amount percentage value={share} />,
-            },
-            {
-              label: content.earnScreen.accountPosition.rewardsLabel,
-              value: earnPosition.data.rewards && (
-                <HFlex
-                  gap={8}
-                  justifyContent="flex-start"
-                  className={css({
-                    fontSize: 14,
-                    color: "positive",
-                    whiteSpace: "nowrap",
-                  })}
-                >
-                  <Amount value={earnPosition.data.rewards.bold} suffix=" BOLD" />
-                  <div
+  return (
+    stabilityPool.data
+    && tab && (
+      <Screen>
+        <BackButton href="/earn" label={content.earnScreen.backButton} />
+        <PoolSummary
+          apr={stabilityPool.data.apr}
+          ebusdQty={stabilityPool.data.totalDeposited}
+          symbol={collateralSymbol}
+        />
+        {earnPosition.data && (
+          <Details
+            items={[
+              {
+                label: content.earnScreen.accountPosition.depositLabel,
+                value: <Amount value={earnPosition.data.deposit} suffix=" EBUSD" />,
+              },
+              {
+                label: content.earnScreen.accountPosition.shareLabel,
+                value: <Amount percentage value={share} />,
+              },
+              {
+                label: content.earnScreen.accountPosition.rewardsLabel,
+                value: earnPosition.data.rewards && (
+                  <HFlex
+                    gap={8}
+                    justifyContent="flex-start"
                     className={css({
-                      display: "flex",
-                      width: 4,
-                      height: 4,
-                      borderRadius: "50%",
-                      backgroundColor: "dimmed",
+                      fontSize: 14,
+                      color: "positive",
+                      whiteSpace: "nowrap",
                     })}
-                  />
-                  <Amount value={earnPosition.data.rewards.coll} suffix={` ${poolToken.name}`} />
-                </HFlex>
-              ),
-            },
-          ]}
-        />
-      )}
-      <div
-        className={css({
-          display: "flex",
-          flexDirection: "column",
-          gap: 24,
-          width: "100%",
-        })}
-      >
-        <Tabs
-          selected={TABS.indexOf(tab)}
-          onSelect={(index) => {
-            router.push(`/earn/${collateralSymbol.toLowerCase()}/${TABS[index].action}`, {
-              scroll: false,
-            });
-          }}
-          items={TABS.map((tab) => ({
-            label: tab.label,
-            panelId: `panel-${tab.action}`,
-            tabId: `tab-${tab.action}`,
-          }))}
-        />
-        {tab.action === "deposit" && (
-          <DepositPanel
-            accountBoldBalance={boldBalance.data}
-            collIndex={collIndex}
-            boldQty={stabilityPool.data.totalDeposited ?? dn.from(0, 18)}
-            position={earnPosition.data ?? undefined}
+                  >
+                    <Amount
+                      value={earnPosition.data.rewards.ebusd}
+                      suffix=" EBUSD"
+                    />
+                    <div
+                      className={css({
+                        display: "flex",
+                        width: 4,
+                        height: 4,
+                        borderRadius: "50%",
+                        backgroundColor: "dimmed",
+                      })}
+                    />
+                    <Amount
+                      value={earnPosition.data.rewards.coll}
+                      suffix={` ${poolToken.name}`}
+                    />
+                  </HFlex>
+                ),
+              },
+            ]}
           />
         )}
-        {tab.action === "withdraw" && (
-          <WithdrawPanel
-            collIndex={collIndex}
-            boldQty={stabilityPool.data.totalDeposited ?? dn.from(0, 18)}
-            position={earnPosition.data ?? undefined}
+        <div
+          className={css({
+            display: "flex",
+            flexDirection: "column",
+            gap: 24,
+            width: "100%",
+          })}
+        >
+          <Tabs
+            selected={TABS.indexOf(tab)}
+            onSelect={(index) => {
+              router.push(
+                `/earn/${collateralSymbol.toLowerCase()}/${TABS[index].action}`,
+                {
+                  scroll: false,
+                },
+              );
+            }}
+            items={TABS.map((tab) => ({
+              label: tab.label,
+              panelId: `panel-${tab.action}`,
+              tabId: `tab-${tab.action}`,
+            }))}
           />
-        )}
-        {tab.action === "claim" && (
-          <RewardsPanel
-            collIndex={collIndex}
-            position={earnPosition.data ?? undefined}
-          />
-        )}
-      </div>
-    </Screen>
+          {tab.action === "deposit" && (
+            <DepositPanel
+              accountEbusdBalance={ebusdBalance.data}
+              collIndex={collIndex}
+              ebusdQty={stabilityPool.data.totalDeposited ?? dn.from(0, 18)}
+              position={earnPosition.data ?? undefined}
+            />
+          )}
+          {tab.action === "withdraw" && (
+            <WithdrawPanel
+              collIndex={collIndex}
+              ebusdQty={stabilityPool.data.totalDeposited ?? dn.from(0, 18)}
+              position={earnPosition.data ?? undefined}
+            />
+          )}
+          {tab.action === "claim" && (
+            <RewardsPanel
+              collIndex={collIndex}
+              position={earnPosition.data ?? undefined}
+            />
+          )}
+        </div>
+      </Screen>
+    )
   );
 }
 
 function PoolSummary({
   apr,
-  boldQty,
+  ebusdQty,
   symbol,
 }: {
   apr: Dnum;
-  boldQty: Dnum;
+  ebusdQty: Dnum;
   symbol: CollateralSymbol;
 }) {
   const poolToken = TOKENS_BY_SYMBOL[symbol];
@@ -189,7 +205,7 @@ function PoolSummary({
           })}
         >
           <TokenIconGroup size="large">
-            <TokenIcon symbol="BOLD" />
+            <TokenIcon symbol="EBUSD" />
             <TokenIcon symbol={symbol} />
           </TokenIconGroup>
         </div>
@@ -218,14 +234,14 @@ function PoolSummary({
           >
             <div>
               {content.earnScreen.headerTvl(
-                <Amount
-                  format="compact"
-                  suffix=" BOLD"
-                  value={boldQty}
-                />,
+                <Amount format="compact" suffix=" EBUSD" value={ebusdQty} />,
               )}
             </div>
-            <InfoTooltip {...infoTooltipProps(content.earnScreen.infoTooltips.tvl(poolToken.name))} />
+            <InfoTooltip
+              {...infoTooltipProps(
+                content.earnScreen.infoTooltips.tvl(poolToken.name),
+              )}
+            />
           </div>
         </div>
       </div>
@@ -242,11 +258,7 @@ function PoolSummary({
             fontSize: 24,
           })}
         >
-          <Amount
-            format={2}
-            percentage
-            value={apr}
-          />
+          <Amount format={2} percentage value={apr} />
         </div>
         <div
           className={css({

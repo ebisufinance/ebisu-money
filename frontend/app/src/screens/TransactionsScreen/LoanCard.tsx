@@ -34,30 +34,31 @@ export function LoanCard({
   prevLoan?: PositionLoan | null;
   onRetry: () => void;
 }) {
-  const collateral = (
-    loan && TOKENS_BY_SYMBOL[loan.collateral]
-  ) || (
-    prevLoan && TOKENS_BY_SYMBOL[prevLoan.collateral]
-  );
+  const collateral = (loan && TOKENS_BY_SYMBOL[loan.collateral])
+    || (prevLoan && TOKENS_BY_SYMBOL[prevLoan.collateral]);
   const collPriceUsd = usePrice(collateral ? collateral.symbol : null);
 
   const isLoanClosing = prevLoan && !loan;
 
-  const loanDetails = loan && collateral && getLoanDetails(
-    loan.deposit,
-    loan.borrowed,
-    loan.interestRate,
-    collateral.collateralRatio,
-    collPriceUsd,
-  );
+  const loanDetails = loan
+    && collateral
+    && getLoanDetails(
+      loan.deposit,
+      loan.borrowed,
+      loan.interestRate,
+      collateral.collateralRatio,
+      collPriceUsd,
+    );
 
-  const prevLoanDetails = prevLoan && collateral && getLoanDetails(
-    prevLoan.deposit,
-    prevLoan.borrowed,
-    prevLoan.interestRate,
-    collateral.collateralRatio,
-    collPriceUsd,
-  );
+  const prevLoanDetails = prevLoan
+    && collateral
+    && getLoanDetails(
+      prevLoan.deposit,
+      prevLoan.borrowed,
+      prevLoan.interestRate,
+      collateral.collateralRatio,
+      collPriceUsd,
+    );
 
   const {
     ltv,
@@ -67,10 +68,7 @@ export function LoanCard({
     liquidationRisk,
   } = loanDetails || {};
 
-  const maxLtv = collateral && dn.div(
-    dn.from(1, 18),
-    collateral.collateralRatio,
-  );
+  const maxLtv = collateral && dn.div(dn.from(1, 18), collateral.collateralRatio);
 
   return (
     <LoadingCard
@@ -132,28 +130,18 @@ export function LoanCard({
             </div>
           </>
         )
-        : loan
+        : (
+          loan
           && loanDetails
           && collateral
           && typeof leverageFactor === "number"
           && depositPreLeverage
           && maxLtv
-          && liquidationRisk
-          && (
+          && liquidationRisk && (
             <>
               {leverageMode
-                ? (
-                  <TotalExposure
-                    loan={loan}
-                    loanDetails={loanDetails}
-                  />
-                )
-                : (
-                  <TotalDebt
-                    loan={loan}
-                    prevLoan={prevLoan}
-                  />
-                )}
+                ? <TotalExposure loan={loan} loanDetails={loanDetails} />
+                : <TotalDebt loan={loan} prevLoan={prevLoan} />}
               <div
                 className={css({
                   display: "grid",
@@ -182,7 +170,9 @@ export function LoanCard({
                           gap: 8,
                         })}
                       >
-                        <div title={`${fmtnum(loan.deposit, "full")} ${collateral.name}`}>
+                        <div
+                          title={`${fmtnum(loan.deposit, "full")} ${collateral.name}`}
+                        >
                           {fmtnum(loan.deposit)} {collateral.name}
                         </div>
                         {prevLoan && !dn.eq(prevLoan.deposit, loan.deposit) && (
@@ -215,17 +205,16 @@ export function LoanCard({
                       && !dn.eq(
                         prevLoanDetails.liquidationPrice,
                         loanDetails.liquidationPrice,
-                      )
-                      && (
-                        <div
-                          className={css({
-                            color: "contentAlt",
-                            textDecoration: "line-through",
-                          })}
-                        >
-                          ${fmtnum(prevLoanDetails.liquidationPrice)}
-                        </div>
-                      )}
+                      ) && (
+                      <div
+                        className={css({
+                          color: "contentAlt",
+                          textDecoration: "line-through",
+                        })}
+                      >
+                        ${fmtnum(prevLoanDetails.liquidationPrice)}
+                      </div>
+                    )}
                   </div>
                 </GridItem>
                 <GridItem label="Interest rate">
@@ -237,7 +226,8 @@ export function LoanCard({
                     })}
                   >
                     {fmtnum(dn.mul(loan.interestRate, 100))}%
-                    {prevLoan && !dn.eq(prevLoan.interestRate, loan.interestRate) && (
+                    {prevLoan
+                      && !dn.eq(prevLoan.interestRate, loan.interestRate) && (
                       <div
                         className={css({
                           color: "contentAlt",
@@ -275,17 +265,18 @@ export function LoanCard({
                     </div>
                     {ltv
                       && prevLoanDetails?.ltv
-                      && !dn.eq(prevLoanDetails.ltv, ltv)
-                      && (
-                        <div
-                          className={css({
-                            color: "contentAlt",
-                            textDecoration: "line-through",
-                          })}
-                        >
-                          {prevLoanDetails.ltv && fmtnum(dn.mul(prevLoanDetails.ltv, 100))}%
-                        </div>
-                      )}
+                      && !dn.eq(prevLoanDetails.ltv, ltv) && (
+                      <div
+                        className={css({
+                          color: "contentAlt",
+                          textDecoration: "line-through",
+                        })}
+                      >
+                        {prevLoanDetails.ltv
+                          && fmtnum(dn.mul(prevLoanDetails.ltv, 100))}
+                        %
+                      </div>
+                    )}
                   </div>
                 </GridItem>
                 <GridItem label="Liquidation risk">
@@ -295,10 +286,13 @@ export function LoanCard({
                       size={8}
                     />
                     {formatRisk(liquidationRisk)}
-                    {prevLoanDetails && liquidationRisk !== prevLoanDetails.liquidationRisk && (
+                    {prevLoanDetails
+                      && liquidationRisk !== prevLoanDetails.liquidationRisk && (
                       <>
                         <StatusDot
-                          mode={riskLevelToStatusMode(prevLoanDetails.liquidationRisk)}
+                          mode={riskLevelToStatusMode(
+                            prevLoanDetails.liquidationRisk,
+                          )}
                           size={8}
                         />
                         <div
@@ -315,16 +309,23 @@ export function LoanCard({
                 </GridItem>
                 {redemptionRisk && (
                   <GridItem label="Redemption risk">
-                    <HFlex gap={8} alignItems="center" justifyContent="flex-start">
+                    <HFlex
+                      gap={8}
+                      alignItems="center"
+                      justifyContent="flex-start"
+                    >
                       <StatusDot
                         mode={riskLevelToStatusMode(redemptionRisk)}
                         size={8}
                       />
                       {formatRisk(redemptionRisk)}
-                      {prevLoanDetails && redemptionRisk !== prevLoanDetails.redemptionRisk && (
+                      {prevLoanDetails
+                        && redemptionRisk !== prevLoanDetails.redemptionRisk && (
                         <>
                           <StatusDot
-                            mode={riskLevelToStatusMode(prevLoanDetails.redemptionRisk)}
+                            mode={riskLevelToStatusMode(
+                              prevLoanDetails.redemptionRisk,
+                            )}
                             size={8}
                           />
                           <div
@@ -342,7 +343,8 @@ export function LoanCard({
                 )}
               </div>
             </>
-          )}
+          )
+        )}
     </LoadingCard>
   );
 }
@@ -374,7 +376,7 @@ function TotalDebt({
         })}
       >
         <div
-          title={`${fmtnum(loan.borrowed, "full")} BOLD`}
+          title={`${fmtnum(loan.borrowed, "full")} EBUSD`}
           className={css({
             display: "flex",
             alignItems: "center",
@@ -388,10 +390,10 @@ function TotalDebt({
           >
             {fmtnum(loan.borrowed)}
           </div>
-          <TokenIcon symbol="BOLD" size={32} />
+          <TokenIcon symbol="EBUSD" size={32} />
           {prevLoan && !dn.eq(prevLoan.borrowed, loan.borrowed) && (
             <div
-              title={`${fmtnum(prevLoan.borrowed, "full")} BOLD`}
+              title={`${fmtnum(prevLoan.borrowed, "full")} EBUSD`}
               className={css({
                 color: "contentAlt",
                 textDecoration: "line-through",
@@ -450,9 +452,11 @@ function TotalExposure({
           >
             <div>
               <Value
-                negative={loanDetails.status === "underwater" || loanDetails.status === "liquidatable"}
+                negative={loanDetails.status === "underwater"
+                  || loanDetails.status === "liquidatable"}
                 title={`Leverage factor: ${
-                  loanDetails.status === "underwater" || loanDetails.leverageFactor === null
+                  loanDetails.status === "underwater"
+                    || loanDetails.leverageFactor === null
                     ? INFINITY
                     : `${roundToDecimal(loanDetails.leverageFactor, 3)}x`
                 }`}
@@ -460,7 +464,8 @@ function TotalExposure({
                   fontSize: 16,
                 })}
               >
-                {loanDetails.status === "underwater" || loanDetails.leverageFactor === null
+                {loanDetails.status === "underwater"
+                    || loanDetails.leverageFactor === null
                   ? INFINITY
                   : `${roundToDecimal(loanDetails.leverageFactor, 1)}x`}
               </Value>
@@ -485,31 +490,22 @@ function LoadingCard({
   loadingState: LoadingState;
   onRetry: () => void;
 }) {
-  const title = leverage ? "Leverage loan" : "BOLD loan";
+  const title = leverage ? "Leverage loan" : "EBUSD loan";
 
   const spring = useSpring({
     to: match(loadingState)
-      .with(
-        P.union(
-          "loading",
-          "error",
-          "not-found",
-        ),
-        (s) => ({
-          cardtransform: "scale3d(0.95, 0.95, 1)",
-          containerHeight: (
-            window.innerHeight
-            - 120 // top bar
-            - 24 * 2 // padding
-            - 48 // bottom bar 1
-            - 40
-            // - 40 // bottom bar 2
-          ),
-          cardHeight: s === "error" || s === "not-found" ? 180 : 120,
-          cardBackground: token("colors.blue:50"),
-          cardColor: token("colors.blue:950"),
-        }),
-      )
+      .with(P.union("loading", "error", "not-found"), (s) => ({
+        cardtransform: "scale3d(0.95, 0.95, 1)",
+        containerHeight: window.innerHeight
+          - 120 // top bar
+          - 24 * 2 // padding
+          - 48 // bottom bar 1
+          - 40,
+        // - 40 // bottom bar 2
+        cardHeight: s === "error" || s === "not-found" ? 180 : 120,
+        cardBackground: token("colors.blue:50"),
+        cardColor: token("colors.blue:950"),
+      }))
       .otherwise(() => ({
         cardtransform: "scale3d(1, 1, 1)",
         containerHeight: height,
@@ -580,9 +576,7 @@ function LoadingCard({
                 color: "strongSurfaceContentAlt2",
               })}
             >
-              {leverage
-                ? <IconLeverage size={16} />
-                : <IconBorrow size={16} />}
+              {leverage ? <IconLeverage size={16} /> : <IconBorrow size={16} />}
             </div>
             {title}
           </div>
@@ -627,11 +621,7 @@ function LoadingCard({
               />
             </div>
           ))
-          .otherwise(() => (
-            <div>
-              {children}
-            </div>
-          ))}
+          .otherwise(() => <div>{children}</div>)}
       </a.section>
     </a.div>
   );

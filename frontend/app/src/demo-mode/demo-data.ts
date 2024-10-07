@@ -16,7 +16,7 @@ export const ETH_PRICE = dn.from(2_580.293872, 18);
 export const RETH_PRICE = dn.from(2_884.72294, 18);
 export const STETH_PRICE = dn.from(2_579.931, 18);
 export const WEETH_PRICE = dn.from(2_579.931, 18);
-export const BOLD_PRICE = dn.from(1.0031, 18);
+export const EBUSD_PRICE = dn.from(1.0031, 18);
 
 export const STAKED_LQTY_TOTAL = [43_920_716_739_092_664_364_409_174n, 18] as const;
 
@@ -27,7 +27,7 @@ export const ACCOUNT_STAKED_LQTY = {
 } as const;
 
 export const ACCOUNT_BALANCES = {
-  BOLD: dn.from(3_987, 18),
+  EBUSD: dn.from(3_987, 18),
   ETH: dn.from(2.429387, 18),
   LQTY: dn.from(2008.217, 18),
   RETH: dn.from(1.3732, 18),
@@ -61,7 +61,7 @@ export const ACCOUNT_POSITIONS: Position[] = [
     deposit: dn.from(5_000, 18),
     collIndex: 0,
     rewards: {
-      bold: dn.from(789.438, 18),
+      ebusd: dn.from(789.438, 18),
       coll: dn.from(0.943, 18),
     },
   },
@@ -100,23 +100,23 @@ export const BORROW_STATS = {
 
 export const EARN_POOLS: Record<
   CollateralToken["symbol"],
-  { apr: Dnum; boldQty: Dnum }
+  { apr: Dnum; ebusdQty: Dnum }
 > = {
   ETH: {
     apr: dn.from(0.068, 18),
-    boldQty: [65_700_000n, 0],
+    ebusdQty: [65_700_000n, 0],
   },
   RETH: {
     apr: dn.from(0.057, 18),
-    boldQty: [44_100_000n, 0],
+    ebusdQty: [44_100_000n, 0],
   },
   STETH: {
     apr: dn.from(0.054, 18),
-    boldQty: [25_700_000n, 0],
+    ebusdQty: [25_700_000n, 0],
   },
   WEETH: {
     apr: dn.from(0.054, 18),
-    boldQty: [25_700_000n, 0],
+    ebusdQty: [25_700_000n, 0],
   },
 };
 
@@ -163,7 +163,7 @@ export const DELEGATES: Delegate[] = [
     name: "DeFi Saver",
     interestRate: dn.from(0.065, 18),
     followers: 1202,
-    boldAmount: dn.from(25_130_000, 18),
+    ebusdAmount: dn.from(25_130_000, 18),
     lastDays: 180,
     redemptions: dn.from(900_000, 18),
     interestRateChange: [
@@ -176,7 +176,7 @@ export const DELEGATES: Delegate[] = [
     name: "Yield Harbor",
     interestRate: dn.from(0.041, 18),
     followers: 700,
-    boldAmount: dn.from(15_730_000, 18),
+    ebusdAmount: dn.from(15_730_000, 18),
     lastDays: 180,
     redemptions: dn.from(2_600_000, 18),
     interestRateChange: [
@@ -189,7 +189,7 @@ export const DELEGATES: Delegate[] = [
     name: "Crypto Nexus",
     interestRate: dn.from(0.031, 18),
     followers: 500,
-    boldAmount: dn.from(12_000_000, 18),
+    ebusdAmount: dn.from(12_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_200_000, 18),
     interestRateChange: [
@@ -202,7 +202,7 @@ export const DELEGATES: Delegate[] = [
     name: "Block Ventures",
     interestRate: dn.from(0.021, 18),
     followers: 200,
-    boldAmount: dn.from(7_000_000, 18),
+    ebusdAmount: dn.from(7_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_280_000, 18),
     interestRateChange: [
@@ -215,7 +215,7 @@ export const DELEGATES: Delegate[] = [
     name: "Chain Gains",
     interestRate: dn.from(0.011, 18),
     followers: 100,
-    boldAmount: dn.from(3_000_000, 18),
+    ebusdAmount: dn.from(3_000_000, 18),
     lastDays: 47,
     redemptions: dn.from(1_100_000, 18),
     interestRateChange: [
@@ -228,7 +228,7 @@ export const DELEGATES: Delegate[] = [
     name: "TokenTrust",
     interestRate: dn.from(0.001, 18),
     followers: 50,
-    boldAmount: dn.from(1_000_000, 18),
+    ebusdAmount: dn.from(1_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(334_000, 18),
     interestRateChange: [
@@ -241,7 +241,7 @@ export const DELEGATES: Delegate[] = [
     name: "Yield Maximizer",
     interestRate: dn.from(0.072, 18),
     followers: 1500,
-    boldAmount: dn.from(30_000_000, 18),
+    ebusdAmount: dn.from(30_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(750_000, 18),
     interestRateChange: [
@@ -254,7 +254,7 @@ export const DELEGATES: Delegate[] = [
     name: "Stable Growth",
     interestRate: dn.from(0.055, 18),
     followers: 980,
-    boldAmount: dn.from(22_500_000, 18),
+    ebusdAmount: dn.from(22_500_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_100_000, 18),
     interestRateChange: [
@@ -267,7 +267,7 @@ export const DELEGATES: Delegate[] = [
     name: "Risk Taker",
     interestRate: dn.from(0.089, 18),
     followers: 750,
-    boldAmount: dn.from(18_000_000, 18),
+    ebusdAmount: dn.from(18_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(2_200_000, 18),
     interestRateChange: [
@@ -280,7 +280,7 @@ export const DELEGATES: Delegate[] = [
     name: "Conservative Gains",
     interestRate: dn.from(0.038, 18),
     followers: 620,
-    boldAmount: dn.from(14_800_000, 18),
+    ebusdAmount: dn.from(14_800_000, 18),
     lastDays: 180,
     redemptions: dn.from(500_000, 18),
     interestRateChange: [
@@ -293,7 +293,7 @@ export const DELEGATES: Delegate[] = [
     name: "Crypto Innovator",
     interestRate: dn.from(0.062, 18),
     followers: 890,
-    boldAmount: dn.from(20_500_000, 18),
+    ebusdAmount: dn.from(20_500_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_500_000, 18),
     interestRateChange: [
@@ -306,7 +306,7 @@ export const DELEGATES: Delegate[] = [
     name: "DeFi Pioneer",
     interestRate: dn.from(0.075, 18),
     followers: 1100,
-    boldAmount: dn.from(26_000_000, 18),
+    ebusdAmount: dn.from(26_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_800_000, 18),
     interestRateChange: [
@@ -319,7 +319,7 @@ export const DELEGATES: Delegate[] = [
     name: "Steady Returns",
     interestRate: dn.from(0.049, 18),
     followers: 780,
-    boldAmount: dn.from(17_500_000, 18),
+    ebusdAmount: dn.from(17_500_000, 18),
     lastDays: 180,
     redemptions: dn.from(600_000, 18),
     interestRateChange: [
@@ -332,7 +332,7 @@ export const DELEGATES: Delegate[] = [
     name: "Blockchain Believer",
     interestRate: dn.from(0.058, 18),
     followers: 850,
-    boldAmount: dn.from(19_800_000, 18),
+    ebusdAmount: dn.from(19_800_000, 18),
     lastDays: 180,
     redemptions: dn.from(1_300_000, 18),
     interestRateChange: [
@@ -345,7 +345,7 @@ export const DELEGATES: Delegate[] = [
     name: "Crypto Sage",
     interestRate: dn.from(0.069, 18),
     followers: 1300,
-    boldAmount: dn.from(28_500_000, 18),
+    ebusdAmount: dn.from(28_500_000, 18),
     lastDays: 180,
     redemptions: dn.from(950_000, 18),
     interestRateChange: [
@@ -355,10 +355,10 @@ export const DELEGATES: Delegate[] = [
   },
   {
     id: "0x10",
-    name: "Bold Strategist",
+    name: "Ebusd Strategist",
     interestRate: dn.from(0.082, 18),
     followers: 970,
-    boldAmount: dn.from(23_000_000, 18),
+    ebusdAmount: dn.from(23_000_000, 18),
     lastDays: 180,
     redemptions: dn.from(2_500_000, 18),
     interestRateChange: [
@@ -374,7 +374,7 @@ export const IC_STRATEGIES: Delegate[] = [
     name: "Conservative",
     interestRate: dn.from(0.065, 18),
     followers: 1202,
-    boldAmount: dn.from(25_130_000, 18),
+    ebusdAmount: dn.from(25_130_000, 18),
     lastDays: 180,
     redemptions: dn.from(900_000, 18),
     interestRateChange: [

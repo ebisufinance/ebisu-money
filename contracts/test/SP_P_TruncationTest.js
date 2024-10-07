@@ -4,7 +4,7 @@ const { createDeployAndFundFixture } = require("../utils/testFixtures.js");
 const { dec } = th;
 
 const TroveManagerTester = artifacts.require("TroveManagerTester");
-const BoldToken = artifacts.require("BoldToken");
+const EbusdToken = artifacts.require("EbusdToken");
 
 const GAS_PRICE = 10000000;
 
@@ -18,7 +18,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
   let contracts;
 
   let priceFeed;
-  let boldToken;
+  let ebusdToken;
   let stabilityPool;
   let sortedTroves;
   let troveManager;
@@ -26,9 +26,11 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
   const ZERO_ADDRESS = th.ZERO_ADDRESS;
 
-  const getOpenTroveBoldAmount = async (totalDebt) => th.getOpenTroveBoldAmount(contracts, totalDebt);
+  const getOpenTroveEbusdAmount = async (totalDebt) =>
+    th.getOpenTroveEbusdAmount(contracts, totalDebt);
   const openTrove = async (params) => th.openTrove(contracts, params);
-  const getBoldAmountForDesiredDebt = async (desiredDebt) => (await getOpenTroveBoldAmount(dec(desiredDebt, 18)));
+  const getEbusdAmountForDesiredDebt = async (desiredDebt) =>
+    await getOpenTroveEbusdAmount(dec(desiredDebt, 18));
 
   const deployFixture = createDeployAndFundFixture({
     accounts: fundedAccounts,
@@ -44,7 +46,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
     const result = await deployFixture();
     contracts = result.contracts;
     priceFeed = contracts.priceFeed;
-    boldToken = contracts.boldToken;
+    ebusdToken = contracts.ebusdToken;
     stabilityPool = contracts.stabilityPool;
     sortedTroves = contracts.sortedTroves;
     troveManager = contracts.troveManager;
@@ -53,26 +55,40 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
   describe("Scale Factor issue tests", async () => {
     it("1. Liquidation succeeds after 2 high-fraction liquidations", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
 
         // th.logBN("Trove debt", await th.getTroveEntireDebtByAddress(contracts, account));
 
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -88,7 +104,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // Price drop -> liquidate Trove A -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -99,14 +118,17 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
       // Price drop -> liquidate Trove B -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P is still 1e9
@@ -114,10 +136,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       console.log("P2:");
       console.log(P_2.toString());
       assert.isTrue(P_2.eq(th.toBN(dec(1, 9))));
-    
+
       // A re-fills SP to same pre-liq level again
       const deposit_2 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
@@ -125,7 +147,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       // Without fix: fails here
       await troveManager.liquidate(th.addressToTroveId(C), { from: owner });
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // // This final liq fails. As expected, the 'assert' in SP line 618 reverts, since 'newP' equals 0 inside the final liq
@@ -134,23 +159,37 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
     });
 
     it("2. New deposits can be made after 2 high fraction liquidations", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -166,7 +205,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // Price drop -> liquidate Trove A -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P remains above 1e9
@@ -177,14 +219,17 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
       // Price drop -> liquidate Trove B -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P is still 1e9
@@ -195,11 +240,11 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP to same pre-liq level again
       const deposit_2 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
-      // Whale gives Bold to D,E,F
+      // Whale gives Ebusd to D,E,F
       const newDeposits = [
         th.toBN(1),
         th.toBN(dec(10000, 18)),
@@ -208,38 +253,52 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       const newDepositors = [D, E, F];
 
       for (let i = 0; i < 3; i++) {
-        await boldToken.transfer(newDepositors[i], newDeposits[i], {
+        await ebusdToken.transfer(newDepositors[i], newDeposits[i], {
           from: whale,
         });
         await th.provideToSPAndClaim(contracts, newDeposits[i], {
           from: newDepositors[i],
         });
         assert.isTrue(
-          (await stabilityPool.getCompoundedBoldDeposit(newDepositors[i])).eq(
-            newDeposits[i],
-          ),
+          (await stabilityPool.getCompoundedEbusdDeposit(newDepositors[i])).eq(
+            newDeposits[i]
+          )
         );
       }
     });
 
     it("3. Liquidation succeeds when P == 1e9 liquidation has newProductFactor == 1e9", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -260,7 +319,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
       // console.log("LIQ 1");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -275,7 +337,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
@@ -283,7 +345,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
       // console.log("LIQ 2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P is still at least 1e9
@@ -300,7 +365,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // A re-fills SP to ~1.000000001x pre-liq level, i.e. to trigger a newProductFactor == 1e9,
       // (and trigger scale change)
       const deposit_2 = deposit_0
-        .sub(await stabilityPool.getTotalBoldDeposits())
+        .sub(await stabilityPool.getTotalEbusdDeposits())
         .add(th.toBN(dec(2, 12)));
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
@@ -308,7 +373,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(C), { from: owner });
       // console.log("LIQ 3");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P remains the same. Pool depletes to 1 billion'th of prior size, so newProductFactor is 1e9.
@@ -326,23 +394,37 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
     });
 
     it("4. Liquidation succeeds when P == 1e9 and liquidation has newProductFactor > 1e9", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -363,7 +445,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
       // console.log("LIQ 1");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -378,7 +463,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
@@ -386,7 +471,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
       // console.log("LIQ 2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -405,14 +493,17 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // and trigger scale change and *increase* raw value of P again.
       const deposit_2 = deposit_0
         .mul(th.toBN(2))
-        .sub(await stabilityPool.getTotalBoldDeposits());
+        .sub(await stabilityPool.getTotalEbusdDeposits());
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
       // Price drop -> liquidate Trove C -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(C), { from: owner });
       // console.log("LIQ 3");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P increases: 50% of the pool is liquidated, and there is a scale change. Pool depletion is 50%, so newProductFactor is 5e17.
@@ -431,23 +522,37 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
     // --- Check depositors have correct stakes after experiencing scale change from depositing when P is tiny  ---
 
     it("5. Depositor have correct depleted stake after deposit at P == 1e9 and scale changing liq (with newProductFactor == 1e9)", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -468,7 +573,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
       // console.log("LIQ 1");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -483,7 +591,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
@@ -491,7 +599,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
       // console.log("LIQ 2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P remains at 1e9
@@ -505,15 +616,15 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // console.log("scale:");
       // console.log(scale);
 
-      // D makes deposit of 1000 Bold
+      // D makes deposit of 1000 Ebusd
       const D_deposit = dec(1, 21);
-      await boldToken.transfer(D, dec(1, 21), { from: whale });
+      await ebusdToken.transfer(D, dec(1, 21), { from: whale });
       await th.provideToSPAndClaim(contracts, D_deposit, { from: D });
 
       // A re-fills SP to ~1.000000001x pre-liq level, i.e. to trigger a newProductFactor == 1e9,
       // (and trigger scale change)
       const deposit_2 = deposit_0
-        .sub(await stabilityPool.getTotalBoldDeposits())
+        .sub(await stabilityPool.getTotalEbusdDeposits())
         .add(th.toBN(dec(2, 12)));
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
@@ -521,13 +632,16 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(C), { from: owner });
       // console.log("LIQ 3");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check liq succeeds and P remains the same. // Pool depletes to 1 billion'th of prior size, so newProductFactor is 1e9.
       // Due to scale change, raw value of P should equal (1 * 1e9 * 1e9 / 1e18) = 1, i.e. should not change.
       const P_3 = await stabilityPool.P();
-      assert.isTrue(P_3.eq(th.toBN(dec(1,9))));
+      assert.isTrue(P_3.eq(th.toBN(dec(1, 9))));
       // console.log("P_3:");
       // console.log(P_3.toString());
       scale = (await stabilityPool.currentScale()).toString();
@@ -536,30 +650,45 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // console.log(scale);
 
       // Check D's deposit has depleted to a billion'th of their initial deposit. That is, from 1e21 to 1e(21-9) = 1e12
-      const D_depletedDeposit = await stabilityPool.getCompoundedBoldDeposit(D);
+      const D_depletedDeposit =
+        await stabilityPool.getCompoundedEbusdDeposit(D);
       assert.isTrue(D_depletedDeposit.eq(th.toBN(dec(1, 12))));
       // console.log("D_depletedDeposit:");
       // console.log(D_depletedDeposit.toString());
     });
 
     it("6. Depositor have correct depleted stake after deposit at P == 1e9 and scale changing liq (with newProductFactor > 1e9)", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k Bold to A
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(100000, 18)), whale, whale, 0, {
-        from: whale,
-        value: dec(100000, "ether"),
-      });
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
+      // Whale opens Trove with 100k ETH and sends 50k Ebusd to A
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
+        whale,
+        whale,
+        0,
+        {
+          from: whale,
+          value: dec(100000, "ether"),
+        }
+      );
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
 
-      // Open 3 Troves with 2000 Bold debt
+      // Open 3 Troves with 2000 Ebusd debt
       for (const account of [A, B, C]) {
-        await th.openTroveWrapper(contracts, await getBoldAmountForDesiredDebt(2000), account, account, 0, {
-          from: account,
-          value: dec(15, "ether"),
-        });
+        await th.openTroveWrapper(
+          contracts,
+          await getEbusdAmountForDesiredDebt(2000),
+          account,
+          account,
+          0,
+          {
+            from: account,
+            value: dec(15, "ether"),
+          }
+        );
         assert.isTrue(
           (await th.getTroveEntireDebtByAddress(contracts, account)).eq(
-            th.toBN(dec(2000, 18)),
-          ),
+            th.toBN(dec(2000, 18))
+          )
         );
       }
 
@@ -580,7 +709,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
       // console.log("LIQ 1");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -595,7 +727,7 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
 
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
       const deposit_1 = deposit_0.sub(
-        await stabilityPool.getTotalBoldDeposits(),
+        await stabilityPool.getTotalEbusdDeposits()
       );
       await th.provideToSPAndClaim(contracts, deposit_1, { from: A });
 
@@ -603,7 +735,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
       // console.log("LIQ 2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P reduced by factor of 1e9
@@ -616,23 +751,26 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // console.log("scale:");
       // console.log(scale);
 
-      // D makes deposit of 1000 Bold
+      // D makes deposit of 1000 Ebusd
       const D_deposit = dec(1, 21);
-      await boldToken.transfer(D, dec(1, 21), { from: whale });
+      await ebusdToken.transfer(D, dec(1, 21), { from: whale });
       await th.provideToSPAndClaim(contracts, D_deposit, { from: D });
 
       // A re-fills SP to ~2x pre-liq level, i.e. to trigger a newProductFactor > 1e9,
       // and trigger scale change and *increase* raw value of P again.
       const deposit_2 = deposit_0
         .mul(th.toBN(2))
-        .sub(await stabilityPool.getTotalBoldDeposits());
+        .sub(await stabilityPool.getTotalEbusdDeposits());
       await th.provideToSPAndClaim(contracts, deposit_2, { from: A });
 
       // Price drop -> liquidate Trove C -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(C), { from: owner });
       // console.log("LIQ 3");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check P increases: 50% of the pool is liquidated, and there is a scale change. Pool depletion is 50%, so newProductFactor is 5e17.
@@ -647,44 +785,64 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // console.log(scale);
 
       // Check D's deposit has depleted to 50% their initial deposit. That is, from 1e21 to 5e20.
-      const D_depletedDeposit = await stabilityPool.getCompoundedBoldDeposit(D);
+      const D_depletedDeposit =
+        await stabilityPool.getCompoundedEbusdDeposit(D);
       assert.isTrue(D_depletedDeposit.eq(th.toBN(dec(5, 20))));
       // console.log("D_depletedDeposit:");
       // console.log(D_depletedDeposit.toString());
     });
 
     it("7. Two consecutive liquidations when P == 1e9 and liquidations have newProductFactor > 1e9 prematurely deplete deposits with minimal (and capped) collateral reward", async () => {
-      // Whale opens Trove with 100k ETH and sends 50k BOLD to A
+      // Whale opens Trove with 100k ETH and sends 50k EBUSD to A
       await th.openTroveWrapper(
         contracts,
-        await getOpenTroveBoldAmount(dec(100000, 18)),
+        await getOpenTroveEbusdAmount(dec(100000, 18)),
         whale,
         whale,
         0,
         { from: whale, value: dec(100000, "ether") }
       );
-      assert.isTrue((await th.getTroveEntireDebtByAddress(contracts, whale)).eq(th.toBN(dec(100000, 18))));
+      assert.isTrue(
+        (await th.getTroveEntireDebtByAddress(contracts, whale)).eq(
+          th.toBN(dec(100000, 18))
+        )
+      );
 
-      await boldToken.transfer(A, dec(50000, 18), { from: whale });
-      // Open 4 Troves with 2000 BOLD debt
+      await ebusdToken.transfer(A, dec(50000, 18), { from: whale });
+      // Open 4 Troves with 2000 EBUSD debt
       for (account of [A, B, C, D]) {
         await th.openTroveWrapper(
           contracts,
-          await getOpenTroveBoldAmount(dec(2000, 18)),
+          await getOpenTroveEbusdAmount(dec(2000, 18)),
           account,
           account,
           0,
           { from: account, value: dec(15, "ether") }
         );
       }
-      assert.isTrue((await th.getTroveEntireDebtByAddress(contracts, A)).eq(th.toBN(dec(2000, 18))));
-      
-      // Open 1 Trove with 16000 BOLD debt
-      await th.openTroveWrapper(contracts, await getOpenTroveBoldAmount(dec(16001, 18)), E, E, 0, {
-        from: E,
-        value: dec(1215, 17),
-      });
-      assert.isTrue((await th.getTroveEntireDebtByAddress(contracts, E)).eq(th.toBN(dec(16001, 18))));
+      assert.isTrue(
+        (await th.getTroveEntireDebtByAddress(contracts, A)).eq(
+          th.toBN(dec(2000, 18))
+        )
+      );
+
+      // Open 1 Trove with 16000 EBUSD debt
+      await th.openTroveWrapper(
+        contracts,
+        await getOpenTroveEbusdAmount(dec(16001, 18)),
+        E,
+        E,
+        0,
+        {
+          from: E,
+          value: dec(1215, 17),
+        }
+      );
+      assert.isTrue(
+        (await th.getTroveEntireDebtByAddress(contracts, E)).eq(
+          th.toBN(dec(16001, 18))
+        )
+      );
       // A deposits to SP - i.e. minimum needed to reduce P to 1e9 from a 2000 debt liquidation
       const deposit_0 = th.toBN("2000000000000000002001");
       await stabilityPool.provideToSP(deposit_0, ZERO_ADDRESS, { from: A });
@@ -700,7 +858,10 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(A), { from: owner });
       console.log("LIQ 1");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(A)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(A)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
       // Check P reduced by factor of 1e9
       const P_1 = await stabilityPool.P();
@@ -712,19 +873,24 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       console.log("scale:");
       console.log(scale); // 1
       // A re-fills SP back up to deposit 0 level, i.e. just enough to reduce P by 1e9 from a 2k debt liq.
-      const deposit_1 = deposit_0.sub(await stabilityPool.getTotalBoldDeposits());
+      const deposit_1 = deposit_0.sub(
+        await stabilityPool.getTotalEbusdDeposits()
+      );
       await stabilityPool.provideToSP(deposit_1, ZERO_ADDRESS, { from: A });
       // Price drop -> liquidate Trove B -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(B), { from: owner });
       console.log("LIQ 2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(B)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(B)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
       // Check P remains at 1e9
       const P_2 = await stabilityPool.P();
-      assert.isTrue(P_2.eq(th.toBN(dec(1,9))));
+      assert.isTrue(P_2.eq(th.toBN(dec(1, 9))));
       console.log("P2:");
-      console.log(P_2.toString());// 1e-9
+      console.log(P_2.toString()); // 1e-9
       scale = (await stabilityPool.currentScale()).toString();
       // 2 scale changes
       assert.equal(scale, "3");
@@ -732,7 +898,9 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       console.log(scale); // 3
       // A re-fills SP to ~10x pre-liq level, which will trigger a newProduct Factor ≈ 9e17
       // when a minimal size trove is liquidated.
-      const deposit_2 = deposit_0.mul(th.toBN(10)).sub(await stabilityPool.getTotalBoldDeposits());
+      const deposit_2 = deposit_0
+        .mul(th.toBN(10))
+        .sub(await stabilityPool.getTotalEbusdDeposits());
       await stabilityPool.provideToSP(deposit_2, ZERO_ADDRESS, { from: A });
       // Price drop -> liquidate Trove C and Trove D consecutively-> price rises
       await priceFeed.setPrice(dec(100, 18));
@@ -740,8 +908,14 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       console.log("LIQ 3.1");
       await troveManager.liquidate(th.addressToTroveId(D), { from: owner });
       console.log("LIQ 3.2");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(C)), 3); // status: closed by liq
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(D)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(C)),
+        3
+      ); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(D)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
 
       // Check A's deposit is still non-zero, and they have the correct earned collateral
@@ -753,8 +927,8 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       console.log("scale:");
       console.log(scale); // 4
       assert.equal(scale, "4");
-      const A_Deposit_Value = await stabilityPool.getCompoundedBoldDeposit(A);
-      console.log("A's compounded BOLD deposit:");
+      const A_Deposit_Value = await stabilityPool.getCompoundedEbusdDeposit(A);
+      console.log("A's compounded EBUSD deposit:");
       console.log(A_Deposit_Value.toString()); // 0
       assert.isTrue(A_Deposit_Value.gt(th.toBN(0)));
       const A_Earned_Collateral = await stabilityPool.getDepositorCollGain(A);
@@ -766,34 +940,42 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
         1e5
       );
 
-      // // Here we will cache the amount of raw ETH in the stability pool contract, the totalBOLDDeposits, and the epoch counter.
+      // // Here we will cache the amount of raw ETH in the stability pool contract, the totalEBUSDDeposits, and the epoch counter.
       const Stability_Pool_ETH = await stabilityPool.getCollBalance();
       console.log("Stability Pool ETH before complete liquidation LIQ4:");
       console.log(Stability_Pool_ETH.toString()); // 29.850000000000001986
-      const Total_BOLD_Deposits = await stabilityPool.getTotalBoldDeposits();
-      console.log("Total Stability Pool BOLD Deposits before complete liquidation LIQ4:");
-      console.log(Total_BOLD_Deposits.toString()); // 16000.000000000000020010
+      const Total_EBUSD_Deposits = await stabilityPool.getTotalEbusdDeposits();
+      console.log(
+        "Total Stability Pool EBUSD Deposits before complete liquidation LIQ4:"
+      );
+      console.log(Total_EBUSD_Deposits.toString()); // 16000.000000000000020010
       const Current_Epoch = await stabilityPool.currentEpoch();
       console.log("Epoch before complete liquidation LIQ4:");
       console.log(Current_Epoch.toString()); // 0
       // // Next, say some trove is liquidated which fully offsets the stability pool balance, triggering an epoch increment.
       // // Earlier, E's trove was defined to be the amount that is now in the stability pool, so liquidating it will offset the whole pool.
-      // // The liquidation will go through because 81% of A's deposit is still a part of the variable 'totalBOLDDeposits'.
+      // // The liquidation will go through because 81% of A's deposit is still a part of the variable 'totalEBUSDDeposits'.
       // // Price drop -> liquidate Trove E -> price rises
       await priceFeed.setPrice(dec(100, 18));
       await troveManager.liquidate(th.addressToTroveId(E), { from: owner });
       console.log("LIQ 4");
-      assert.equal(await troveManager.getTroveStatus(th.addressToTroveId(E)), 3); // status: closed by liq
+      assert.equal(
+        await troveManager.getTroveStatus(th.addressToTroveId(E)),
+        3
+      ); // status: closed by liq
       await priceFeed.setPrice(dec(200, 18));
-      // // Check: we can check that the full trove was indeed offset, by ensuring that the pool's BOLD balance is now 0,
+      // // Check: we can check that the full trove was indeed offset, by ensuring that the pool's EBUSD balance is now 0,
       // // the epoch counter has incremented, and the P value is reset to 1e18.
       const Stability_Pool_ETH_2 = await stabilityPool.getCollBalance();
       console.log("Stability Pool ETH after complete liquidation LIQ4:");
       console.log(Stability_Pool_ETH_2.toString()); // 150.734944690956817336
-      const Total_BOLD_Deposits_2 = await stabilityPool.getTotalBoldDeposits();
-      console.log("Total Stability Pool BOLD Deposits after complete liquidation LIQ4:");
-      console.log(Total_BOLD_Deposits_2.toString()); // 0
-      assert.equal(Total_BOLD_Deposits_2, 0);
+      const Total_EBUSD_Deposits_2 =
+        await stabilityPool.getTotalEbusdDeposits();
+      console.log(
+        "Total Stability Pool EBUSD Deposits after complete liquidation LIQ4:"
+      );
+      console.log(Total_EBUSD_Deposits_2.toString()); // 0
+      assert.equal(Total_EBUSD_Deposits_2, 0);
       const Current_Epoch_2 = await stabilityPool.currentEpoch();
       console.log("Epoch after complete liquidation LIQ4:");
       console.log(Current_Epoch.toString()); // 0
@@ -807,13 +989,18 @@ contract("StabilityPool Scale Factor issue tests", async (accounts) => {
       // // This is because the scale increment is two increments ahead of A's scale snapshot, so they cannot earn collateral in the present scale.
       // // A's compounded deposit will still be 0 and their earned collateral will still be what it was after LIQ 2 and 3 (A_Earned_Collateral).
       // // This test fails when the bug is not fixed.
-      const A_Deposit_Value_2 = await stabilityPool.getCompoundedBoldDeposit(A);
-      console.log("A's compounded BOLD deposit after complete liquidation LIQ4:");
+      const A_Deposit_Value_2 =
+        await stabilityPool.getCompoundedEbusdDeposit(A);
+      console.log(
+        "A's compounded EBUSD deposit after complete liquidation LIQ4:"
+      );
       console.log(A_Deposit_Value_2.toString()); // 0
       assert.isTrue(A_Deposit_Value_2.eq(th.toBN(0)));
-      const A_Earned_Collateral_2 = th.toBN(await stabilityPool.getDepositorCollGain(A));
+      const A_Earned_Collateral_2 = th.toBN(
+        await stabilityPool.getDepositorCollGain(A)
+      );
       console.log("A's earned ETH collateral after complete liquidation LIQ4:");
-      console.log(A_Earned_Collateral_2.toString()); // 29.849999999999980026 
+      console.log(A_Earned_Collateral_2.toString()); // 29.849999999999980026
       assert.isTrue(A_Earned_Collateral_2.gt(A_Earned_Collateral));
     });
   });

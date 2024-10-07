@@ -59,7 +59,7 @@ export type PositionEarn = {
   collIndex: CollIndex;
   deposit: Dnum;
   rewards: {
-    bold: Dnum;
+    ebusd: Dnum;
     coll: Dnum;
   };
 };
@@ -76,7 +76,7 @@ export type PositionStake = {
 export type Position = PositionLoan | PositionEarn | PositionStake;
 
 export type Delegate = {
-  boldAmount: Dnum;
+  ebusdAmount: Dnum;
   fee?: Dnum;
   followers: number;
   id: string;

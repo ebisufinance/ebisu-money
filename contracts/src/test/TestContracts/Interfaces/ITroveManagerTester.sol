@@ -13,11 +13,11 @@ interface ITroveManagerTester is ITroveManager {
     function get_LIQUIDATION_PENALTY_SP() external view returns (uint256);
     function get_LIQUIDATION_PENALTY_REDISTRIBUTION() external view returns (uint256);
 
-    function getBoldToken() external view returns (IBoldToken);
+    function getEbusdToken() external view returns (IEbusdToken);
     function getBorrowerOperations() external view returns (IBorrowerOperations);
 
     function get_L_coll() external view returns (uint256);
-    function get_L_boldDebt() external view returns (uint256);
+    function get_L_ebusdDebt() external view returns (uint256);
     function getTotalStakes() external view returns (uint256);
     function getTotalStakesSnapshot() external view returns (uint256);
     function getTotalCollateralSnapshot() external view returns (uint256);
@@ -46,7 +46,7 @@ interface ITroveManagerTester is ITroveManager {
 
     function getPendingCollReward(uint256 _troveId) external view returns (uint256);
 
-    function getPendingBoldDebtReward(uint256 _troveId) external view returns (uint256);
+    function getPendingEbusdDebtReward(uint256 _troveId) external view returns (uint256);
 
     function getEntireDebtAndColl(uint256 _troveId)
         external
@@ -54,7 +54,7 @@ interface ITroveManagerTester is ITroveManager {
         returns (
             uint256 entireDebt,
             uint256 entireColl,
-            uint256 pendingBoldDebtReward,
+            uint256 pendingEbusdDebtReward,
             uint256 pendingCollReward,
             uint256 accruedTroveInterest
         );

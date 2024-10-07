@@ -24,13 +24,13 @@ export const DefaultPool = [{
   "stateMutability": "view",
 }, {
   "type": "function",
-  "name": "decreaseBoldDebt",
+  "name": "decreaseEbusdDebt",
   "inputs": [{ "name": "_amount", "type": "uint256", "internalType": "uint256" }],
   "outputs": [],
   "stateMutability": "nonpayable",
 }, {
   "type": "function",
-  "name": "getBoldDebt",
+  "name": "getEbusdDebt",
   "inputs": [],
   "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
   "stateMutability": "view",
@@ -42,7 +42,7 @@ export const DefaultPool = [{
   "stateMutability": "view",
 }, {
   "type": "function",
-  "name": "increaseBoldDebt",
+  "name": "increaseEbusdDebt",
   "inputs": [{ "name": "_amount", "type": "uint256", "internalType": "uint256" }],
   "outputs": [],
   "stateMutability": "nonpayable",
@@ -76,8 +76,8 @@ export const DefaultPool = [{
   "anonymous": false,
 }, {
   "type": "event",
-  "name": "DefaultPoolBoldDebtUpdated",
-  "inputs": [{ "name": "_boldDebt", "type": "uint256", "indexed": false, "internalType": "uint256" }],
+  "name": "DefaultPoolEbusdDebtUpdated",
+  "inputs": [{ "name": "_ebusdDebt", "type": "uint256", "indexed": false, "internalType": "uint256" }],
   "anonymous": false,
 }, {
   "type": "event",

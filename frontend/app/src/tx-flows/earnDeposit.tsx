@@ -26,7 +26,7 @@ const RequestSchema = v.object({
 
   collIndex: vCollIndex(),
   depositor: vAddress(),
-  boldAmount: vDnum(),
+  ebusdAmount: vDnum(),
   claim: v.boolean(),
 });
 
@@ -44,21 +44,22 @@ export const earnDeposit: FlowDeclaration<Request, Step> = {
 
   Summary() {
     // const { symbol } = useCollateral(flow.request.collIndex);
-    return (
-      null
-    );
+    return null;
   },
 
   Details({ flow }) {
     const { request } = flow;
-    const boldPrice = usePrice("BOLD");
+    const ebusdPrice = usePrice("EBUSD");
     return (
       <>
         <TransactionDetailsRow
           label="You deposit"
           value={[
-            <Amount value={request.boldAmount} suffix=" BOLD" />,
-            <Amount value={boldPrice && dn.mul(request.boldAmount, boldPrice)} prefix="$" />,
+            <Amount value={request.ebusdAmount} suffix=" EBUSD" />,
+            <Amount
+              value={ebusdPrice && dn.mul(request.ebusdAmount, ebusdPrice)}
+              prefix="$"
+            />,
           ]}
         />
       </>
@@ -83,10 +84,7 @@ export const earnDeposit: FlowDeclaration<Request, Step> = {
     return {
       ...collateral.contracts.StabilityPool,
       functionName: "provideToSP",
-      args: [
-        request.boldAmount[0],
-        request.claim,
-      ],
+      args: [request.ebusdAmount[0], request.claim],
     };
   },
 };

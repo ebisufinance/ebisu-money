@@ -40,8 +40,8 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
         return LIQUIDATION_PENALTY_REDISTRIBUTION;
     }
 
-    function getBoldToken() external view returns (IBoldToken) {
-        return boldToken;
+    function getEbusdToken() external view returns (IEbusdToken) {
+        return ebusdToken;
     }
 
     function getBorrowerOperations() external view returns (IBorrowerOperations) {
@@ -52,8 +52,8 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
         return L_coll;
     }
 
-    function get_L_boldDebt() external view returns (uint256) {
-        return L_boldDebt;
+    function get_L_ebusdDebt() external view returns (uint256) {
+        return L_ebusdDebt;
     }
 
     function getTotalStakes() external view returns (uint256) {
@@ -132,7 +132,7 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
     }
 
     function getEffectiveRedemptionFeeInColl(uint256 _redeemAmount, uint256 _price) external view returns (uint256) {
-        return collateralRegistry.getEffectiveRedemptionFeeInBold(_redeemAmount) * DECIMAL_PRECISION / _price;
+        return collateralRegistry.getEffectiveRedemptionFeeInEbusd(_redeemAmount) * DECIMAL_PRECISION / _price;
     }
 
     function callInternalRemoveTroveId(uint256 _troveId) external {
@@ -183,11 +183,11 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
         return trove.redistCollGain;
     }
 
-    // Get the borrower's pending accumulated Bold reward, earned by their stake
-    function getPendingBoldDebtReward(uint256 _troveId) external view override returns (uint256 redistBoldDebtGain) {
+    // Get the borrower's pending accumulated Ebusd reward, earned by their stake
+    function getPendingEbusdDebtReward(uint256 _troveId) external view override returns (uint256 redistEbusdDebtGain) {
         LatestTroveData memory trove;
         _getLatestTroveData(_troveId, trove);
-        return trove.redistBoldDebtGain;
+        return trove.redistEbusdDebtGain;
     }
 
     function getEntireDebtAndColl(uint256 _troveId)
@@ -196,7 +196,7 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
         returns (
             uint256 entireDebt,
             uint256 entireColl,
-            uint256 pendingBoldDebtReward,
+            uint256 pendingEbusdDebtReward,
             uint256 pendingCollReward,
             uint256 accruedTroveInterest
         )
@@ -205,7 +205,7 @@ contract TroveManagerTester is ITroveManagerTester, TroveManager {
         _getLatestTroveData(_troveId, trove);
 
         return
-            (trove.entireDebt, trove.entireColl, trove.redistBoldDebtGain, trove.redistCollGain, trove.accruedInterest);
+            (trove.entireDebt, trove.entireColl, trove.redistEbusdDebtGain, trove.redistCollGain, trove.accruedInterest);
     }
 
     function getTroveEntireDebt(uint256 _troveId) external view returns (uint256) {

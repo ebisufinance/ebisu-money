@@ -71,7 +71,7 @@ contract MultiTroveGetter is IMultiTroveGetter {
             //_out.batchDebtShares,
         ) = _troveManager.Troves(_id);
 
-        (_out.snapshotETH, _out.snapshotBoldDebt) = _troveManager.rewardSnapshots(_id);
+        (_out.snapshotETH, _out.snapshotEbusdDebt) = _troveManager.rewardSnapshots(_id);
     }
 
     function _getMultipleSortedTrovesFromHead(

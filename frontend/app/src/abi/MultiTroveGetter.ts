@@ -53,7 +53,7 @@ export const MultiTroveGetter = [{
       { "name": "batchDebtShares", "type": "uint256", "internalType": "uint256" },
       { "name": "batchCollShares", "type": "uint256", "internalType": "uint256" },
       { "name": "snapshotETH", "type": "uint256", "internalType": "uint256" },
-      { "name": "snapshotBoldDebt", "type": "uint256", "internalType": "uint256" },
+      { "name": "snapshotEbusdDebt", "type": "uint256", "internalType": "uint256" },
     ],
   }],
   "stateMutability": "view",

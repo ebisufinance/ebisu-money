@@ -28,7 +28,7 @@ contract("StabilityPool", async (accounts) => {
       mockActivePoolAddress,
       dumbContractAddress,
       dumbContractAddress,
-      dumbContractAddress,
+      dumbContractAddress
     );
 
     return stabilityPool;
@@ -40,9 +40,9 @@ contract("StabilityPool", async (accounts) => {
     assert.equal(recordedCollBalance, 0);
   });
 
-  it("getTotalBoldDeposits(): gets the recorded BOLD balance", async () => {
+  it("getTotalEbusdDeposits(): gets the recorded EBUSD balance", async () => {
     const stabilityPool = await loadFixture(deployFixture);
-    const recordedCollBalance = await stabilityPool.getTotalBoldDeposits();
+    const recordedCollBalance = await stabilityPool.getTotalEbusdDeposits();
     assert.equal(recordedCollBalance, 0);
   });
 });
@@ -64,7 +64,7 @@ contract("ActivePool", async (accounts) => {
       dumbContractAddress,
       dumbContractAddress,
       dumbContractAddress,
-      dumbContractAddress,
+      dumbContractAddress
     );
 
     return { activePool, mockBorrowerOperations, mockTroveManager, WETH };
@@ -83,15 +83,17 @@ contract("ActivePool", async (accounts) => {
     assert.equal(recordedCollBalance, 0);
   });
 
-  it("getBoldDebt(): gets the total BOLD debt balance", async () => {
-    const recordedBoldDebt = await activePool.getBoldDebt();
-    assert.equal(recordedBoldDebt, 0);
+  it("getEbusdDebt(): gets the total EBUSD debt balance", async () => {
+    const recordedEbusdDebt = await activePool.getEbusdDebt();
+    assert.equal(recordedEbusdDebt, 0);
   });
 
   // send raw ether
   it("sendColl(): decreases the recorded Coll balance by the correct amount", async () => {
     // setup: give pool 2 ether
-    const activePool_initialBalance = web3.utils.toBN(await WETH.balanceOf(activePool.address));
+    const activePool_initialBalance = web3.utils.toBN(
+      await WETH.balanceOf(activePool.address)
+    );
     assert.equal(activePool_initialBalance, 0);
     // start pool with 2 ether
     // await web3.eth.sendTransaction({ from: mockBorrowerOperationsAddress, to: activePool.address, value: dec(2, 'ether') })
@@ -102,13 +104,23 @@ contract("ActivePool", async (accounts) => {
       activePool.address,
       web3.utils.toHex(eth_amount),
     ]);
-    await mockBorrowerOperations.forward(WETH.address, approveData, { from: owner });
+    await mockBorrowerOperations.forward(WETH.address, approveData, {
+      from: owner,
+    });
     // call receiveColl
-    const receiveCollData = th.getTransactionData("receiveColl(uint256)", [web3.utils.toHex(eth_amount)]);
-    const tx1 = await mockBorrowerOperations.forward(activePool.address, receiveCollData, { from: owner });
+    const receiveCollData = th.getTransactionData("receiveColl(uint256)", [
+      web3.utils.toHex(eth_amount),
+    ]);
+    const tx1 = await mockBorrowerOperations.forward(
+      activePool.address,
+      receiveCollData,
+      { from: owner }
+    );
     assert.isTrue(tx1.receipt.status);
 
-    const activePool_BalanceBeforeTx = web3.utils.toBN(await WETH.balanceOf(activePool.address));
+    const activePool_BalanceBeforeTx = web3.utils.toBN(
+      await WETH.balanceOf(activePool.address)
+    );
     const alice_Balance_BeforeTx = web3.utils.toBN(await WETH.balanceOf(alice));
 
     assert.equal(activePool_BalanceBeforeTx, dec(2, "ether"));
@@ -116,15 +128,28 @@ contract("ActivePool", async (accounts) => {
     // send ether from pool to alice
     // th.logBN("eth bal", await WETH.balanceOf(activePool.address))
     // await activePool.sendcoll(alice, dec(1, 'ether'), { from: mockBorrowerOperationsAddress })
-    const sendCollData = th.getTransactionData("sendColl(address,uint256)", [alice, web3.utils.toHex(dec(1, "ether"))]);
-    const tx2 = await mockBorrowerOperations.forward(activePool.address, sendCollData, { from: owner });
+    const sendCollData = th.getTransactionData("sendColl(address,uint256)", [
+      alice,
+      web3.utils.toHex(dec(1, "ether")),
+    ]);
+    const tx2 = await mockBorrowerOperations.forward(
+      activePool.address,
+      sendCollData,
+      { from: owner }
+    );
     assert.isTrue(tx2.receipt.status);
 
-    const activePool_BalanceAfterTx = web3.utils.toBN(await WETH.balanceOf(activePool.address));
+    const activePool_BalanceAfterTx = web3.utils.toBN(
+      await WETH.balanceOf(activePool.address)
+    );
     const alice_Balance_AfterTx = web3.utils.toBN(await WETH.balanceOf(alice));
 
-    const alice_BalanceChange = alice_Balance_AfterTx.sub(alice_Balance_BeforeTx);
-    const pool_BalanceChange = activePool_BalanceAfterTx.sub(activePool_BalanceBeforeTx);
+    const alice_BalanceChange = alice_Balance_AfterTx.sub(
+      alice_Balance_BeforeTx
+    );
+    const pool_BalanceChange = activePool_BalanceAfterTx.sub(
+      activePool_BalanceBeforeTx
+    );
     assert.equal(alice_BalanceChange, dec(1, "ether"));
     assert.equal(pool_BalanceChange, _minus_1_Ether);
   });
@@ -141,7 +166,10 @@ contract("DefaultPool", async (accounts) => {
     const mockTroveManager = await NonPayableSwitch.new();
     const mockActivePool = await NonPayableSwitch.new();
     await mockActivePool.setColl(WETH.address);
-    await defaultPool.setAddresses(mockTroveManager.address, mockActivePool.address);
+    await defaultPool.setAddresses(
+      mockTroveManager.address,
+      mockActivePool.address
+    );
 
     return { defaultPool, mockTroveManager, mockActivePool, WETH };
   };
@@ -154,52 +182,72 @@ contract("DefaultPool", async (accounts) => {
     mockActivePool = result.mockActivePool;
   });
 
-  it("getCollBalance(): gets the recorded BOLD balance", async () => {
+  it("getCollBalance(): gets the recorded EBUSD balance", async () => {
     const recordedCollBalance = await defaultPool.getCollBalance();
     assert.equal(recordedCollBalance, 0);
   });
 
-  it("getBoldDebt(): gets the recorded BOLD balance", async () => {
-    const recordedBoldDebt = await defaultPool.getBoldDebt();
-    assert.equal(recordedBoldDebt, 0);
+  it("getEbusdDebt(): gets the recorded EBUSD balance", async () => {
+    const recordedEbusdDebt = await defaultPool.getEbusdDebt();
+    assert.equal(recordedEbusdDebt, 0);
   });
 
-  it("increaseBold(): increases the recorded BOLD balance by the correct amount", async () => {
-    const recordedBold_balanceBefore = await defaultPool.getBoldDebt();
-    assert.equal(recordedBold_balanceBefore, 0);
+  it("increaseEbusd(): increases the recorded EBUSD balance by the correct amount", async () => {
+    const recordedEbusd_balanceBefore = await defaultPool.getEbusdDebt();
+    assert.equal(recordedEbusd_balanceBefore, 0);
 
-    // await defaultPool.increaseBoldDebt(100, { from: mockTroveManagerAddress })
-    const increaseBoldDebtData = th.getTransactionData("increaseBoldDebt(uint256)", ["0x64"]);
-    const tx = await mockTroveManager.forward(defaultPool.address, increaseBoldDebtData);
+    // await defaultPool.increaseEbusdDebt(100, { from: mockTroveManagerAddress })
+    const increaseEbusdDebtData = th.getTransactionData(
+      "increaseEbusdDebt(uint256)",
+      ["0x64"]
+    );
+    const tx = await mockTroveManager.forward(
+      defaultPool.address,
+      increaseEbusdDebtData
+    );
     assert.isTrue(tx.receipt.status);
 
-    const recordedBold_balanceAfter = await defaultPool.getBoldDebt();
-    assert.equal(recordedBold_balanceAfter, 100);
+    const recordedEbusd_balanceAfter = await defaultPool.getEbusdDebt();
+    assert.equal(recordedEbusd_balanceAfter, 100);
   });
 
-  it("decreaseBold(): decreases the recorded BOLD balance by the correct amount", async () => {
+  it("decreaseEbusd(): decreases the recorded EBUSD balance by the correct amount", async () => {
     // start the pool on 100 wei
-    // await defaultPool.increaseBoldDebt(100, { from: mockTroveManagerAddress })
-    const increaseBoldDebtData = th.getTransactionData("increaseBoldDebt(uint256)", ["0x64"]);
-    const tx1 = await mockTroveManager.forward(defaultPool.address, increaseBoldDebtData);
+    // await defaultPool.increaseEbusdDebt(100, { from: mockTroveManagerAddress })
+    const increaseEbusdDebtData = th.getTransactionData(
+      "increaseEbusdDebt(uint256)",
+      ["0x64"]
+    );
+    const tx1 = await mockTroveManager.forward(
+      defaultPool.address,
+      increaseEbusdDebtData
+    );
     assert.isTrue(tx1.receipt.status);
 
-    const recordedBold_balanceBefore = await defaultPool.getBoldDebt();
-    assert.equal(recordedBold_balanceBefore, 100);
+    const recordedEbusd_balanceBefore = await defaultPool.getEbusdDebt();
+    assert.equal(recordedEbusd_balanceBefore, 100);
 
-    // await defaultPool.decreaseBoldDebt(100, { from: mockTroveManagerAddress })
-    const decreaseBoldDebtData = th.getTransactionData("decreaseBoldDebt(uint256)", ["0x64"]);
-    const tx2 = await mockTroveManager.forward(defaultPool.address, decreaseBoldDebtData);
+    // await defaultPool.decreaseEbusdDebt(100, { from: mockTroveManagerAddress })
+    const decreaseEbusdDebtData = th.getTransactionData(
+      "decreaseEbusdDebt(uint256)",
+      ["0x64"]
+    );
+    const tx2 = await mockTroveManager.forward(
+      defaultPool.address,
+      decreaseEbusdDebtData
+    );
     assert.isTrue(tx2.receipt.status);
 
-    const recordedBold_balanceAfter = await defaultPool.getBoldDebt();
-    assert.equal(recordedBold_balanceAfter, 0);
+    const recordedEbusd_balanceAfter = await defaultPool.getEbusdDebt();
+    assert.equal(recordedEbusd_balanceAfter, 0);
   });
 
   // send raw ether
   it("sendCollToActivePool(): decreases the recorded Coll balance by the correct amount", async () => {
     // setup: give pool 2 ether
-    const defaultPool_initialBalance = web3.utils.toBN(await WETH.balanceOf(defaultPool.address));
+    const defaultPool_initialBalance = web3.utils.toBN(
+      await WETH.balanceOf(defaultPool.address)
+    );
     assert.equal(defaultPool_initialBalance, 0);
 
     // start pool with 2 ether
@@ -213,29 +261,54 @@ contract("DefaultPool", async (accounts) => {
     ]);
     await mockActivePool.forward(WETH.address, approveData, { from: owner });
     // call receiveColl
-    const receiveCollData = th.getTransactionData("receiveColl(uint256)", [web3.utils.toHex(eth_amount)]);
-    const tx1 = await mockActivePool.forward(defaultPool.address, receiveCollData, { from: owner });
+    const receiveCollData = th.getTransactionData("receiveColl(uint256)", [
+      web3.utils.toHex(eth_amount),
+    ]);
+    const tx1 = await mockActivePool.forward(
+      defaultPool.address,
+      receiveCollData,
+      { from: owner }
+    );
     assert.isTrue(tx1.receipt.status);
 
-    const defaultPool_BalanceBeforeTx = web3.utils.toBN(await WETH.balanceOf(defaultPool.address));
-    const activePool_Balance_BeforeTx = web3.utils.toBN(await WETH.balanceOf(mockActivePool.address));
+    const defaultPool_BalanceBeforeTx = web3.utils.toBN(
+      await WETH.balanceOf(defaultPool.address)
+    );
+    const activePool_Balance_BeforeTx = web3.utils.toBN(
+      await WETH.balanceOf(mockActivePool.address)
+    );
 
     assert.equal(defaultPool_BalanceBeforeTx, dec(2, "ether"));
 
-    console.log(' -- ')
-    console.log('')
+    console.log(" -- ");
+    console.log("");
     // send ether from default pool to active
     // await defaultPool.sendCollToActivePool(dec(1, 'ether'), { from: mockTroveManagerAddress })
-    const sendCollData = th.getTransactionData("sendCollToActivePool(uint256)", [web3.utils.toHex(dec(1, "ether"))]);
-    const tx2 = await mockTroveManager.forward(defaultPool.address, sendCollData, { from: owner });
+    const sendCollData = th.getTransactionData(
+      "sendCollToActivePool(uint256)",
+      [web3.utils.toHex(dec(1, "ether"))]
+    );
+    const tx2 = await mockTroveManager.forward(
+      defaultPool.address,
+      sendCollData,
+      { from: owner }
+    );
     assert.isTrue(tx2.receipt.status);
-    console.log(' -- ')
+    console.log(" -- ");
 
-    const defaultPool_BalanceAfterTx = web3.utils.toBN(await WETH.balanceOf(defaultPool.address));
-    const activePool_Balance_AfterTx = web3.utils.toBN(await WETH.balanceOf(mockActivePool.address));
+    const defaultPool_BalanceAfterTx = web3.utils.toBN(
+      await WETH.balanceOf(defaultPool.address)
+    );
+    const activePool_Balance_AfterTx = web3.utils.toBN(
+      await WETH.balanceOf(mockActivePool.address)
+    );
 
-    const activePool_BalanceChange = activePool_Balance_AfterTx.sub(activePool_Balance_BeforeTx);
-    const defaultPool_BalanceChange = defaultPool_BalanceAfterTx.sub(defaultPool_BalanceBeforeTx);
+    const activePool_BalanceChange = activePool_Balance_AfterTx.sub(
+      activePool_Balance_BeforeTx
+    );
+    const defaultPool_BalanceChange = defaultPool_BalanceAfterTx.sub(
+      defaultPool_BalanceBeforeTx
+    );
     // assert.equal(activePool_BalanceChange, dec(1, 'ether'))
     // assert.equal(defaultPool_BalanceChange, _minus_1_Ether)
   });

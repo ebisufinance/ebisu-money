@@ -19,13 +19,13 @@ contract GasCompZapper is AddRemoveManagers {
     ITroveManager public immutable troveManager;
     IWETH public immutable WETH;
     IERC20 public immutable collToken;
-    IBoldToken public immutable boldToken;
+    IEbusdToken public immutable ebusdToken;
 
     constructor(IAddressesRegistry _addressesRegistry) AddRemoveManagers(_addressesRegistry) {
         borrowerOperations = _addressesRegistry.borrowerOperations();
         troveManager = _addressesRegistry.troveManager();
         collToken = _addressesRegistry.collToken();
-        boldToken = _addressesRegistry.boldToken();
+        ebusdToken = _addressesRegistry.ebusdToken();
         WETH = _addressesRegistry.WETH();
         require(address(WETH) != address(collToken), "GCZ: Wrong coll branch");
     }
@@ -34,7 +34,7 @@ contract GasCompZapper is AddRemoveManagers {
         address owner;
         uint256 ownerIndex;
         uint256 collAmount;
-        uint256 boldAmount;
+        uint256 ebusdAmount;
         uint256 upperHint;
         uint256 lowerHint;
         uint256 annualInterestRate;
@@ -73,7 +73,7 @@ contract GasCompZapper is AddRemoveManagers {
             _params.owner,
             _params.ownerIndex,
             _params.collAmount,
-            _params.boldAmount,
+            _params.ebusdAmount,
             _params.upperHint,
             _params.lowerHint,
             _params.annualInterestRate,
@@ -85,7 +85,7 @@ contract GasCompZapper is AddRemoveManagers {
             address(this) // receiver for remove manager
         );
 
-        boldToken.transfer(msg.sender, _params.boldAmount);
+        ebusdToken.transfer(msg.sender, _params.ebusdAmount);
 
         // Set add/remove managers
         _setAddManager(vars.troveId, _params.addManager);
@@ -120,63 +120,63 @@ contract GasCompZapper is AddRemoveManagers {
         collToken.safeTransfer(receiver, _amount);
     }
 
-    function withdrawBold(uint256 _troveId, uint256 _boldAmount, uint256 _maxUpfrontFee) external {
+    function withdrawEbusd(uint256 _troveId, uint256 _ebusdAmount, uint256 _maxUpfrontFee) external {
         address owner = troveNFT.ownerOf(_troveId);
         address receiver = _requireSenderIsOwnerOrRemoveManagerAndGetReceiver(_troveId, owner);
 
-        borrowerOperations.withdrawBold(_troveId, _boldAmount, _maxUpfrontFee);
+        borrowerOperations.withdrawEbusd(_troveId, _ebusdAmount, _maxUpfrontFee);
 
-        // Send Bold
-        boldToken.transfer(receiver, _boldAmount);
+        // Send Ebusd
+        ebusdToken.transfer(receiver, _ebusdAmount);
     }
 
-    function repayBold(uint256 _troveId, uint256 _boldAmount) external {
+    function repayEbusd(uint256 _troveId, uint256 _ebusdAmount) external {
         address owner = troveNFT.ownerOf(_troveId);
         _requireSenderIsOwnerOrAddManager(_troveId, owner);
 
-        // Pull Bold
-        boldToken.transferFrom(msg.sender, address(this), _boldAmount);
+        // Pull Ebusd
+        ebusdToken.transferFrom(msg.sender, address(this), _ebusdAmount);
 
-        borrowerOperations.repayBold(_troveId, _boldAmount);
+        borrowerOperations.repayEbusd(_troveId, _ebusdAmount);
     }
 
     function adjustTroveWithRawETH(
         uint256 _troveId,
         uint256 _collChange,
         bool _isCollIncrease,
-        uint256 _boldChange,
+        uint256 _ebusdChange,
         bool _isDebtIncrease,
         uint256 _maxUpfrontFee
     ) external {
-        address receiver = _adjustTrovePre(_troveId, _collChange, _isCollIncrease, _boldChange, _isDebtIncrease);
+        address receiver = _adjustTrovePre(_troveId, _collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease);
         borrowerOperations.adjustTrove(
-            _troveId, _collChange, _isCollIncrease, _boldChange, _isDebtIncrease, _maxUpfrontFee
+            _troveId, _collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease, _maxUpfrontFee
         );
-        _adjustTrovePost(_collChange, _isCollIncrease, _boldChange, _isDebtIncrease, receiver);
+        _adjustTrovePost(_collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease, receiver);
     }
 
     function adjustZombieTroveWithRawETH(
         uint256 _troveId,
         uint256 _collChange,
         bool _isCollIncrease,
-        uint256 _boldChange,
+        uint256 _ebusdChange,
         bool _isDebtIncrease,
         uint256 _upperHint,
         uint256 _lowerHint,
         uint256 _maxUpfrontFee
     ) external {
-        address receiver = _adjustTrovePre(_troveId, _collChange, _isCollIncrease, _boldChange, _isDebtIncrease);
+        address receiver = _adjustTrovePre(_troveId, _collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease);
         borrowerOperations.adjustZombieTrove(
-            _troveId, _collChange, _isCollIncrease, _boldChange, _isDebtIncrease, _upperHint, _lowerHint, _maxUpfrontFee
+            _troveId, _collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease, _upperHint, _lowerHint, _maxUpfrontFee
         );
-        _adjustTrovePost(_collChange, _isCollIncrease, _boldChange, _isDebtIncrease, receiver);
+        _adjustTrovePost(_collChange, _isCollIncrease, _ebusdChange, _isDebtIncrease, receiver);
     }
 
     function _adjustTrovePre(
         uint256 _troveId,
         uint256 _collChange,
         bool _isCollIncrease,
-        uint256 _boldChange,
+        uint256 _ebusdChange,
         bool _isDebtIncrease
     ) internal returns (address) {
         address owner = troveNFT.ownerOf(_troveId);
@@ -186,7 +186,7 @@ contract GasCompZapper is AddRemoveManagers {
             receiver = _requireSenderIsOwnerOrRemoveManagerAndGetReceiver(_troveId, owner);
         }
 
-        if (_isCollIncrease || (!_isDebtIncrease && _boldChange > 0)) {
+        if (_isCollIncrease || (!_isDebtIncrease && _ebusdChange > 0)) {
             _requireSenderIsOwnerOrAddManager(_troveId, owner);
         }
 
@@ -198,9 +198,9 @@ contract GasCompZapper is AddRemoveManagers {
         }
 
         // TODO: version with Permit
-        // Pull Bold
+        // Pull Ebusd
         if (!_isDebtIncrease) {
-            boldToken.transferFrom(msg.sender, address(this), _boldChange);
+            ebusdToken.transferFrom(msg.sender, address(this), _ebusdChange);
         }
 
         return receiver;
@@ -209,7 +209,7 @@ contract GasCompZapper is AddRemoveManagers {
     function _adjustTrovePost(
         uint256 _collChange,
         bool _isCollIncrease,
-        uint256 _boldChange,
+        uint256 _ebusdChange,
         bool _isDebtIncrease,
         address _receiver
     ) internal {
@@ -218,9 +218,9 @@ contract GasCompZapper is AddRemoveManagers {
             collToken.safeTransfer(_receiver, _collChange);
         }
 
-        // Send Bold
+        // Send Ebusd
         if (_isDebtIncrease) {
-            boldToken.transfer(_receiver, _boldChange);
+            ebusdToken.transfer(_receiver, _ebusdChange);
         }
     }
 
@@ -228,9 +228,9 @@ contract GasCompZapper is AddRemoveManagers {
         address owner = troveNFT.ownerOf(_troveId);
         address payable receiver = payable(_requireSenderIsOwnerOrRemoveManagerAndGetReceiver(_troveId, owner));
 
-        // pull Bold for repayment
+        // pull Ebusd for repayment
         LatestTroveData memory trove = troveManager.getLatestTroveData(_troveId);
-        boldToken.transferFrom(msg.sender, address(this), trove.entireDebt);
+        ebusdToken.transferFrom(msg.sender, address(this), trove.entireDebt);
 
         borrowerOperations.closeTrove(_troveId);
 

@@ -12,7 +12,7 @@ import {ETH_GAS_COMPENSATION} from "../Dependencies/Constants.sol";
 import {IBorrowerOperations} from "../Interfaces/IBorrowerOperations.sol";
 import "../AddressesRegistry.sol";
 import "../ActivePool.sol";
-import "../BoldToken.sol";
+import "../EbusdToken.sol";
 import "../BorrowerOperations.sol";
 import "../CollSurplusPool.sol";
 import "../DefaultPool.sol";
@@ -95,7 +95,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         ITroveManager[] troveManagers;
         LiquityContractsTestnet contracts;
         bytes bytecode;
-        address boldTokenAddress;
+        address ebusdTokenAddress;
         uint256 i;
     }
 
@@ -111,7 +111,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
     struct DeploymentResult {
         LiquityContractsTestnet[] contractsArray;
         ICollateralRegistry collateralRegistry;
-        IBoldToken boldToken;
+        IEbusdToken ebusdToken;
         HintHelpers hintHelpers;
         MultiTroveGetter multiTroveGetter;
     }
@@ -158,7 +158,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             "{",
             string.concat(
                 string.concat('"collateralRegistry":"', address(deployed.collateralRegistry).toHexString(), '",'),
-                string.concat('"boldToken":"', address(deployed.boldToken).toHexString(), '",'),
+                string.concat('"ebusdToken":"', address(deployed.ebusdToken).toHexString(), '",'),
                 string.concat('"hintHelpers":"', address(deployed.hintHelpers).toHexString(), '",'),
                 string.concat('"multiTroveGetter":"', address(deployed.multiTroveGetter).toHexString(), '",'),
                 string.concat('"branches":[', branches.join(","), "]") // no comma
@@ -277,7 +277,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
                 vm.addr(trove.owner), //     _owner
                 trove.ownerIndex, //         _ownerIndex
                 trove.coll, //               _collAmount
-                trove.debt, //               _boldAmount
+                trove.debt, //               _ebusdAmount
                 0, //                        _upperHint
                 0, //                        _lowerHint
                 trove.annualInterestRate, // _annualInterestRate
@@ -302,11 +302,11 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
     {
         DeploymentVarsTestnet memory vars;
         vars.numCollaterals = troveManagerParamsArray.length;
-        // Deploy Bold
-        vars.bytecode = abi.encodePacked(type(BoldToken).creationCode, abi.encode(deployer));
-        vars.boldTokenAddress = vm.computeCreate2Address(SALT, keccak256(vars.bytecode));
-        r.boldToken = new BoldToken{salt: SALT}(deployer);
-        assert(address(r.boldToken) == vars.boldTokenAddress);
+        // Deploy Ebusd
+        vars.bytecode = abi.encodePacked(type(EbusdToken).creationCode, abi.encode(deployer));
+        vars.ebusdTokenAddress = vm.computeCreate2Address(SALT, keccak256(vars.bytecode));
+        r.ebusdToken = new EbusdToken{salt: SALT}(deployer);
+        assert(address(r.ebusdToken) == vars.ebusdTokenAddress);
 
         r.contractsArray = new LiquityContractsTestnet[](vars.numCollaterals);
         vars.collaterals = new IERC20Metadata[](vars.numCollaterals);
@@ -334,7 +334,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
 
-        r.collateralRegistry = new CollateralRegistry(r.boldToken, vars.collaterals, vars.troveManagers);
+        r.collateralRegistry = new CollateralRegistry(r.ebusdToken, vars.collaterals, vars.troveManagers);
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
 
@@ -342,7 +342,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         for (vars.i = 0; vars.i < vars.numCollaterals; vars.i++) {
             vars.contracts = _deployAndConnectCollateralContractsTestnet(
                 vars.collaterals[vars.i],
-                r.boldToken,
+                r.ebusdToken,
                 r.collateralRegistry,
                 _WETH,
                 vars.addressesRegistries[vars.i],
@@ -353,7 +353,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             r.contractsArray[vars.i] = vars.contracts;
         }
 
-        r.boldToken.setCollateralRegistry(address(r.collateralRegistry));
+        r.ebusdToken.setCollateralRegistry(address(r.collateralRegistry));
     }
 
     function _deployAddressesRegistry(TroveManagerParams memory _troveManagerParams)
@@ -377,7 +377,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
 
     function _deployAndConnectCollateralContractsTestnet(
         IERC20Metadata _collToken,
-        IBoldToken _boldToken,
+        IEbusdToken _ebusdToken,
         ICollateralRegistry _collateralRegistry,
         IWETH _weth,
         IAddressesRegistry _addressesRegistry,
@@ -443,7 +443,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             hintHelpers: _hintHelpers,
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
-            boldToken: _boldToken,
+            ebusdToken: _ebusdToken,
             WETH: _weth
         });
         contracts.addressesRegistry.setAddresses(addressVars);
@@ -469,7 +469,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _ebusdToken.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),

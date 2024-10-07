@@ -119,7 +119,7 @@ export const TroveManager = [
       "components": [
         { "name": "entireDebt", "type": "uint256", "internalType": "uint256" },
         { "name": "entireColl", "type": "uint256", "internalType": "uint256" },
-        { "name": "redistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+        { "name": "redistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
         { "name": "redistCollGain", "type": "uint256", "internalType": "uint256" },
         { "name": "accruedInterest", "type": "uint256", "internalType": "uint256" },
         { "name": "recordedDebt", "type": "uint256", "internalType": "uint256" },
@@ -189,7 +189,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -218,7 +218,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -252,7 +252,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -285,7 +285,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -313,7 +313,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -358,7 +358,7 @@ export const TroveManager = [
       "type": "tuple",
       "internalType": "struct TroveChange",
       "components": [
-        { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+        { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
         { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
         { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
         { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -386,7 +386,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -430,7 +430,7 @@ export const TroveManager = [
         "type": "tuple",
         "internalType": "struct TroveChange",
         "components": [
-          { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+          { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
           { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
           { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
           { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -481,7 +481,7 @@ export const TroveManager = [
           "type": "tuple",
           "internalType": "struct TroveChange",
           "components": [
-            { "name": "appliedRedistBoldDebtGain", "type": "uint256", "internalType": "uint256" },
+            { "name": "appliedRedistEbusdDebtGain", "type": "uint256", "internalType": "uint256" },
             { "name": "appliedRedistCollGain", "type": "uint256", "internalType": "uint256" },
             { "name": "collIncrease", "type": "uint256", "internalType": "uint256" },
             { "name": "collDecrease", "type": "uint256", "internalType": "uint256" },
@@ -508,7 +508,7 @@ export const TroveManager = [
     "name": "redeemCollateral",
     "inputs": [
       { "name": "_redeemer", "type": "address", "internalType": "address" },
-      { "name": "_boldamount", "type": "uint256", "internalType": "uint256" },
+      { "name": "_ebusdamount", "type": "uint256", "internalType": "uint256" },
       { "name": "_price", "type": "uint256", "internalType": "uint256" },
       { "name": "_redemptionRate", "type": "uint256", "internalType": "uint256" },
       { "name": "_maxIterations", "type": "uint256", "internalType": "uint256" },
@@ -521,7 +521,7 @@ export const TroveManager = [
     "name": "rewardSnapshots",
     "inputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
     "outputs": [{ "name": "coll", "type": "uint256", "internalType": "uint256" }, {
-      "name": "boldDebt",
+      "name": "ebusdDebt",
       "type": "uint256",
       "internalType": "uint256",
     }],
@@ -566,7 +566,7 @@ export const TroveManager = [
   {
     "type": "function",
     "name": "urgentRedemption",
-    "inputs": [{ "name": "_boldAmount", "type": "uint256", "internalType": "uint256" }, {
+    "inputs": [{ "name": "_ebusdAmount", "type": "uint256", "internalType": "uint256" }, {
       "name": "_troveIds",
       "type": "uint256[]",
       "internalType": "uint256[]",
@@ -611,8 +611,8 @@ export const TroveManager = [
   },
   {
     "type": "event",
-    "name": "BoldTokenAddressChanged",
-    "inputs": [{ "name": "_newBoldTokenAddress", "type": "address", "indexed": false, "internalType": "address" }],
+    "name": "EbusdTokenAddressChanged",
+    "inputs": [{ "name": "_newEbusdTokenAddress", "type": "address", "indexed": false, "internalType": "address" }],
     "anonymous": false,
   },
   {
@@ -661,13 +661,13 @@ export const TroveManager = [
     "inputs": [
       { "name": "_debtOffsetBySP", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_debtRedistributed", "type": "uint256", "indexed": false, "internalType": "uint256" },
-      { "name": "_boldGasCompensation", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "_ebusdGasCompensation", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_collGasCompensation", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_collSentToSP", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_collRedistributed", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_collSurplus", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_L_ETH", "type": "uint256", "indexed": false, "internalType": "uint256" },
-      { "name": "_L_boldDebt", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "_L_ebusdDebt", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_price", "type": "uint256", "indexed": false, "internalType": "uint256" },
     ],
     "anonymous": false,
@@ -682,8 +682,8 @@ export const TroveManager = [
     "type": "event",
     "name": "Redemption",
     "inputs": [
-      { "name": "_attemptedBoldAmount", "type": "uint256", "indexed": false, "internalType": "uint256" },
-      { "name": "_actualBoldAmount", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "_attemptedEbusdAmount", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "_actualEbusdAmount", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_ETHSent", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_ETHFee", "type": "uint256", "indexed": false, "internalType": "uint256" },
       { "name": "_price", "type": "uint256", "indexed": false, "internalType": "uint256" },
@@ -756,7 +756,7 @@ export const TroveManager = [
     "name": "MinCollNotReached",
     "inputs": [{ "name": "_coll", "type": "uint256", "internalType": "uint256" }],
   },
-  { "type": "error", "name": "NotEnoughBoldBalance", "inputs": [] },
+  { "type": "error", "name": "NotEnoughEbusdBalance", "inputs": [] },
   { "type": "error", "name": "NotShutDown", "inputs": [] },
   { "type": "error", "name": "NothingToLiquidate", "inputs": [] },
   { "type": "error", "name": "OnlyOneTroveLeft", "inputs": [] },

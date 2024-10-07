@@ -27,7 +27,7 @@ export default {
     loanRedemptionRisk: [
       "Redemption risk",
       <>
-        If BOLD trades below $1, your collateral may be{" "}
+        If ebUSD trades below $1, your collateral may be{" "}
         <a
           href="https://docs.liquity.org/faq/lusd-redemptions"
           rel="noopener noreferrer"
@@ -41,11 +41,11 @@ export default {
     ],
     loanLtv: [
       "Loan-to-value ratio",
-      "The ratio between your deposited collateral and the amount of BOLD you have chosen to borrow.",
+      "The ratio between your deposited collateral and the amount of ebUSD you have chosen to borrow.",
     ],
     loanMaxLtv: [
       "Maximum loan-to-value ratio",
-      "The maximum ratio between your collateral and the BOLD that you mint allowed at origination.",
+      "The maximum ratio between your collateral and the ebUSD that you mint allowed at origination.",
     ],
     loanLiquidationPrice: [
       "Liquidation price",
@@ -63,16 +63,16 @@ export default {
     myPositionsTitle: "My positions",
     actions: {
       borrow: {
-        title: "Borrow BOLD",
-        description: "Set your own interest rate and borrow BOLD against ETH and staked ETH.",
+        title: "Borrow ebUSD",
+        description: "Set your own interest rate and borrow ebUSD against ETH and staked ETH.",
       },
       leverage: {
         title: "Leverage ETH",
         description: "Set your own interest rate and increase your exposure to ETH and staked ETH.",
       },
       earn: {
-        title: "Earn with BOLD",
-        description: "Cover liquidations to earn BOLD and collateral assets.",
+        title: "Earn with ebUSD",
+        description: "Cover liquidations to earn ebUSD and collateral assets.",
       },
       stake: {
         title: "Stake LQTY",
@@ -92,7 +92,7 @@ export default {
       ],
       spTvl: [
         "Total Value Locked",
-        "The total amount of BOLD deposited in each stability pool.",
+        "The total amount of ebUSD deposited in each stability pool.",
       ],
       borrowTvl: [
         "Total Value Locked",
@@ -103,9 +103,9 @@ export default {
 
   // Borrow screen
   borrowScreen: {
-    headline: (tokensIcons: N, boldIcon: N) => (
+    headline: (tokensIcons: N, ebusdIcon: N) => (
       <>
-        Borrow {boldIcon} BOLD with {tokensIcons} ETH
+        Borrow {ebusdIcon} ebUSD with {tokensIcons} ETH
       </>
     ),
     depositField: {
@@ -123,9 +123,9 @@ export default {
     action: "Open loan",
     infoTooltips: {
       interestRateSuggestions: [
-        "Positions with lower interest rates are the first to be redeemed by BOLD holders.",
+        "Positions with lower interest rates are the first to be redeemed by ebUSD holders.",
       ],
-      interestRateBoldPerYear: [
+      interestRateEbUsdPerYear: [
         "Your annualized interest burden at your selected position rate.",
       ],
     },
@@ -150,9 +150,9 @@ export default {
         "Choose the amplification of your exposure. Note that a higher level means higher liquidation risk. You are responsible for your own assessment of what a suitable level is.",
       ],
       interestRateSuggestions: [
-        "Positions with lower interest rates are the first to be redeemed by BOLD holders.",
+        "Positions with lower interest rates are the first to be redeemed by ebUSD holders.",
       ],
-      interestRateBoldPerYear: [
+      interestRateEbUsdPerYear: [
         "Your annualized interest burden at your selected position rate.",
       ],
       exposure: [
@@ -164,12 +164,12 @@ export default {
 
   // Earn home screen
   earnHome: {
-    headline: (tokensIcons: N, boldIcon: N) => (
+    headline: (tokensIcons: N, ebusdIcon: N) => (
       <>
-        Earn {tokensIcons} with {boldIcon} BOLD
+        Earn {tokensIcons} with {ebusdIcon} ebUSD
       </>
     ),
-    subheading: "Get BOLD and extra ETH rewards from liquidations",
+    subheading: "Get ebUSD and extra ETH rewards from liquidations",
     poolsColumns: {
       pool: "Pool",
       apr: "APR",
@@ -177,7 +177,7 @@ export default {
     },
     infoTooltips: {
       tvl: (collateral: N) => [
-        <>Total BOLD covering {collateral}-backed position liquidations</>,
+        <>Total ebUSD covering {collateral}-backed position liquidations</>,
       ],
     },
   },
@@ -230,23 +230,23 @@ export default {
     },
     infoTooltips: {
       tvl: (collateral: N) => [
-        <>Total BOLD covering {collateral}-backed position liquidations.</>,
+        <>Total ebUSD covering {collateral}-backed position liquidations.</>,
       ],
       depositPoolShare: [
-        "Ratio of your BOLD deposits versus the total stability pool.",
+        "Ratio of your ebUSD deposits versus the total stability pool.",
       ],
       alsoClaimRewardsCheckbox: [
-        "Trigger a payout of your accrued BOLD and ETH rewards.",
+        "Trigger a payout of your accrued ebUSD and ETH rewards.",
       ],
       currentApr: [
-        "Average annualized return for BOLD deposits over the past 7 days.",
+        "Average annualized return for ebUSD deposits over the past 7 days.",
       ],
       rewardsColl: [
         "COLL rewards",
         "Your proceeds from liquidations conducted by this stability pool.",
       ],
-      rewardsBold: [
-        "BOLD rewards",
+      rewardsEbUsd: [
+        "ebUSD rewards",
         "Your earnings from protocol revenue distributions to this stability pool.",
       ],
     },

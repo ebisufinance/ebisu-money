@@ -29,10 +29,13 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
   const collateral = TOKENS_BY_SYMBOL[loan.collateral];
   const collPrice = usePrice(collateral.symbol);
 
-  const deposit = useInputFieldValue((value) => `${dn.format(value)} ${collateral.symbol}`, {
-    defaultValue: dn.toString(loan.deposit),
-  });
-  const debt = useInputFieldValue((value) => `${dn.format(value)} BOLD`, {
+  const deposit = useInputFieldValue(
+    (value) => `${dn.format(value)} ${collateral.symbol}`,
+    {
+      defaultValue: dn.toString(loan.deposit),
+    },
+  );
+  const debt = useInputFieldValue((value) => `${dn.format(value)} EBUSD`, {
     defaultValue: dn.toString(loan.borrowed),
   });
 
@@ -54,9 +57,7 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
     collPrice,
   );
 
-  const boldInterestPerYear = interestRate
-    && debt.parsed
-    && dn.mul(debt.parsed, interestRate);
+  const ebusdInterestPerYear = interestRate && debt.parsed && dn.mul(debt.parsed, interestRate);
 
   const allowSubmit = account.isConnected
     && deposit.parsed
@@ -90,13 +91,19 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
             <ValueUpdate
               before={loanDetails.redemptionRisk && (
                 <HFlex gap={4} justifyContent="flex-start">
-                  <StatusDot mode={riskLevelToStatusMode(loanDetails.redemptionRisk)} />
+                  <StatusDot
+                    mode={riskLevelToStatusMode(loanDetails.redemptionRisk)}
+                  />
                   {formatRisk(loanDetails.redemptionRisk)}
                 </HFlex>
               )}
               after={newLoanDetails.redemptionRisk && (
                 <HFlex gap={4} justifyContent="flex-start">
-                  <StatusDot mode={riskLevelToStatusMode(newLoanDetails.redemptionRisk)} />
+                  <StatusDot
+                    mode={riskLevelToStatusMode(
+                      newLoanDetails.redemptionRisk,
+                    )}
+                  />
                   {formatRisk(newLoanDetails.redemptionRisk)}
                 </HFlex>
               )}
@@ -107,14 +114,14 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
               <div>Interest rate / day</div>
               <InfoTooltip heading="Interest rate / day" />
             </HFlex>
-            {boldInterestPerYear && (
+            {ebusdInterestPerYear && (
               <HFlex
                 gap={8}
                 className={css({
                   fontVariantNumeric: "tabular-nums",
                 })}
               >
-                ~{fmtnum(dn.div(boldInterestPerYear, 365))} BOLD
+                ~{fmtnum(dn.div(ebusdInterestPerYear, 365))} EBUSD
               </HFlex>
             )}
           </HFlex>
@@ -165,7 +172,10 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
                 lowerHint: dnum18(0),
                 maxUpfrontFee: dnum18(maxUint256),
                 owner: account.address,
-                prefixedTroveId: getPrefixedTroveId(loan.collIndex, loan.troveId),
+                prefixedTroveId: getPrefixedTroveId(
+                  loan.collIndex,
+                  loan.troveId,
+                ),
                 upperHint: dnum18(0),
               });
               router.push("/transactions");

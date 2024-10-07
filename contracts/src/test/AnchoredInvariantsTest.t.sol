@@ -26,7 +26,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         p[3] = TestDeployer.TroveManagerParams(1.6 ether, 1.25 ether, 1.01 ether, 0.05 ether, 0.1 ether);
         TestDeployer deployer = new TestDeployer();
         Contracts memory contracts;
-        (contracts.branches, contracts.collateralRegistry, contracts.boldToken, contracts.hintHelpers,, contracts.weth,)
+        (contracts.branches, contracts.collateralRegistry, contracts.ebusdToken, contracts.hintHelpers,, contracts.weth,)
         = deployer.deployAndConnectContractsMultiColl(p);
         setupContracts(contracts);
 
@@ -202,7 +202,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.warp(18_593_995);
 
         // redemption rate: 0.195871664252157123 ether
-        // redeemed BOLD: 15_191.361299840412827416 ether
+        // redeemed EBUSD: 15_191.361299840412827416 ether
         // redeemed Troves: [
         //   [],
         //   [],
@@ -213,7 +213,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.redeemCollateral(15_191.361299840412827416 ether, 0);
 
         // redemption rate: 0.195871664252157123 ether
-        // redeemed BOLD: 0.000000000000006302 ether
+        // redeemed EBUSD: 0.000000000000006302 ether
         // redeemed Troves: [
         //   [],
         //   [],
@@ -285,7 +285,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.warp(13_319_679);
 
         // redemption rate: 0.246264103698059017 ether
-        // redeemed BOLD: 16_223.156659761268542045 ether
+        // redeemed EBUSD: 16_223.156659761268542045 ether
         // redeemed Troves: [
         //   [],
         //   [],
@@ -419,7 +419,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.addMeToUrgentRedemptionBatch();
 
         // redemption rate: 0.1474722457669512 ether
-        // redeemed BOLD: 64_016.697525751186019703 ether
+        // redeemed EBUSD: 64_016.697525751186019703 ether
         // redeemed Troves: [
         //   [],
         //   [fran],
@@ -451,7 +451,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.addMeToLiquidationBatch();
 
         // redemption rate: 0.108097849716691371 ether
-        // redeemed BOLD: 0.000151948988774207 ether
+        // redeemed EBUSD: 0.000151948988774207 ether
         // redeemed Troves: [
         //   [],
         //   [fran],
@@ -542,7 +542,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         );
 
         // redemption rate: 0.005000000000000004 ether
-        // redeemed BOLD: 0.000000000000071705 ether
+        // redeemed EBUSD: 0.000000000000071705 ether
         // redeemed Troves: [
         //   [],
         //   [gabe],
@@ -553,7 +553,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.redeemCollateral(0.000000000000071705 ether, 1);
 
         // redemption rate: 0.387443853477360594 ether
-        // redeemed BOLD: 5_896.917877499258624384 ether
+        // redeemed EBUSD: 5_896.917877499258624384 ether
         // redeemed Troves: [
         //   [],
         //   [gabe],
@@ -744,7 +744,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         info("gabe debt: ", c.troveManager.getTroveEntireDebt(addressToTroveId(gabe)).decimal());
 
         // redemption rate: 0.184202341360173417 ether
-        // redeemed BOLD: 66_462.494346928386331338 ether
+        // redeemed EBUSD: 66_462.494346928386331338 ether
         // redeemed Troves: [
         //   [carl],
         //   [gabe],
@@ -843,7 +843,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         );
 
         // redemption rate: 0.005 ether
-        // redeemed BOLD: 0.000000000000017162 ether
+        // redeemed EBUSD: 0.000000000000017162 ether
         // redeemed Troves: [
         //   [],
         //   [gabe],
@@ -873,7 +873,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.addMeToUrgentRedemptionBatch();
 
         // redemption rate: 0.37622704640950591 ether
-        // redeemed BOLD: 34_333.025174298345667786 ether
+        // redeemed EBUSD: 34_333.025174298345667786 ether
         // redeemed Troves: [
         //   [hope],
         //   [gabe],
@@ -927,7 +927,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.addMeToUrgentRedemptionBatch();
 
         // redemption rate: 0.37622704640950591 ether
-        // redeemed BOLD: 0.000000000000005602 ether
+        // redeemed EBUSD: 0.000000000000005602 ether
         // redeemed Troves: [
         //   [carl],
         //   [gabe],
@@ -953,7 +953,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         );
 
         // redemption rate: 0.718476929948594246 ether
-        // redeemed BOLD: 5_431.066474911544502914 ether
+        // redeemed EBUSD: 5_431.066474911544502914 ether
         // redeemed Troves: [
         //   [carl],
         //   [gabe],
@@ -1030,7 +1030,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         // upper hint: 0
         // lower hint: 30960623452289762463130736603892188849115197753010878244835568881362241800197
         // upfront fee: 56.245103106642574315 ether
-        // function: withdrawBold()
+        // function: withdrawEbusd()
         vm.prank(hope);
         handler.adjustTrove(
             0,
@@ -1098,7 +1098,7 @@ contract AnchoredInvariantsTest is Logging, BaseInvariantTest, BaseMultiCollater
         handler.addMeToUrgentRedemptionBatch();
 
         // redemption rate: 0.00500000000000102 ether
-        // redeemed BOLD: 0.000000000536305094 ether
+        // redeemed EBUSD: 0.000000000536305094 ether
         // redeemed Troves: [
         //   [barb],
         //   [gabe],

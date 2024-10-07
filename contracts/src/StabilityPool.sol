@@ -8,24 +8,24 @@ import "./Interfaces/IStabilityPool.sol";
 import "./Interfaces/IAddressesRegistry.sol";
 import "./Interfaces/IStabilityPoolEvents.sol";
 import "./Interfaces/ITroveManager.sol";
-import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/IEbusdToken.sol";
 import "./Interfaces/ISortedTroves.sol";
 import "./Dependencies/LiquityBase.sol";
 
 // import "forge-std/console2.sol";
 
 /*
- * The Stability Pool holds Bold tokens deposited by Stability Pool depositors.
+ * The Stability Pool holds Ebusd tokens deposited by Stability Pool depositors.
  *
- * When a trove is liquidated, then depending on system conditions, some of its Bold debt gets offset with
- * Bold in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of Bold tokens in the Stability Pool is burned.
+ * When a trove is liquidated, then depending on system conditions, some of its Ebusd debt gets offset with
+ * Ebusd in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of Ebusd tokens in the Stability Pool is burned.
  *
- * Thus, a liquidation causes each depositor to receive a Bold loss, in proportion to their deposit as a share of total deposits.
+ * Thus, a liquidation causes each depositor to receive a Ebusd loss, in proportion to their deposit as a share of total deposits.
  * They also receive an Coll gain, as the collateral of the liquidated trove is distributed among Stability depositors,
  * in the same proportion.
  *
  * When a liquidation occurs, it depletes every deposit by the same fraction: for example, a liquidation that depletes 40%
- * of the total Bold in the Stability Pool, depletes 40% of each deposit.
+ * of the total Ebusd in the Stability Pool, depletes 40% of each deposit.
  *
  * A deposit that has experienced a series of liquidations is termed a "compounded deposit": each liquidation depletes the deposit,
  * multiplying it by some factor in range ]0,1[
@@ -87,7 +87,7 @@ import "./Dependencies/LiquityBase.sol";
  *
  * Otherwise, we then compare the current scale to the deposit's scale snapshot. If they're equal, the compounded deposit is given by d_t * P/P_t.
  * If it spans one scale change, it is given by d_t * P/(P_t * 1e9). If it spans more than one scale change, we define the compounded deposit
- * as 0, since it is now less than 1e-9'th of its initial value (e.g. a deposit of 1 billion Bold has depleted to < 1 Bold).
+ * as 0, since it is now less than 1e-9'th of its initial value (e.g. a deposit of 1 billion Ebusd has depleted to < 1 Ebusd).
  *
  *
  *  --- TRACKING DEPOSITOR'S Coll GAIN OVER SCALE CHANGES AND EPOCHS ---
@@ -135,18 +135,18 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
 
     IERC20 public immutable collToken;
     ITroveManager public immutable troveManager;
-    IBoldToken public immutable boldToken;
+    IEbusdToken public immutable ebusdToken;
 
     uint256 internal collBalance; // deposited ether tracker
 
-    // Tracker for Bold held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
-    uint256 internal totalBoldDeposits;
+    // Tracker for Ebusd held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
+    uint256 internal totalEbusdDeposits;
 
-    // Total remaining Bold yield gains (from Trove interest mints) held by SP, and not yet paid out to depositors
+    // Total remaining Ebusd yield gains (from Trove interest mints) held by SP, and not yet paid out to depositors
     // TODO: from the contract's perspective, this is a write-only variable. It is only ever read in tests, so it would
     // be better to keep it outside the core contract.
     uint256 internal yieldGainsOwed;
-    // Total remaining Bold yield gains (from Trove interest mints) held by SP, not yet paid out to depositors,
+    // Total remaining Ebusd yield gains (from Trove interest mints) held by SP, not yet paid out to depositors,
     // and not accounted for because they were received when the total deposits were too small
     uint256 internal yieldGainsPending;
 
@@ -159,7 +159,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     struct Snapshots {
         uint256 S; // Coll reward sum liqs
         uint256 P;
-        uint256 B; // Bold reward sum from minted interest
+        uint256 B; // Ebusd reward sum from minted interest
         uint128 scale;
         uint128 epoch;
     }
@@ -169,7 +169,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     mapping(address => uint256) public stashedColl;
 
     /*  Product 'P': Running product by which to multiply an initial deposit, in order to find the current compounded deposit,
-    * after a series of liquidations have occurred, each of which cancel some Bold debt with the deposit.
+    * after a series of liquidations have occurred, each of which cancel some Ebusd debt with the deposit.
     *
     * During its lifetime, a deposit's value evolves from d_t to d_t * P / P_t , where P_t
     * is the snapshot of P taken at the instant the deposit was made. 18-digit decimal.
@@ -197,23 +197,23 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
 
     // Error trackers for the error correction in the offset calculation
     uint256 public lastCollError_Offset;
-    uint256 public lastBoldLossError_Offset;
+    uint256 public lastEbusdLossError_Offset;
 
-    // Error tracker fror the error correction in the BOLD reward calculation
+    // Error tracker fror the error correction in the EBUSD reward calculation
     uint256 public lastYieldError;
 
     // --- Events ---
 
     event TroveManagerAddressChanged(address _newTroveManagerAddress);
-    event BoldTokenAddressChanged(address _newBoldTokenAddress);
+    event EbusdTokenAddressChanged(address _newEbusdTokenAddress);
 
     constructor(IAddressesRegistry _addressesRegistry) LiquityBase(_addressesRegistry) {
         collToken = _addressesRegistry.collToken();
         troveManager = _addressesRegistry.troveManager();
-        boldToken = _addressesRegistry.boldToken();
+        ebusdToken = _addressesRegistry.ebusdToken();
 
         emit TroveManagerAddressChanged(address(troveManager));
-        emit BoldTokenAddressChanged(address(boldToken));
+        emit EbusdTokenAddressChanged(address(ebusdToken));
     }
 
     // --- Getters for public variables. Required by IPool interface ---
@@ -222,8 +222,8 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         return collBalance;
     }
 
-    function getTotalBoldDeposits() external view override returns (uint256) {
-        return totalBoldDeposits;
+    function getTotalEbusdDeposits() external view override returns (uint256) {
+        return totalEbusdDeposits;
     }
 
     function getYieldGainsOwed() external view override returns (uint256) {
@@ -251,16 +251,16 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
 
         uint256 currentCollGain = getDepositorCollGain(msg.sender);
         uint256 currentYieldGain = getDepositorYieldGain(msg.sender);
-        uint256 compoundedBoldDeposit = getCompoundedBoldDeposit(msg.sender);
+        uint256 compoundedEbusdDeposit = getCompoundedEbusdDeposit(msg.sender);
         (uint256 keptYieldGain, uint256 yieldGainToSend) = _getYieldToKeepOrSend(currentYieldGain, _doClaim);
-        uint256 newDeposit = compoundedBoldDeposit + _topUp + keptYieldGain;
+        uint256 newDeposit = compoundedEbusdDeposit + _topUp + keptYieldGain;
         (uint256 newStashedColl, uint256 collToSend) =
             _getNewStashedCollAndCollToSend(msg.sender, currentCollGain, _doClaim);
 
         emit DepositOperation(
             msg.sender,
             Operation.provideToSP,
-            initialDeposit - compoundedBoldDeposit,
+            initialDeposit - compoundedEbusdDeposit,
             int256(_topUp),
             currentYieldGain,
             yieldGainToSend,
@@ -269,10 +269,10 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         );
 
         _updateDepositAndSnapshots(msg.sender, newDeposit, newStashedColl);
-        boldToken.sendToPool(msg.sender, address(this), _topUp);
-        _updateTotalBoldDeposits(_topUp + keptYieldGain, 0);
+        ebusdToken.sendToPool(msg.sender, address(this), _topUp);
+        _updateTotalEbusdDeposits(_topUp + keptYieldGain, 0);
         _decreaseYieldGainsOwed(currentYieldGain);
-        _sendBoldtoDepositor(msg.sender, yieldGainToSend);
+        _sendEbusdtoDepositor(msg.sender, yieldGainToSend);
         _sendCollGainToDepositor(collToSend);
 
         // If there were pending yields and with the new deposit we are reaching the threshold, let’s move the yield to owed
@@ -297,7 +297,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     /*  withdrawFromSP():
     * - Calculates depositor's Coll gain
     * - Calculates the compounded deposit
-    * - Sends the requested BOLD withdrawal to depositor
+    * - Sends the requested EBUSD withdrawal to depositor
     * - (If _amount > userDeposit, the user withdraws all of their compounded deposit)
     * - Decreases deposit by withdrawn amount and takes new snapshots of accumulators P and S
     */
@@ -309,18 +309,18 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
 
         uint256 currentCollGain = getDepositorCollGain(msg.sender);
         uint256 currentYieldGain = getDepositorYieldGain(msg.sender);
-        uint256 compoundedBoldDeposit = getCompoundedBoldDeposit(msg.sender);
-        uint256 boldToWithdraw = LiquityMath._min(_amount, compoundedBoldDeposit);
+        uint256 compoundedEbusdDeposit = getCompoundedEbusdDeposit(msg.sender);
+        uint256 ebusdToWithdraw = LiquityMath._min(_amount, compoundedEbusdDeposit);
         (uint256 keptYieldGain, uint256 yieldGainToSend) = _getYieldToKeepOrSend(currentYieldGain, _doClaim);
-        uint256 newDeposit = compoundedBoldDeposit - boldToWithdraw + keptYieldGain;
+        uint256 newDeposit = compoundedEbusdDeposit - ebusdToWithdraw + keptYieldGain;
         (uint256 newStashedColl, uint256 collToSend) =
             _getNewStashedCollAndCollToSend(msg.sender, currentCollGain, _doClaim);
 
         emit DepositOperation(
             msg.sender,
             Operation.withdrawFromSP,
-            initialDeposit - compoundedBoldDeposit,
-            -int256(boldToWithdraw),
+            initialDeposit - compoundedEbusdDeposit,
+            -int256(ebusdToWithdraw),
             currentYieldGain,
             yieldGainToSend,
             currentCollGain,
@@ -329,8 +329,8 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
 
         _updateDepositAndSnapshots(msg.sender, newDeposit, newStashedColl);
         _decreaseYieldGainsOwed(currentYieldGain);
-        _updateTotalBoldDeposits(keptYieldGain, boldToWithdraw);
-        _sendBoldtoDepositor(msg.sender, boldToWithdraw + yieldGainToSend);
+        _updateTotalEbusdDeposits(keptYieldGain, ebusdToWithdraw);
+        _sendEbusdtoDepositor(msg.sender, ebusdToWithdraw + yieldGainToSend);
         _sendCollGainToDepositor(collToSend);
 
         // If there were pending yields and with the new deposit we are reaching the threshold, let’s move the yield to owed
@@ -368,23 +368,23 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         _sendCollGainToDepositor(collToSend);
     }
 
-    // --- BOLD reward functions ---
+    // --- EBUSD reward functions ---
 
-    function triggerBoldRewards(uint256 _boldYield) external {
+    function triggerEbusdRewards(uint256 _ebusdYield) external {
         _requireCallerIsActivePool();
-        assert(_boldYield > 0); // TODO: remove before deploying
+        assert(_ebusdYield > 0); // TODO: remove before deploying
 
-        _updateYieldRewardsSum(_boldYield);
+        _updateYieldRewardsSum(_ebusdYield);
     }
 
     function _updateYieldRewardsSum(uint256 _newYield) internal {
         uint256 accumulatedYieldGains = yieldGainsPending + _newYield;
         if (accumulatedYieldGains == 0) return;
 
-        // When total deposits is very small, B is not updated. In this case, the BOLD issued is hold
-        // until the total deposits reach 1 BOLD (remains in the balance of the SP).
-        uint256 totalBoldDepositsCached = totalBoldDeposits; // cached to save an SLOAD
-        if (totalBoldDepositsCached < DECIMAL_PRECISION) {
+        // When total deposits is very small, B is not updated. In this case, the EBUSD issued is hold
+        // until the total deposits reach 1 EBUSD (remains in the balance of the SP).
+        uint256 totalEbusdDepositsCached = totalEbusdDeposits; // cached to save an SLOAD
+        if (totalEbusdDepositsCached < DECIMAL_PRECISION) {
             yieldGainsPending = accumulatedYieldGains;
             return;
         }
@@ -393,7 +393,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         yieldGainsPending = 0;
 
         /*
-         * Calculate the BOLD-per-unit staked.  Division uses a "feedback" error correction, to keep the
+         * Calculate the EBUSD-per-unit staked.  Division uses a "feedback" error correction, to keep the
          * cumulative error low in the running total B:
          *
          * 1) Form a numerator which compensates for the floor division error that occurred the last time this
@@ -405,8 +405,8 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
          */
         uint256 yieldNumerator = accumulatedYieldGains * DECIMAL_PRECISION + lastYieldError;
 
-        uint256 yieldPerUnitStaked = yieldNumerator / totalBoldDepositsCached;
-        lastYieldError = yieldNumerator - yieldPerUnitStaked * totalBoldDepositsCached;
+        uint256 yieldPerUnitStaked = yieldNumerator / totalEbusdDepositsCached;
+        lastYieldError = yieldNumerator - yieldPerUnitStaked * totalEbusdDepositsCached;
 
         uint256 marginalYieldGain = yieldPerUnitStaked * P;
         epochToScaleToB[currentEpoch][currentScale] = epochToScaleToB[currentEpoch][currentScale] + marginalYieldGain;
@@ -417,31 +417,31 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     // --- Liquidation functions ---
 
     /*
-    * Cancels out the specified debt against the Bold contained in the Stability Pool (as far as possible)
+    * Cancels out the specified debt against the Ebusd contained in the Stability Pool (as far as possible)
     * and transfers the Trove's Coll collateral from ActivePool to StabilityPool.
     * Only called by liquidation functions in the TroveManager.
     */
     function offset(uint256 _debtToOffset, uint256 _collToAdd) external override {
         _requireCallerIsTroveManager();
-        uint256 totalBold = totalBoldDeposits; // cached to save an SLOAD
-        if (totalBold == 0 || _debtToOffset == 0) return;
+        uint256 totalEbusd = totalEbusdDeposits; // cached to save an SLOAD
+        if (totalEbusd == 0 || _debtToOffset == 0) return;
 
-        (uint256 collGainPerUnitStaked, uint256 boldLossPerUnitStaked) =
-            _computeCollRewardsPerUnitStaked(_collToAdd, _debtToOffset, totalBold);
+        (uint256 collGainPerUnitStaked, uint256 ebusdLossPerUnitStaked) =
+            _computeCollRewardsPerUnitStaked(_collToAdd, _debtToOffset, totalEbusd);
 
-        _updateCollRewardSumAndProduct(collGainPerUnitStaked, boldLossPerUnitStaked); // updates S and P
+        _updateCollRewardSumAndProduct(collGainPerUnitStaked, ebusdLossPerUnitStaked); // updates S and P
 
         _moveOffsetCollAndDebt(_collToAdd, _debtToOffset);
     }
 
     // --- Offset helper functions ---
 
-    function _computeCollRewardsPerUnitStaked(uint256 _collToAdd, uint256 _debtToOffset, uint256 _totalBoldDeposits)
+    function _computeCollRewardsPerUnitStaked(uint256 _collToAdd, uint256 _debtToOffset, uint256 _totalEbusdDeposits)
         internal
-        returns (uint256 collGainPerUnitStaked, uint256 boldLossPerUnitStaked)
+        returns (uint256 collGainPerUnitStaked, uint256 ebusdLossPerUnitStaked)
     {
         /*
-        * Compute the Bold and Coll rewards. Uses a "feedback" error correction, to keep
+        * Compute the Ebusd and Coll rewards. Uses a "feedback" error correction, to keep
         * the cumulative error in the P and S state variables low:
         *
         * 1) Form numerators which compensate for the floor division errors that occurred the last time this
@@ -453,37 +453,37 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         */
         uint256 collNumerator = _collToAdd * DECIMAL_PRECISION + lastCollError_Offset;
 
-        assert(_debtToOffset <= _totalBoldDeposits);
-        if (_debtToOffset == _totalBoldDeposits) {
-            boldLossPerUnitStaked = DECIMAL_PRECISION; // When the Pool depletes to 0, so does each deposit
-            lastBoldLossError_Offset = 0;
+        assert(_debtToOffset <= _totalEbusdDeposits);
+        if (_debtToOffset == _totalEbusdDeposits) {
+            ebusdLossPerUnitStaked = DECIMAL_PRECISION; // When the Pool depletes to 0, so does each deposit
+            lastEbusdLossError_Offset = 0;
         } else {
-            uint256 boldLossNumerator = _debtToOffset * DECIMAL_PRECISION - lastBoldLossError_Offset;
+            uint256 ebusdLossNumerator = _debtToOffset * DECIMAL_PRECISION - lastEbusdLossError_Offset;
             /*
-            * Add 1 to make error in quotient positive. We want "slightly too much" Bold loss,
-            * which ensures the error in any given compoundedBoldDeposit favors the Stability Pool.
+            * Add 1 to make error in quotient positive. We want "slightly too much" Ebusd loss,
+            * which ensures the error in any given compoundedEbusdDeposit favors the Stability Pool.
             */
-            boldLossPerUnitStaked = boldLossNumerator / _totalBoldDeposits + 1;
-            lastBoldLossError_Offset = boldLossPerUnitStaked * _totalBoldDeposits - boldLossNumerator;
+            ebusdLossPerUnitStaked = ebusdLossNumerator / _totalEbusdDeposits + 1;
+            lastEbusdLossError_Offset = ebusdLossPerUnitStaked * _totalEbusdDeposits - ebusdLossNumerator;
         }
 
-        collGainPerUnitStaked = collNumerator / _totalBoldDeposits;
-        lastCollError_Offset = collNumerator - collGainPerUnitStaked * _totalBoldDeposits;
+        collGainPerUnitStaked = collNumerator / _totalEbusdDeposits;
+        lastCollError_Offset = collNumerator - collGainPerUnitStaked * _totalEbusdDeposits;
 
-        return (collGainPerUnitStaked, boldLossPerUnitStaked);
+        return (collGainPerUnitStaked, ebusdLossPerUnitStaked);
     }
 
     // Update the Stability Pool reward sum S and product P
-    function _updateCollRewardSumAndProduct(uint256 _collGainPerUnitStaked, uint256 _boldLossPerUnitStaked) internal {
+    function _updateCollRewardSumAndProduct(uint256 _collGainPerUnitStaked, uint256 _ebusdLossPerUnitStaked) internal {
         uint256 currentP = P;
         uint256 newP;
 
-        assert(_boldLossPerUnitStaked <= DECIMAL_PRECISION);
+        assert(_ebusdLossPerUnitStaked <= DECIMAL_PRECISION);
         /*
-        * The newProductFactor is the factor by which to change all deposits, due to the depletion of Stability Pool Bold in the liquidation.
-        * We make the product factor 0 if there was a pool-emptying. Otherwise, it is (1 - boldLossPerUnitStaked)
+        * The newProductFactor is the factor by which to change all deposits, due to the depletion of Stability Pool Ebusd in the liquidation.
+        * We make the product factor 0 if there was a pool-emptying. Otherwise, it is (1 - ebusdLossPerUnitStaked)
         */
-        uint256 newProductFactor = uint256(DECIMAL_PRECISION) - _boldLossPerUnitStaked;
+        uint256 newProductFactor = uint256(DECIMAL_PRECISION) - _ebusdLossPerUnitStaked;
 
         uint128 currentScaleCached = currentScale;
         uint128 currentEpochCached = currentEpoch;
@@ -534,11 +534,11 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     }
 
     function _moveOffsetCollAndDebt(uint256 _collToAdd, uint256 _debtToOffset) internal {
-        // Cancel the liquidated Bold debt with the Bold in the stability pool
-        _updateTotalBoldDeposits(0, _debtToOffset);
+        // Cancel the liquidated Ebusd debt with the Ebusd in the stability pool
+        _updateTotalEbusdDeposits(0, _debtToOffset);
 
         // Burn the debt that was successfully offset
-        boldToken.burn(address(this), _debtToOffset);
+        ebusdToken.burn(address(this), _debtToOffset);
 
         // Update internal Coll balance tracker
         uint256 newCollBalance = collBalance + _collToAdd;
@@ -550,11 +550,11 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         emit StabilityPoolCollBalanceUpdated(newCollBalance);
     }
 
-    function _updateTotalBoldDeposits(uint256 _depositIncrease, uint256 _depositDecrease) internal {
+    function _updateTotalEbusdDeposits(uint256 _depositIncrease, uint256 _depositDecrease) internal {
         if (_depositIncrease == 0 && _depositDecrease == 0) return;
-        uint256 newTotalBoldDeposits = totalBoldDeposits + _depositIncrease - _depositDecrease;
-        totalBoldDeposits = newTotalBoldDeposits;
-        emit StabilityPoolBoldBalanceUpdated(newTotalBoldDeposits);
+        uint256 newTotalEbusdDeposits = totalEbusdDeposits + _depositIncrease - _depositDecrease;
+        totalEbusdDeposits = newTotalEbusdDeposits;
+        emit StabilityPoolEbusdBalanceUpdated(newTotalEbusdDeposits);
     }
 
     function _decreaseYieldGainsOwed(uint256 _amount) internal {
@@ -603,9 +603,9 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         uint256 firstPortionPending;
         uint256 secondPortionPending;
 
-        if (pendingSPYield > 0 && snapshots.epoch == currentEpoch && totalBoldDeposits >= DECIMAL_PRECISION) {
+        if (pendingSPYield > 0 && snapshots.epoch == currentEpoch && totalEbusdDeposits >= DECIMAL_PRECISION) {
             uint256 yieldNumerator = pendingSPYield * DECIMAL_PRECISION + lastYieldError;
-            uint256 yieldPerUnitStaked = yieldNumerator / totalBoldDeposits;
+            uint256 yieldPerUnitStaked = yieldNumerator / totalEbusdDeposits;
             uint256 marginalYieldGain = yieldPerUnitStaked * P;
 
             if (currentScale == snapshots.scale) firstPortionPending = marginalYieldGain;
@@ -648,8 +648,8 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         returns (uint256)
     {
         /*
-        * Grab the sum 'B' from the epoch at which the stake was made. The Bold gain may span up to one scale change.
-        * If it does, the second portion of the Bold gain is scaled by 1e9.
+        * Grab the sum 'B' from the epoch at which the stake was made. The Ebusd gain may span up to one scale change.
+        * If it does, the second portion of the Ebusd gain is scaled by 1e9.
         * If the gain spans no scale change, the second portion will be 0.
         */
         uint128 epochSnapshot = snapshots.epoch;
@@ -671,7 +671,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
     * Return the user's compounded deposit. Given by the formula:  d = d0 * P/P(0)
     * where P(0) is the depositor's snapshot of the product P, taken when they last updated their deposit.
     */
-    function getCompoundedBoldDeposit(address _depositor) public view override returns (uint256) {
+    function getCompoundedEbusdDeposit(address _depositor) public view override returns (uint256) {
         uint256 initialDeposit = deposits[_depositor].initialValue;
         if (initialDeposit == 0) return 0;
 
@@ -724,7 +724,7 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         return compoundedStake;
     }
 
-    // --- Sender functions for Bold deposit and Coll gains ---
+    // --- Sender functions for Ebusd deposit and Coll gains ---
 
     function _sendCollGainToDepositor(uint256 _collAmount) internal {
         if (_collAmount == 0) return;
@@ -736,10 +736,10 @@ contract StabilityPool is LiquityBase, IStabilityPool, IStabilityPoolEvents {
         collToken.safeTransfer(msg.sender, _collAmount);
     }
 
-    // Send Bold to user and decrease Bold in Pool
-    function _sendBoldtoDepositor(address _depositor, uint256 _boldToSend) internal {
-        if (_boldToSend == 0) return;
-        boldToken.returnFromPool(address(this), _depositor, _boldToSend);
+    // Send Ebusd to user and decrease Ebusd in Pool
+    function _sendEbusdtoDepositor(address _depositor, uint256 _ebusdToSend) internal {
+        if (_ebusdToSend == 0) return;
+        ebusdToken.returnFromPool(address(this), _depositor, _ebusdToSend);
     }
 
     // --- Stability Pool Deposit Functionality ---

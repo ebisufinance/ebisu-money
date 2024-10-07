@@ -8,16 +8,16 @@ import "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "./Dependencies/Constants.sol";
 import "./Interfaces/IActivePool.sol";
 import "./Interfaces/IAddressesRegistry.sol";
-import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/IEbusdToken.sol";
 import "./Interfaces/IInterestRouter.sol";
 import "./Interfaces/IDefaultPool.sol";
 
 // import "forge-std/console2.sol";
 
 /*
- * The Active Pool holds the collateral and Bold debt (but not Bold tokens) for all active troves.
+ * The Active Pool holds the collateral and Ebusd debt (but not Ebusd tokens) for all active troves.
  *
- * When a trove is liquidated, it's Coll and Bold debt are transferred from the Active Pool, to either the
+ * When a trove is liquidated, it's Coll and Ebusd debt are transferred from the Active Pool, to either the
  * Stability Pool, the Default Pool, or both, depending on the liquidation conditions.
  *
  */
@@ -31,10 +31,10 @@ contract ActivePool is IActivePool {
     address public immutable troveManagerAddress;
     address public immutable defaultPoolAddress;
 
-    IBoldToken boldToken;
+    IEbusdToken ebusdToken;
 
     IInterestRouter public interestRouter;
-    IBoldRewardsReceiver public stabilityPool;
+    IEbusdRewardsReceiver public stabilityPool;
 
     uint256 internal collBalance; // deposited ether tracker
 
@@ -71,17 +71,17 @@ contract ActivePool is IActivePool {
     event DefaultPoolAddressChanged(address _newDefaultPoolAddress);
     event StabilityPoolAddressChanged(address _newStabilityPoolAddress);
     event EtherSent(address _to, uint256 _amount);
-    event ActivePoolBoldDebtUpdated(uint256 _recordedDebtSum);
+    event ActivePoolEbusdDebtUpdated(uint256 _recordedDebtSum);
     event ActivePoolCollBalanceUpdated(uint256 _collBalance);
 
     constructor(IAddressesRegistry _addressesRegistry) {
         collToken = _addressesRegistry.collToken();
         borrowerOperationsAddress = address(_addressesRegistry.borrowerOperations());
         troveManagerAddress = address(_addressesRegistry.troveManager());
-        stabilityPool = IBoldRewardsReceiver(_addressesRegistry.stabilityPool());
+        stabilityPool = IEbusdRewardsReceiver(_addressesRegistry.stabilityPool());
         defaultPoolAddress = address(_addressesRegistry.defaultPool());
         interestRouter = _addressesRegistry.interestRouter();
-        boldToken = _addressesRegistry.boldToken();
+        ebusdToken = _addressesRegistry.ebusdToken();
 
         emit CollTokenAddressChanged(address(collToken));
         emit BorrowerOperationsAddressChanged(borrowerOperationsAddress);
@@ -140,7 +140,7 @@ contract ActivePool is IActivePool {
 
         uint256 newAggRecordedDebt = aggRecordedDebt;
         newAggRecordedDebt += calcPendingAggInterest();
-        newAggRecordedDebt += _troveChange.appliedRedistBoldDebtGain;
+        newAggRecordedDebt += _troveChange.appliedRedistEbusdDebtGain;
         newAggRecordedDebt += _troveChange.debtIncrease;
         newAggRecordedDebt += _troveChange.batchAccruedManagementFee;
         newAggRecordedDebt -= _troveChange.debtDecrease;
@@ -149,14 +149,14 @@ contract ActivePool is IActivePool {
         newAggWeightedDebtSum += _troveChange.newWeightedRecordedDebt;
         newAggWeightedDebtSum -= _troveChange.oldWeightedRecordedDebt;
 
-        // Avoid division by 0 if the first ever borrower tries to borrow 0 BOLD
-        // Borrowing 0 BOLD is not allowed, but our check of debt >= MIN_DEBT happens _after_ calculating the upfront
+        // Avoid division by 0 if the first ever borrower tries to borrow 0 EBUSD
+        // Borrowing 0 EBUSD is not allowed, but our check of debt >= MIN_DEBT happens _after_ calculating the upfront
         // fee, which involves getting the new approx. avg. interest rate
         return newAggRecordedDebt > 0 ? newAggWeightedDebtSum / newAggRecordedDebt : 0;
     }
 
     // Returns sum of agg.recorded debt plus agg. pending interest. Excludes pending redist. gains.
-    function getBoldDebt() external view returns (uint256) {
+    function getEbusdDebt() external view returns (uint256) {
         return aggRecordedDebt + calcPendingAggInterest() + aggBatchManagementFees + calcPendingAggBatchManagementFee();
     }
 
@@ -223,13 +223,13 @@ contract ActivePool is IActivePool {
 
         // Batch management fees
         if (_batchAddress != address(0)) {
-            _mintBatchManagementFeeAndAccountForChange(boldToken, _troveChange, _batchAddress);
+            _mintBatchManagementFeeAndAccountForChange(ebusdToken, _troveChange, _batchAddress);
         }
 
         // Do the arithmetic in 2 steps here to avoid overflow from the decrease
         uint256 newAggRecordedDebt = aggRecordedDebt; // 1 SLOAD
-        newAggRecordedDebt += _mintAggInterest(boldToken, _troveChange.upfrontFee); // adds minted agg. interest + upfront fee
-        newAggRecordedDebt += _troveChange.appliedRedistBoldDebtGain;
+        newAggRecordedDebt += _mintAggInterest(ebusdToken, _troveChange.upfrontFee); // adds minted agg. interest + upfront fee
+        newAggRecordedDebt += _troveChange.appliedRedistEbusdDebtGain;
         newAggRecordedDebt += _troveChange.debtIncrease;
         newAggRecordedDebt -= _troveChange.debtDecrease;
         aggRecordedDebt = newAggRecordedDebt; // 1 SSTORE
@@ -246,22 +246,22 @@ contract ActivePool is IActivePool {
 
     function mintAggInterest() external override {
         _requireCallerIsBOorSP();
-        aggRecordedDebt += _mintAggInterest(boldToken, 0);
+        aggRecordedDebt += _mintAggInterest(ebusdToken, 0);
     }
 
-    function _mintAggInterest(IBoldToken _boldToken, uint256 _upfrontFee) internal returns (uint256 mintedAmount) {
+    function _mintAggInterest(IEbusdToken _ebusdToken, uint256 _upfrontFee) internal returns (uint256 mintedAmount) {
         mintedAmount = calcPendingAggInterest() + _upfrontFee;
 
-        // Mint part of the BOLD interest to the SP and part to the router for LPs.
+        // Mint part of the EBUSD interest to the SP and part to the router for LPs.
         if (mintedAmount > 0) {
             uint256 spYield = SP_YIELD_SPLIT * mintedAmount / DECIMAL_PRECISION;
             uint256 remainderToLPs = mintedAmount - spYield;
 
-            _boldToken.mint(address(interestRouter), remainderToLPs);
+            _ebusdToken.mint(address(interestRouter), remainderToLPs);
 
             if (spYield > 0) {
-                _boldToken.mint(address(stabilityPool), spYield);
-                stabilityPool.triggerBoldRewards(spYield);
+                _ebusdToken.mint(address(stabilityPool), spYield);
+                stabilityPool.triggerEbusdRewards(spYield);
             }
         }
 
@@ -273,11 +273,11 @@ contract ActivePool is IActivePool {
         override
     {
         _requireCallerIsBOorTroveM();
-        _mintBatchManagementFeeAndAccountForChange(boldToken, _troveChange, _batchAddress);
+        _mintBatchManagementFeeAndAccountForChange(ebusdToken, _troveChange, _batchAddress);
     }
 
     function _mintBatchManagementFeeAndAccountForChange(
-        IBoldToken _boldToken,
+        IEbusdToken _ebusdToken,
         TroveChange memory _troveChange,
         address _batchAddress
     ) internal {
@@ -297,7 +297,7 @@ contract ActivePool is IActivePool {
 
         // mint fee to batch address
         if (_troveChange.batchAccruedManagementFee > 0) {
-            _boldToken.mint(_batchAddress, _troveChange.batchAccruedManagementFee);
+            _ebusdToken.mint(_batchAddress, _troveChange.batchAccruedManagementFee);
         }
 
         lastAggBatchManagementFeesUpdateTime = block.timestamp;

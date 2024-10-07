@@ -30,11 +30,7 @@ export function AboutModal({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      <Modal
-        onClose={() => setVisible(false)}
-        visible={visible}
-        title="About"
-      >
+      <Modal onClose={() => setVisible(false)} visible={visible} title="About">
         <div
           className={css({
             display: "flex",
@@ -43,13 +39,15 @@ export function AboutModal({ children }: { children: ReactNode }) {
           })}
         >
           <div>
-            Version: {APP_VERSION} (<a
-              href={`"https://github.com/liquity/bold/tree/${COMMIT_HASH}`}
+            Version: {APP_VERSION} (
+            <a
+              href={`"https://github.com/liquity/ebusd/tree/${COMMIT_HASH}`}
               rel="noopener noreferrer"
               target="_blank"
             >
               {COMMIT_HASH}
-            </a>)
+            </a>
+            )
           </div>
           <div>
             <div
@@ -64,11 +62,11 @@ export function AboutModal({ children }: { children: ReactNode }) {
                 fontSize: 12,
               })}
             >
-          {contracts.map(([name, address]) => (
-            <div key={name}>
-              {name}: {address}
-            </div>
-          ))}
+							{contracts.map(([name, address]) => (
+								<div key={name}>
+									{name}: {address}
+								</div>
+							))}
             </pre>
           </div>
         </div>

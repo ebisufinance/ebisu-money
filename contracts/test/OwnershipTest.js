@@ -3,7 +3,9 @@ const { TestHelper: th, MoneyValues: mv } = require("../utils/testHelpers.js");
 const { dec, toBN } = th;
 
 const GasPool = artifacts.require("./GasPool.sol");
-const BorrowerOperationsTester = artifacts.require("./BorrowerOperationsTester.sol");
+const BorrowerOperationsTester = artifacts.require(
+  "./BorrowerOperationsTester.sol"
+);
 const PriceFeedMock = artifacts.require("./PriceFeedMock.sol");
 
 contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
@@ -12,7 +14,7 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
   const [bountyAddress, lpRewardsAddress, multisig] = accounts.slice(997, 1000);
 
   let contracts;
-  let boldToken;
+  let ebusdToken;
   let sortedTroves;
   let troveManager;
   let activePool;
@@ -21,12 +23,14 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
   let borrowerOperations;
 
   before(async () => {
-    contracts = await deploymentHelper.deployLiquityCore(mocks = {
-      PriceFeed: PriceFeedMock,
-      BorrowerOperations: BorrowerOperationsTester,
-    });
+    contracts = await deploymentHelper.deployLiquityCore(
+      (mocks = {
+        PriceFeed: PriceFeedMock,
+        BorrowerOperations: BorrowerOperationsTester,
+      })
+    );
 
-    boldToken = contracts.boldToken;
+    ebusdToken = contracts.ebusdToken;
     sortedTroves = contracts.sortedTroves;
     troveManager = contracts.troveManager;
     activePool = contracts.activePool;
@@ -35,17 +39,51 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
     borrowerOperations = contracts.borrowerOperations;
   });
 
-  const testZeroAddress = async (contract, params, method = "setAddresses", skip = 0) => {
-    await testWrongAddress(contract, params, th.ZERO_ADDRESS, method, skip, "Account cannot be zero address");
+  const testZeroAddress = async (
+    contract,
+    params,
+    method = "setAddresses",
+    skip = 0
+  ) => {
+    await testWrongAddress(
+      contract,
+      params,
+      th.ZERO_ADDRESS,
+      method,
+      skip,
+      "Account cannot be zero address"
+    );
   };
-  const testNonContractAddress = async (contract, params, method = "setAddresses", skip = 0) => {
-    await testWrongAddress(contract, params, bob, method, skip, "Account code size cannot be zero");
+  const testNonContractAddress = async (
+    contract,
+    params,
+    method = "setAddresses",
+    skip = 0
+  ) => {
+    await testWrongAddress(
+      contract,
+      params,
+      bob,
+      method,
+      skip,
+      "Account code size cannot be zero"
+    );
   };
-  const testWrongAddress = async (contract, params, address, method, skip, message) => {
+  const testWrongAddress = async (
+    contract,
+    params,
+    address,
+    method,
+    skip,
+    message
+  ) => {
     for (let i = skip; i < params.length; i++) {
       const newParams = [...params];
       newParams[i] = address;
-      await th.assertRevert(contract[method](...newParams, { from: owner }), message);
+      await th.assertRevert(
+        contract[method](...newParams, { from: owner }),
+        message
+      );
     }
   };
 
@@ -54,9 +92,13 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
     numberOfAddresses,
     checkContract = true,
     twice = true,
-    method = "setAddresses",
+    method = "setAddresses"
   ) => {
-    const dumbContract = await GasPool.new(contracts.WETH.address, contracts.borrowerOperations.address, contracts.troveManager.address);
+    const dumbContract = await GasPool.new(
+      contracts.WETH.address,
+      contracts.borrowerOperations.address,
+      contracts.troveManager.address
+    );
     const params = Array(numberOfAddresses).fill(dumbContract.address);
 
     // Attempt call from alice
@@ -77,12 +119,24 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
     }
   };
 
-  describe("BoldToken", async (accounts) => {
+  describe("EbusdToken", async (accounts) => {
     it("setBranchAddresses(): reverts when called by non-owner, with wrong addresses", async () => {
-      await testDeploymentSetter(boldToken, 4, false, false, "setBranchAddresses");
+      await testDeploymentSetter(
+        ebusdToken,
+        4,
+        false,
+        false,
+        "setBranchAddresses"
+      );
     });
     it("setCollateralRegistry(): reverts when called by non-owner, with wrong address, or twice", async () => {
-      await testDeploymentSetter(boldToken, 1, false, true, "setCollateralRegistry");
+      await testDeploymentSetter(
+        ebusdToken,
+        1,
+        false,
+        true,
+        "setCollateralRegistry"
+      );
     });
   });
 
@@ -112,11 +166,17 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
 
   describe("SortedTroves", async (accounts) => {
     it("setAddresses(): reverts when called by non-owner, with wrong addresses, or twice", async () => {
-      const dumbContract = await GasPool.new(contracts.WETH.address, contracts.borrowerOperations.address, contracts.troveManager.address);
+      const dumbContract = await GasPool.new(
+        contracts.WETH.address,
+        contracts.borrowerOperations.address,
+        contracts.troveManager.address
+      );
       const params = [dumbContract.address, dumbContract.address];
 
       // Attempt call from alice
-      await th.assertRevert(sortedTroves.setAddresses(...params, { from: alice }));
+      await th.assertRevert(
+        sortedTroves.setAddresses(...params, { from: alice })
+      );
 
       // Attempt to use zero address
       await testZeroAddress(sortedTroves, params, "setAddresses", 1);
@@ -124,11 +184,15 @@ contract("All Liquity functions with onlyOwner modifier", async (accounts) => {
       await testNonContractAddress(sortedTroves, params, "setAddresses", 1);
 
       // Owner can successfully set params
-      const txOwner = await sortedTroves.setAddresses(...params, { from: owner });
+      const txOwner = await sortedTroves.setAddresses(...params, {
+        from: owner,
+      });
       assert.isTrue(txOwner.receipt.status);
 
       // fails if called twice
-      await th.assertRevert(sortedTroves.setAddresses(...params, { from: owner }));
+      await th.assertRevert(
+        sortedTroves.setAddresses(...params, { from: owner })
+      );
     });
   });
 });

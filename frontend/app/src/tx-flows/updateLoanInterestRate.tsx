@@ -64,10 +64,12 @@ export const updateLoanInterestRate: FlowDeclaration<Request, Step> = {
       <LoanCard
         leverageMode={false}
         loadingState={loadingState}
-        loan={!loan.data ? null : {
-          ...loan.data,
-          interestRate: flow.request.interestRate,
-        }}
+        loan={!loan.data
+          ? null
+          : {
+            ...loan.data,
+            interestRate: flow.request.interestRate,
+          }}
         prevLoan={loan.data}
         onRetry={() => {}}
       />
@@ -77,17 +79,18 @@ export const updateLoanInterestRate: FlowDeclaration<Request, Step> = {
     const { request } = flow;
 
     const loan = useLoanById(flow.request.prefixedTroveId);
-    const boldPerYear = dn.mul(loan.data?.borrowed ?? 0n, request.interestRate);
+    const ebusdPerYear = dn.mul(
+      loan.data?.borrowed ?? 0n,
+      request.interestRate,
+    );
 
     return (
       <TransactionDetailsRow
         label="Interest rate"
         value={[
-          <div>
-            {fmtnum(request.interestRate, "full", 100)}%
-          </div>,
-          <div title={`${fmtnum(boldPerYear, "full")} BOLD per year`}>
-            ~{fmtnum(boldPerYear, 4)} BOLD per year
+          <div>{fmtnum(request.interestRate, "full", 100)}%</div>,
+          <div title={`${fmtnum(ebusdPerYear, "full")} EBUSD per year`}>
+            ~{fmtnum(ebusdPerYear, 4)} EBUSD per year
           </div>,
         ]}
       />

@@ -19,11 +19,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function WithdrawPanel({
-  boldQty,
+  ebusdQty,
   collIndex,
   position,
 }: {
-  boldQty: Dnum;
+  ebusdQty: Dnum;
   collIndex: null | CollIndex;
   position?: PositionEarn;
 }) {
@@ -37,7 +37,7 @@ export function WithdrawPanel({
 
   const parsedValue = parseInputFloat(value);
 
-  const value_ = focused || !parsedValue ? value : `${fmtnum(parsedValue, "full")} BOLD`;
+  const value_ = focused || !parsedValue ? value : `${fmtnum(parsedValue, "full")} EBUSD`;
 
   const depositDifference = dn.mul(parsedValue ?? DNUM_0, -1);
 
@@ -46,10 +46,10 @@ export function WithdrawPanel({
     DNUM_0,
   );
 
-  const updatedBoldQty = dn.add(boldQty, depositDifference);
+  const updatedEbusdQty = dn.add(ebusdQty, depositDifference);
 
-  const updatedPoolShare = depositDifference && dn.gt(updatedBoldQty, 0)
-    ? dn.div(updatedDeposit, updatedBoldQty)
+  const updatedPoolShare = depositDifference && dn.gt(updatedEbusdQty, 0)
+    ? dn.div(updatedDeposit, updatedEbusdQty)
     : DNUM_0;
 
   const collateral = useCollateral(collIndex);
@@ -83,14 +83,14 @@ export function WithdrawPanel({
                   userSelect: "none",
                 }}
               >
-                <TokenIcon symbol="BOLD" />
+                <TokenIcon symbol="EBUSD" />
                 <div
                   style={{
                     fontSize: 24,
                     fontWeight: 500,
                   }}
                 >
-                  BOLD
+                  EBUSD
                 </div>
               </div>
             }
@@ -116,7 +116,7 @@ export function WithdrawPanel({
               ),
               end: position?.deposit && dn.gt(position.deposit, 0) && (
                 <TextButton
-                  label={`Max ${fmtnum(position.deposit, 2)} BOLD`}
+                  label={`Max ${fmtnum(position.deposit, 2)} EBUSD`}
                   onClick={() => {
                     setValue(dn.toString(position.deposit));
                   }}
@@ -161,13 +161,13 @@ export function WithdrawPanel({
               })}
             >
               <div>
-                {fmtnum(position.rewards.bold)}{" "}
+                {fmtnum(position.rewards.ebusd)}{" "}
                 <span
                   className={css({
                     color: "contentAlt",
                   })}
                 >
-                  BOLD
+                  EBUSD
                 </span>
               </div>
               <div>
@@ -204,7 +204,7 @@ export function WithdrawPanel({
                 successMessage: "The earn position has been created successfully.",
 
                 depositor: account.address,
-                boldAmount: dn.abs(depositDifference),
+                ebusdAmount: dn.abs(depositDifference),
                 claim: claimRewards,
                 collIndex: position.collIndex,
               });

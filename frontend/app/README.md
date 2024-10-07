@@ -12,8 +12,8 @@
 ## Setup
 
 ```sh
-git clone git@github.com:liquity/bold.git
-cd bold
+git clone git@github.com:liquity/ebusd.git
+cd ebusd
 pnpm install
 ```
 
@@ -22,14 +22,14 @@ pnpm install
 Run the Hardhat Network local node:
 
 ```sh
-cd bold/contracts
+cd ebusd/contracts
 ACCOUNTS_BALANCE=1000 pnpm hardhat node # ACCOUNTS_BALANCE=1000 is optional but nicer than the default values in the UI
 ```
 
 Deploy the contracts:
 
 ```sh
-cd bold/contracts
+cd ebusd/contracts
 pnpm hardhat run --network localhost utils/deploymentDev.js
 ```
 
@@ -38,7 +38,7 @@ Copy the addresses of the deployed contracts to the `.env.local` file.
 Run the development server:
 
 ```sh
-cd bold/frontend/app
+cd ebusd/frontend/app
 pnpm build-uikit # only needed once
 pnpm dev
 ```

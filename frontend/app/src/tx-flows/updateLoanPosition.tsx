@@ -43,23 +43,20 @@ export type Request = v.InferOutput<typeof RequestSchema>;
 
 type FinalStep =
   | "adjustTrove" // update both collateral and borrowed
-  | "depositBold"
+  | "depositEbusd"
   | "depositColl"
-  | "withdrawBold"
+  | "withdrawEbusd"
   | "withdrawColl";
 
-type Step =
-  | FinalStep
-  | "approveBold"
-  | "approveColl";
+type Step = FinalStep | "approveEbusd" | "approveColl";
 
 const stepNames: Record<Step, string> = {
-  approveBold: "Approve BOLD",
+  approveEbusd: "Approve EBUSD",
   approveColl: "Approve {collSymbol}",
   adjustTrove: "Update Position",
-  depositBold: "Update Position",
+  depositEbusd: "Update Position",
   depositColl: "Update Position",
-  withdrawBold: "Update Position",
+  withdrawEbusd: "Update Position",
   withdrawColl: "Update Position",
 };
 
@@ -76,13 +73,13 @@ function getFinalStep(request: Request): FinalStep {
   if (dn.lt(collChange, 0)) {
     return "withdrawColl";
   }
-  // debt increases => withdraw BOLD (borrow)
+  // debt increases => withdraw EBUSD (borrow)
   if (dn.gt(debtChange, 0)) {
-    return "withdrawBold";
+    return "withdrawEbusd";
   }
-  // debt decreases => deposit BOLD (repay)
+  // debt decreases => deposit EBUSD (repay)
   if (dn.lt(debtChange, 0)) {
-    return "depositBold";
+    return "depositEbusd";
   }
   throw new Error("Invalid request");
 }
@@ -106,24 +103,34 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
       return null;
     }
 
-    const newDeposit = dn.add(loan.data?.deposit ?? 0n, flow.request.collChange);
-    const newBorrowed = dn.add(loan.data?.borrowed ?? 0n, flow.request.debtChange);
+    const newDeposit = dn.add(
+      loan.data?.deposit ?? 0n,
+      flow.request.collChange,
+    );
+    const newBorrowed = dn.add(
+      loan.data?.borrowed ?? 0n,
+      flow.request.debtChange,
+    );
 
-    const newLoan = !loan.data ? null : {
-      troveId,
-      borrowed: newBorrowed,
-      collIndex: flow.request.collIndex,
-      collateral: collateral.symbol,
-      deposit: newDeposit,
-      interestRate: loan.data.interestRate,
-      type: "borrow" as const,
-    };
+    const newLoan = !loan.data
+      ? null
+      : {
+        troveId,
+        borrowed: newBorrowed,
+        collIndex: flow.request.collIndex,
+        collateral: collateral.symbol,
+        deposit: newDeposit,
+        interestRate: loan.data.interestRate,
+        type: "borrow" as const,
+      };
 
-    const prevLoan = !newLoan || !loan.data ? null : {
-      ...newLoan,
-      borrowed: loan.data.borrowed,
-      deposit: loan.data.deposit,
-    };
+    const prevLoan = !newLoan || !loan.data
+      ? null
+      : {
+        ...newLoan,
+        borrowed: loan.data.borrowed,
+        deposit: loan.data.deposit,
+      };
 
     return (
       <LoanCard
@@ -139,56 +146,56 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
     const { request } = flow;
     const collateral = useCollateral(flow.request.collIndex);
     const collPrice = usePrice(collateral?.symbol ?? null);
-    const boldPrice = usePrice("BOLD");
+    const ebusdPrice = usePrice("EBUSD");
 
     const collChangeUnsigned = dn.abs(request.collChange);
     const debtChangeUnsigned = dn.abs(request.debtChange);
 
-    return collateral && (
-      <>
-        <TransactionDetailsRow
-          label={dn.gt(request.collChange, 0n)
-            ? "You deposit"
-            : "You withdraw"}
-          value={[
-            <div
-              title={`${fmtnum(collChangeUnsigned, "full")} ${collateral.name}`}
-              style={{
-                color: dn.eq(collChangeUnsigned, 0n)
-                  ? "var(--colors-content-alt2)"
-                  : undefined,
-              }}
-            >
-              {fmtnum(collChangeUnsigned)} {collateral.name}
-            </div>,
-            collPrice && (
-              <div title={fmtnum(dn.mul(collChangeUnsigned, collPrice))}>
-                ${fmtnum(dn.mul(collChangeUnsigned, collPrice))}
-              </div>
-            ),
-          ]}
-        />
-        <TransactionDetailsRow
-          label={dn.gt(request.debtChange, 0n) ? "You borrow" : "You repay"}
-          value={[
-            <div
-              title={`${fmtnum(debtChangeUnsigned, "full")} BOLD`}
-              style={{
-                color: dn.eq(debtChangeUnsigned, 0n)
-                  ? "var(--colors-content-alt2)"
-                  : undefined,
-              }}
-            >
-              {fmtnum(debtChangeUnsigned)} BOLD
-            </div>,
-            boldPrice && (
-              <div title={fmtnum(dn.mul(debtChangeUnsigned, boldPrice))}>
-                ${fmtnum(dn.mul(debtChangeUnsigned, boldPrice))}
-              </div>
-            ),
-          ]}
-        />
-      </>
+    return (
+      collateral && (
+        <>
+          <TransactionDetailsRow
+            label={dn.gt(request.collChange, 0n) ? "You deposit" : "You withdraw"}
+            value={[
+              <div
+                title={`${fmtnum(collChangeUnsigned, "full")} ${collateral.name}`}
+                style={{
+                  color: dn.eq(collChangeUnsigned, 0n)
+                    ? "var(--colors-content-alt2)"
+                    : undefined,
+                }}
+              >
+                {fmtnum(collChangeUnsigned)} {collateral.name}
+              </div>,
+              collPrice && (
+                <div title={fmtnum(dn.mul(collChangeUnsigned, collPrice))}>
+                  ${fmtnum(dn.mul(collChangeUnsigned, collPrice))}
+                </div>
+              ),
+            ]}
+          />
+          <TransactionDetailsRow
+            label={dn.gt(request.debtChange, 0n) ? "You borrow" : "You repay"}
+            value={[
+              <div
+                title={`${fmtnum(debtChangeUnsigned, "full")} EBUSD`}
+                style={{
+                  color: dn.eq(debtChangeUnsigned, 0n)
+                    ? "var(--colors-content-alt2)"
+                    : undefined,
+                }}
+              >
+                {fmtnum(debtChangeUnsigned)} EBUSD
+              </div>,
+              ebusdPrice && (
+                <div title={fmtnum(dn.mul(debtChangeUnsigned, ebusdPrice))}>
+                  ${fmtnum(dn.mul(debtChangeUnsigned, ebusdPrice))}
+                </div>
+              ),
+            ]}
+          />
+        </>
+      )
     );
   },
 
@@ -214,28 +221,31 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
       throw new Error("Account address is required");
     }
 
-    const isBoldApproved = !dn.lt(debtChange, 0) || !dn.gt(dn.abs(debtChange), [
-      await readContract(wagmiConfig, {
-        ...contracts.BoldToken,
-        functionName: "allowance",
-        args: [account.address, Controller.address],
-      }) ?? 0n,
-      18,
-    ]);
+    const isEbusdApproved = !dn.lt(debtChange, 0)
+      || !dn.gt(dn.abs(debtChange), [
+        (await readContract(wagmiConfig, {
+          ...contracts.EbusdToken,
+          functionName: "allowance",
+          args: [account.address, Controller.address],
+        })) ?? 0n,
+        18,
+      ]);
 
     // Collateral token needs to be approved if collChange > 0 and collToken != "ETH" (no WETHZapper)
-    const isCollApproved = coll.symbol === "ETH" || !dn.gt(request.collChange, 0) || !dn.gt(request.collChange, [
-      await readContract(wagmiConfig, {
-        ...coll.contracts.CollToken,
-        functionName: "allowance",
-        args: [account.address, Controller.address],
-      }) ?? 0n,
-      18,
-    ]);
+    const isCollApproved = coll.symbol === "ETH"
+      || !dn.gt(request.collChange, 0)
+      || !dn.gt(request.collChange, [
+        (await readContract(wagmiConfig, {
+          ...coll.contracts.CollToken,
+          functionName: "allowance",
+          args: [account.address, Controller.address],
+        })) ?? 0n,
+        18,
+      ]);
 
     return [
-      isBoldApproved ? null : "approveBold" as const,
-      isCollApproved ? null : "approveColl" as const,
+      isEbusdApproved ? null : ("approveEbusd" as const),
+      isCollApproved ? null : ("approveColl" as const),
       getFinalStep(request),
     ].filter((step) => step !== null);
   },
@@ -245,9 +255,7 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
     const collateral = contracts.collaterals[collIndex];
     const { BorrowerOperations, WETHZapper } = collateral.contracts;
 
-    const Controller = collateral.symbol === "ETH"
-      ? WETHZapper
-      : BorrowerOperations;
+    const Controller = collateral.symbol === "ETH" ? WETHZapper : BorrowerOperations;
 
     if (!account.address) {
       throw new Error("Account address is required");
@@ -255,14 +263,11 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
 
     const { troveId } = parsePrefixedTroveId(request.prefixedTroveId);
 
-    if (stepId === "approveBold") {
+    if (stepId === "approveEbusd") {
       return {
-        ...contracts.BoldToken,
+        ...contracts.EbusdToken,
         functionName: "approve",
-        args: [
-          Controller.address,
-          dn.abs(debtChange)[0],
-        ],
+        args: [Controller.address, dn.abs(debtChange)[0]],
       };
     }
 
@@ -298,14 +303,14 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
           functionName: "withdrawCollToRawETH",
           args: [troveId, dn.abs(collChange)[0]],
         }))
-        .with("depositBold", () => ({
+        .with("depositEbusd", () => ({
           ...WETHZapper,
-          functionName: "repayBold",
+          functionName: "repayEbusd",
           args: [troveId, dn.abs(debtChange)[0]],
         }))
-        .with("withdrawBold", () => ({
+        .with("withdrawEbusd", () => ({
           ...WETHZapper,
-          functionName: "withdrawBold",
+          functionName: "withdrawEbusd",
           args: [troveId, debtChange[0], maxUpfrontFee[0]],
         }))
         .exhaustive();

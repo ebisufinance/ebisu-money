@@ -201,30 +201,30 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
     struct ProvideToSPContext {
         TestDeployer.LiquityContractsDev c;
         uint256 pendingInterest;
-        uint256 totalBoldDeposits;
+        uint256 totalEbusdDeposits;
         uint256 blockedSPYield;
-        uint256 initialBoldDeposit;
-        uint256 boldDeposit;
-        uint256 boldYield;
+        uint256 initialEbusdDeposit;
+        uint256 ebusdDeposit;
+        uint256 ebusdYield;
         uint256 ethGain;
         uint256 ethStash;
         uint256 ethClaimed;
-        uint256 boldClaimed;
+        uint256 ebusdClaimed;
         string errorString;
     }
 
     struct WithdrawFromSPContext {
         TestDeployer.LiquityContractsDev c;
         uint256 pendingInterest;
-        uint256 totalBoldDeposits;
+        uint256 totalEbusdDeposits;
         uint256 blockedSPYield;
-        uint256 initialBoldDeposit;
-        uint256 boldDeposit;
-        uint256 boldYield;
+        uint256 initialEbusdDeposit;
+        uint256 ebusdDeposit;
+        uint256 ebusdYield;
         uint256 ethGain;
         uint256 ethStash;
         uint256 ethClaimed;
-        uint256 boldClaimed;
+        uint256 ebusdClaimed;
         uint256 withdrawn;
         string errorString;
     }
@@ -344,16 +344,16 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
     // Public ghost variables (per branch, exposed to InvariantsTest)
     mapping(uint256 branchIdx => uint256) public designatedVictimId; // ID of zombie Trove that'll be redeemed first
     mapping(uint256 branchIdx => uint256) public collSurplus;
-    mapping(uint256 branchIdx => uint256) public spBoldDeposits;
-    mapping(uint256 branchIdx => uint256) public spBoldYield;
+    mapping(uint256 branchIdx => uint256) public spEbusdDeposits;
+    mapping(uint256 branchIdx => uint256) public spEbusdYield;
     mapping(uint256 branchIdx => uint256) public spColl;
     mapping(uint256 branchIdx => bool) public isShutdown;
 
     // Price per branch
     mapping(uint256 branchIdx => uint256) _price;
 
-    // All free-floating BOLD is kept in the handler, to be dealt out to actors as needed
-    uint256 _handlerBold;
+    // All free-floating EBUSD is kept in the handler, to be dealt out to actors as needed
+    uint256 _handlerEbusd;
 
     // Used to keep track of base rate
     uint256 _baseRate = INITIAL_BASE_RATE;
@@ -684,8 +684,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _sweepWETHAndUnapprove(msg.sender, ETH_GAS_COMPENSATION, address(v.c.borrowerOperations));
         } else {
             // Cleanup (success)
-            _sweepBold(msg.sender, v.borrowed);
-            if (v.join) _sweepBold(v.batchManager, v.batchManagementFee);
+            _sweepEbusd(msg.sender, v.borrowed);
+            if (v.join) _sweepEbusd(v.batchManager, v.batchManagementFee);
         }
     }
 
@@ -733,7 +733,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         collChange = v.prop != AdjustedTroveProperties.onlyDebt ? _bound(collChange, 0, v.t.entireColl + 1) : 0;
         debtChange = v.prop != AdjustedTroveProperties.onlyColl ? _bound(debtChange, 0, v.t.entireDebt + 1) : 0;
-        if (!isDebtInc) debtChange = Math.min(debtChange, _handlerBold);
+        if (!isDebtInc) debtChange = Math.min(debtChange, _handlerEbusd);
         v.maxDebtDec = v.t.entireDebt > MIN_DEBT ? v.t.entireDebt - MIN_DEBT : 0;
         v.collDelta = isCollInc ? int256(collChange) : -int256(collChange);
         v.debtDelta = isDebtInc ? int256(debtChange) : -int256(Math.min(debtChange, v.maxDebtDec));
@@ -762,7 +762,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         // TODO: randomly deal less?
         if (isCollInc) _dealCollAndApprove(i, msg.sender, collChange, address(v.c.borrowerOperations));
-        if (!isDebtInc) _dealBold(msg.sender, debtChange);
+        if (!isDebtInc) _dealEbusd(msg.sender, debtChange);
 
         vm.prank(msg.sender);
         try _functionCaller.call(
@@ -859,14 +859,14 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
             // Cleanup (failure)
             if (isCollInc) _sweepCollAndUnapprove(i, msg.sender, collChange, address(v.c.borrowerOperations));
-            if (!isDebtInc) _sweepBold(msg.sender, debtChange);
+            if (!isDebtInc) _sweepEbusd(msg.sender, debtChange);
         } else {
             // Cleanup (success)
             if (!isCollInc) _sweepColl(i, msg.sender, collChange);
-            if (isDebtInc) _sweepBold(msg.sender, debtChange);
-            // Take back remaining BOLD after repayment truncation
-            if (!isDebtInc) _sweepBold(msg.sender, debtChange - uint256(-v.debtDelta));
-            if (v.batchManager != address(0)) _sweepBold(v.batchManager, v.batchManagementFee);
+            if (isDebtInc) _sweepEbusd(msg.sender, debtChange);
+            // Take back remaining EBUSD after repayment truncation
+            if (!isDebtInc) _sweepEbusd(msg.sender, debtChange - uint256(-v.debtDelta));
+            if (v.batchManager != address(0)) _sweepEbusd(v.batchManager, v.batchManagementFee);
         }
     }
 
@@ -1000,8 +1000,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         logCall("closeTrove", i.toString());
 
-        v.dealt = Math.min(v.t.entireDebt, _handlerBold);
-        _dealBold(msg.sender, v.dealt);
+        v.dealt = Math.min(v.t.entireDebt, _handlerEbusd);
+        _dealEbusd(msg.sender, v.dealt);
 
         vm.prank(msg.sender);
         try v.c.borrowerOperations.closeTrove(v.troveId) {
@@ -1042,8 +1042,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             (selector, v.errorString) = _decodeCustomError(revertData);
 
             // Justify failures
-            if (selector == BorrowerOperations.NotEnoughBoldBalance.selector) {
-                assertLtDecimal(v.dealt, v.t.entireDebt, 18, "Shouldn't have failed as caller had enough Bold");
+            if (selector == BorrowerOperations.NotEnoughEbusdBalance.selector) {
+                assertLtDecimal(v.dealt, v.t.entireDebt, 18, "Shouldn't have failed as caller had enough Ebusd");
             } else if (selector == BorrowerOperations.TCRBelowCCR.selector) {
                 uint256 newTCR = _TCR(i, -int256(v.t.entireColl), -int256(v.t.entireDebt), 0);
                 assertFalse(isShutdown[i], "Shouldn't have failed as branch had been shut down");
@@ -1063,12 +1063,12 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
 
             // Cleanup (failure)
-            _sweepBold(msg.sender, v.dealt);
+            _sweepEbusd(msg.sender, v.dealt);
         } else {
             // Cleanup (success)
             _sweepColl(i, msg.sender, v.t.entireColl);
             _sweepWETH(msg.sender, ETH_GAS_COMPENSATION);
-            if (v.batchManager != address(0)) _sweepBold(v.batchManager, v.batchManagementFee);
+            if (v.batchManager != address(0)) _sweepEbusd(v.batchManager, v.batchManagementFee);
         }
     }
 
@@ -1099,7 +1099,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         vm.prank(msg.sender);
 
         try c.troveManager.batchLiquidateTroves(_troveIdsFrom(l.batch)) {
-            info("SP BOLD: ", c.stabilityPool.getTotalBoldDeposits().decimal());
+            info("SP EBUSD: ", c.stabilityPool.getTotalEbusdDeposits().decimal());
             info("P: ", c.stabilityPool.P().decimal());
             _log();
 
@@ -1150,7 +1150,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             // Effects (system)
             _mintYield(i, pendingInterest, 0);
             spColl[i] += l.t.spCollGain;
-            spBoldDeposits[i] -= l.t.spOffset;
+            spEbusdDeposits[i] -= l.t.spOffset;
             collSurplus[i] += l.t.collSurplus;
         } catch Panic(uint256 code) {
             uint256 totalStakes = 0;
@@ -1192,7 +1192,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _sweepWETH(msg.sender, l.liquidated.size() * ETH_GAS_COMPENSATION);
 
             for (uint256 j = 0; j < l.batchManagers.size(); ++j) {
-                _sweepBold(l.batchManagers.get(j), batchManagementFee[j]);
+                _sweepEbusd(l.batchManagers.get(j), batchManagementFee[j]);
             }
         }
 
@@ -1206,12 +1206,12 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             maxNumTroves = Math.max(numTroves(i), maxNumTroves);
         }
 
-        amount = _bound(amount, 0, _handlerBold);
+        amount = _bound(amount, 0, _handlerEbusd);
         maxIterationsPerCollateral = _bound(maxIterationsPerCollateral, 0, maxNumTroves * 11 / 10);
 
         uint256 oldBaseRate = _getBaseRate();
-        uint256 boldSupply = boldToken.totalSupply();
-        uint256 redemptionRate = _getRedemptionRate(oldBaseRate + _getBaseRateIncrease(boldSupply, amount));
+        uint256 ebusdSupply = ebusdToken.totalSupply();
+        uint256 redemptionRate = _getRedemptionRate(oldBaseRate + _getBaseRateIncrease(ebusdSupply, amount));
 
         uint256[] memory pendingInterest = new uint256[](branches.length);
         for (uint256 i = 0; i < branches.length; ++i) {
@@ -1232,7 +1232,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         }
 
         info("redemption rate: ", redemptionRate.decimal());
-        info("redeemed BOLD: ", totalDebtRedeemed.decimal());
+        info("redeemed EBUSD: ", totalDebtRedeemed.decimal());
         info("redeemed Troves: [");
         for (uint256 i = 0; i < branches.length; ++i) {
             info("  [", isShutdown[i] ? "/* shutdown */" : _labelsFrom(i, r[i].redeemed).join(", "), "],");
@@ -1241,7 +1241,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         logCall("redeemCollateral", amount.decimal(), maxIterationsPerCollateral.toString());
 
         // TODO: randomly deal less than amount?
-        _dealBold(msg.sender, amount);
+        _dealEbusd(msg.sender, amount);
 
         string memory errorString;
         vm.prank(msg.sender);
@@ -1251,7 +1251,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             assertGtDecimal(amount, 0, 18, "Should have failed as amount was zero");
 
             // Effects (global)
-            _baseRate = Math.min(oldBaseRate + _getBaseRateIncrease(boldSupply, totalDebtRedeemed), _100pct);
+            _baseRate = Math.min(oldBaseRate + _getBaseRateIncrease(ebusdSupply, totalDebtRedeemed), _100pct);
             if (_timeSinceLastRedemption >= ONE_MINUTE) _timeSinceLastRedemption = 0;
 
             for (uint256 j = 0; j < branches.length; ++j) {
@@ -1314,7 +1314,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
 
             // Cleanup (failure)
-            _sweepBold(msg.sender, amount);
+            _sweepEbusd(msg.sender, amount);
         } else {
             // Cleanup (success)
             for (uint256 j = 0; j < branches.length; ++j) {
@@ -1324,14 +1324,14 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
                 _sweepColl(j, msg.sender, collReceived);
 
                 for (uint256 i = 0; i < r[j].batchManagers.size(); ++i) {
-                    _sweepBold(r[j].batchManagers.get(i), batchManagementFee[j][i]);
+                    _sweepEbusd(r[j].batchManagers.get(i), batchManagementFee[j][i]);
                 }
             }
 
             // There can be a slight discrepancy when hitting batched Troves
-            uint256 remainingAmount = boldToken.balanceOf(msg.sender);
-            assertApproxEqAbsDecimal(remainingAmount, amount - totalDebtRedeemed, 1e5, 18, "Wrong remaining BOLD");
-            _sweepBold(msg.sender, remainingAmount);
+            uint256 remainingAmount = ebusdToken.balanceOf(msg.sender);
+            assertApproxEqAbsDecimal(remainingAmount, amount - totalDebtRedeemed, 1e5, 18, "Wrong remaining EBUSD");
+            _sweepEbusd(msg.sender, remainingAmount);
         }
 
         _resetRedemption();
@@ -1385,7 +1385,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
     function urgentRedemption(uint256 i, uint256 amount) external {
         i = _bound(i, 0, branches.length - 1);
-        amount = _bound(amount, 0, _handlerBold);
+        amount = _bound(amount, 0, _handlerEbusd);
 
         TestDeployer.LiquityContractsDev memory c = branches[i];
         uint256 pendingInterest = c.activePool.calcPendingAggInterest();
@@ -1397,12 +1397,12 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             batchManagementFee[j] = c.troveManager.getLatestBatchData(r.batchManagers.get(j)).accruedManagementFee;
         }
 
-        info("redeemed BOLD: ", r.totalDebtRedeemed.decimal());
+        info("redeemed EBUSD: ", r.totalDebtRedeemed.decimal());
         info("batch: [", _labelsFrom(r.batch).join(", "), "]");
         logCall("urgentRedemption", i.toString(), amount.decimal());
 
         // TODO: randomly deal less than amount?
-        _dealBold(msg.sender, amount);
+        _dealEbusd(msg.sender, amount);
 
         string memory errorString;
         vm.prank(msg.sender);
@@ -1467,7 +1467,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
 
             // Cleanup (failure)
-            _sweepBold(msg.sender, amount);
+            _sweepEbusd(msg.sender, amount);
         } else {
             // Cleanup (success)
 
@@ -1477,13 +1477,13 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _sweepColl(i, msg.sender, collReceived);
 
             for (uint256 j = 0; j < r.batchManagers.size(); ++j) {
-                _sweepBold(r.batchManagers.get(j), batchManagementFee[j]);
+                _sweepEbusd(r.batchManagers.get(j), batchManagementFee[j]);
             }
 
             // There can be a slight discrepancy when hitting batched Troves
-            uint256 remainingAmount = boldToken.balanceOf(msg.sender);
-            assertApproxEqAbsDecimal(remainingAmount, amount - r.totalDebtRedeemed, 1e5, 18, "Wrong remaining BOLD");
-            _sweepBold(msg.sender, remainingAmount);
+            uint256 remainingAmount = ebusdToken.balanceOf(msg.sender);
+            assertApproxEqAbsDecimal(remainingAmount, amount - r.totalDebtRedeemed, 1e5, 18, "Wrong remaining EBUSD");
+            _sweepEbusd(msg.sender, remainingAmount);
         }
 
         _resetUrgentRedemption();
@@ -1549,7 +1549,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            if (v.batchManager != address(0)) _sweepBold(v.batchManager, v.batchManagementFee);
+            if (v.batchManager != address(0)) _sweepEbusd(v.batchManager, v.batchManagementFee);
         }
     }
 
@@ -1557,32 +1557,32 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         ProvideToSPContext memory v;
 
         i = _bound(i, 0, branches.length - 1);
-        amount = _bound(amount, 0, _handlerBold);
+        amount = _bound(amount, 0, _handlerEbusd);
 
         v.c = branches[i];
         v.pendingInterest = v.c.activePool.calcPendingAggInterest();
-        v.totalBoldDeposits = v.c.stabilityPool.getTotalBoldDeposits();
-        v.blockedSPYield = v.totalBoldDeposits < DECIMAL_PRECISION
+        v.totalEbusdDeposits = v.c.stabilityPool.getTotalEbusdDeposits();
+        v.blockedSPYield = v.totalEbusdDeposits < DECIMAL_PRECISION
             ? v.c.activePool.calcPendingSPYield() + v.c.stabilityPool.getYieldGainsPending()
             : 0;
-        v.initialBoldDeposit = v.c.stabilityPool.deposits(msg.sender);
-        v.boldDeposit = v.c.stabilityPool.getCompoundedBoldDeposit(msg.sender);
-        v.boldYield = v.c.stabilityPool.getDepositorYieldGainWithPending(msg.sender);
+        v.initialEbusdDeposit = v.c.stabilityPool.deposits(msg.sender);
+        v.ebusdDeposit = v.c.stabilityPool.getCompoundedEbusdDeposit(msg.sender);
+        v.ebusdYield = v.c.stabilityPool.getDepositorYieldGainWithPending(msg.sender);
         v.ethGain = v.c.stabilityPool.getDepositorCollGain(msg.sender);
         v.ethStash = v.c.stabilityPool.stashedColl(msg.sender);
         v.ethClaimed = claim ? v.ethStash + v.ethGain : 0;
-        v.boldClaimed = claim ? v.boldYield : 0;
+        v.ebusdClaimed = claim ? v.ebusdYield : 0;
 
-        info("initial deposit: ", v.initialBoldDeposit.decimal());
-        info("compounded deposit: ", v.boldDeposit.decimal());
-        info("yield gain: ", v.boldYield.decimal());
+        info("initial deposit: ", v.initialEbusdDeposit.decimal());
+        info("compounded deposit: ", v.ebusdDeposit.decimal());
+        info("yield gain: ", v.ebusdYield.decimal());
         info("coll gain: ", v.ethGain.decimal());
         info("stashed coll: ", v.ethStash.decimal());
         info("blocked SP yield: ", v.blockedSPYield.decimal());
         logCall("provideToSP", i.toString(), amount.decimal(), claim.toString());
 
         // TODO: randomly deal less than amount?
-        _dealBold(msg.sender, amount);
+        _dealEbusd(msg.sender, amount);
 
         vm.prank(msg.sender);
         try v.c.stabilityPool.provideToSP(amount, claim) {
@@ -1593,21 +1593,21 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             v.ethStash += v.ethGain;
             v.ethStash -= v.ethClaimed;
 
-            v.boldDeposit += amount;
-            v.boldDeposit += v.boldYield;
-            v.boldDeposit -= v.boldClaimed;
+            v.ebusdDeposit += amount;
+            v.ebusdDeposit += v.ebusdYield;
+            v.ebusdDeposit -= v.ebusdClaimed;
 
             // See if the change unblocked any pending yield
-            v.totalBoldDeposits += amount;
-            v.totalBoldDeposits += v.boldYield;
-            v.totalBoldDeposits -= v.boldClaimed;
+            v.totalEbusdDeposits += amount;
+            v.totalEbusdDeposits += v.ebusdYield;
+            v.totalEbusdDeposits -= v.ebusdClaimed;
 
-            uint256 newBoldYield =
-                v.totalBoldDeposits >= DECIMAL_PRECISION ? v.blockedSPYield * v.boldDeposit / v.totalBoldDeposits : 0;
+            uint256 newEbusdYield =
+                v.totalEbusdDeposits >= DECIMAL_PRECISION ? v.blockedSPYield * v.ebusdDeposit / v.totalEbusdDeposits : 0;
 
-            assertEqDecimal(v.c.stabilityPool.getCompoundedBoldDeposit(msg.sender), v.boldDeposit, 18, "Wrong deposit");
+            assertEqDecimal(v.c.stabilityPool.getCompoundedEbusdDeposit(msg.sender), v.ebusdDeposit, 18, "Wrong deposit");
             assertApproxEqAbsDecimal(
-                v.c.stabilityPool.getDepositorYieldGain(msg.sender), newBoldYield, 1e10, 18, "Wrong yield gain"
+                v.c.stabilityPool.getDepositorYieldGain(msg.sender), newEbusdYield, 1e10, 18, "Wrong yield gain"
             );
             assertEqDecimal(v.c.stabilityPool.getDepositorCollGain(msg.sender), 0, 18, "Wrong coll gain");
             assertEqDecimal(v.c.stabilityPool.stashedColl(msg.sender), v.ethStash, 18, "Wrong stashed coll");
@@ -1616,10 +1616,10 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _mintYield(i, v.pendingInterest, 0);
 
             spColl[i] -= v.ethClaimed;
-            spBoldDeposits[i] += amount;
-            spBoldDeposits[i] += v.boldYield;
-            spBoldDeposits[i] -= v.boldClaimed;
-            spBoldYield[i] -= v.boldYield;
+            spEbusdDeposits[i] += amount;
+            spEbusdDeposits[i] += v.ebusdYield;
+            spEbusdDeposits[i] -= v.ebusdClaimed;
+            spEbusdYield[i] -= v.ebusdYield;
         } catch Error(string memory reason) {
             v.errorString = reason;
 
@@ -1638,10 +1638,10 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
 
             // Cleanup (failure)
-            _sweepBold(msg.sender, amount); // Take back the BOLD that was dealt
+            _sweepEbusd(msg.sender, amount); // Take back the EBUSD that was dealt
         } else {
             // Cleanup (success)
-            _sweepBold(msg.sender, v.boldClaimed);
+            _sweepEbusd(msg.sender, v.ebusdClaimed);
             _sweepColl(i, msg.sender, v.ethClaimed);
         }
     }
@@ -1653,24 +1653,24 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         v.c = branches[i];
         v.pendingInterest = v.c.activePool.calcPendingAggInterest();
-        v.totalBoldDeposits = v.c.stabilityPool.getTotalBoldDeposits();
-        v.blockedSPYield = v.totalBoldDeposits < DECIMAL_PRECISION
+        v.totalEbusdDeposits = v.c.stabilityPool.getTotalEbusdDeposits();
+        v.blockedSPYield = v.totalEbusdDeposits < DECIMAL_PRECISION
             ? v.c.activePool.calcPendingSPYield() + v.c.stabilityPool.getYieldGainsPending()
             : 0;
-        v.initialBoldDeposit = v.c.stabilityPool.deposits(msg.sender);
-        v.boldDeposit = v.c.stabilityPool.getCompoundedBoldDeposit(msg.sender);
-        v.boldYield = v.c.stabilityPool.getDepositorYieldGainWithPending(msg.sender);
+        v.initialEbusdDeposit = v.c.stabilityPool.deposits(msg.sender);
+        v.ebusdDeposit = v.c.stabilityPool.getCompoundedEbusdDeposit(msg.sender);
+        v.ebusdYield = v.c.stabilityPool.getDepositorYieldGainWithPending(msg.sender);
         v.ethGain = v.c.stabilityPool.getDepositorCollGain(msg.sender);
         v.ethStash = v.c.stabilityPool.stashedColl(msg.sender);
         v.ethClaimed = claim ? v.ethStash + v.ethGain : 0;
-        v.boldClaimed = claim ? v.boldYield : 0;
+        v.ebusdClaimed = claim ? v.ebusdYield : 0;
 
-        amount = _bound(amount, 0, v.boldDeposit * 11 / 10); // sometimes try withdrawing too much
-        v.withdrawn = Math.min(amount, v.boldDeposit);
+        amount = _bound(amount, 0, v.ebusdDeposit * 11 / 10); // sometimes try withdrawing too much
+        v.withdrawn = Math.min(amount, v.ebusdDeposit);
 
-        info("initial deposit: ", v.initialBoldDeposit.decimal());
-        info("compounded deposit: ", v.boldDeposit.decimal());
-        info("yield gain: ", v.boldYield.decimal());
+        info("initial deposit: ", v.initialEbusdDeposit.decimal());
+        info("compounded deposit: ", v.ebusdDeposit.decimal());
+        info("yield gain: ", v.ebusdYield.decimal());
         info("coll gain: ", v.ethGain.decimal());
         info("stashed coll: ", v.ethStash.decimal());
         info("blocked SP yield: ", v.blockedSPYield.decimal());
@@ -1679,27 +1679,27 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         vm.prank(msg.sender);
         try v.c.stabilityPool.withdrawFromSP(amount, claim) {
             // Preconditions
-            assertGtDecimal(v.initialBoldDeposit, 0, 18, "Should have failed as user had zero deposit");
+            assertGtDecimal(v.initialEbusdDeposit, 0, 18, "Should have failed as user had zero deposit");
 
             // Effects (deposit)
             v.ethStash += v.ethGain;
             v.ethStash -= v.ethClaimed;
 
-            v.boldDeposit += v.boldYield;
-            v.boldDeposit -= v.boldClaimed;
-            v.boldDeposit -= v.withdrawn;
+            v.ebusdDeposit += v.ebusdYield;
+            v.ebusdDeposit -= v.ebusdClaimed;
+            v.ebusdDeposit -= v.withdrawn;
 
             // See if the change unblocked any pending yield
-            v.totalBoldDeposits += v.boldYield;
-            v.totalBoldDeposits -= v.boldClaimed;
-            v.totalBoldDeposits -= v.withdrawn;
+            v.totalEbusdDeposits += v.ebusdYield;
+            v.totalEbusdDeposits -= v.ebusdClaimed;
+            v.totalEbusdDeposits -= v.withdrawn;
 
-            uint256 newBoldYield =
-                v.totalBoldDeposits >= DECIMAL_PRECISION ? v.blockedSPYield * v.boldDeposit / v.totalBoldDeposits : 0;
+            uint256 newEbusdYield =
+                v.totalEbusdDeposits >= DECIMAL_PRECISION ? v.blockedSPYield * v.ebusdDeposit / v.totalEbusdDeposits : 0;
 
-            assertEqDecimal(v.c.stabilityPool.getCompoundedBoldDeposit(msg.sender), v.boldDeposit, 18, "Wrong deposit");
+            assertEqDecimal(v.c.stabilityPool.getCompoundedEbusdDeposit(msg.sender), v.ebusdDeposit, 18, "Wrong deposit");
             assertApproxEqAbsDecimal(
-                v.c.stabilityPool.getDepositorYieldGain(msg.sender), newBoldYield, 1e10, 18, "Wrong yield gain"
+                v.c.stabilityPool.getDepositorYieldGain(msg.sender), newEbusdYield, 1e10, 18, "Wrong yield gain"
             );
             assertEqDecimal(v.c.stabilityPool.getDepositorCollGain(msg.sender), 0, 18, "Wrong coll gain");
             assertEqDecimal(v.c.stabilityPool.stashedColl(msg.sender), v.ethStash, 18, "Wrong stashed coll");
@@ -1708,16 +1708,16 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _mintYield(i, v.pendingInterest, 0);
 
             spColl[i] -= v.ethClaimed;
-            spBoldDeposits[i] += v.boldYield;
-            spBoldDeposits[i] -= v.boldClaimed;
-            spBoldDeposits[i] -= v.withdrawn;
-            spBoldYield[i] -= v.boldYield;
+            spEbusdDeposits[i] += v.ebusdYield;
+            spEbusdDeposits[i] -= v.ebusdClaimed;
+            spEbusdDeposits[i] -= v.withdrawn;
+            spEbusdYield[i] -= v.ebusdYield;
         } catch Error(string memory reason) {
             v.errorString = reason;
 
             // Justify failures
             if (reason.equals("StabilityPool: User must have a non-zero deposit")) {
-                assertEqDecimal(v.initialBoldDeposit, 0, 18, "Shouldn't have failed as user had a non-zero deposit");
+                assertEqDecimal(v.initialEbusdDeposit, 0, 18, "Shouldn't have failed as user had a non-zero deposit");
             } else {
                 revert(reason);
             }
@@ -1730,7 +1730,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            _sweepBold(msg.sender, v.boldClaimed + v.withdrawn);
+            _sweepEbusd(msg.sender, v.ebusdClaimed + v.withdrawn);
             _sweepColl(i, msg.sender, v.ethClaimed);
         }
     }
@@ -1740,7 +1740,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         TestDeployer.LiquityContractsDev memory c = branches[i];
         uint256 pendingInterest = c.activePool.calcPendingAggInterest();
-        uint256 initialBoldDeposit = c.stabilityPool.deposits(msg.sender);
+        uint256 initialEbusdDeposit = c.stabilityPool.deposits(msg.sender);
         uint256 ethStash = c.stabilityPool.stashedColl(msg.sender);
 
         logCall("claimAllCollGains", i.toString());
@@ -1750,11 +1750,11 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         try c.stabilityPool.claimAllCollGains() {
             // Preconditions
-            assertEqDecimal(initialBoldDeposit, 0, 18, "Should have failed as user had a non-zero deposit");
+            assertEqDecimal(initialEbusdDeposit, 0, 18, "Should have failed as user had a non-zero deposit");
             assertGtDecimal(ethStash, 0, 18, "Should have failed as ETH stash was zero");
 
             // Effects (deposit)
-            assertEqDecimal(c.stabilityPool.getCompoundedBoldDeposit(msg.sender), 0, 18, "Wrong deposit");
+            assertEqDecimal(c.stabilityPool.getCompoundedEbusdDeposit(msg.sender), 0, 18, "Wrong deposit");
             assertEqDecimal(c.stabilityPool.getDepositorYieldGain(msg.sender), 0, 18, "Wrong yield gain");
             assertEqDecimal(c.stabilityPool.getDepositorCollGain(msg.sender), 0, 18, "Wrong coll gain");
             assertEqDecimal(c.stabilityPool.stashedColl(msg.sender), 0, 18, "Wrong stashed coll");
@@ -1767,7 +1767,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
             // Justify failures
             if (reason.equals("StabilityPool: User must have no deposit")) {
-                assertGtDecimal(initialBoldDeposit, 0, 18, "Shouldn't have failed as user had no deposit");
+                assertGtDecimal(initialEbusdDeposit, 0, 18, "Shouldn't have failed as user had no deposit");
             } else if (reason.equals("StabilityPool: Amount must be non-zero")) {
                 assertEqDecimal(ethStash, 0, 18, "Shouldn't have failed as ETH stash was non-zero");
             } else {
@@ -1955,7 +1955,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            _sweepBold(msg.sender, batchManagementFee);
+            _sweepEbusd(msg.sender, batchManagementFee);
         }
     }
 
@@ -2079,7 +2079,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            _sweepBold(v.newBatchManager, v.batchManagementFee);
+            _sweepEbusd(v.newBatchManager, v.batchManagementFee);
         }
     }
 
@@ -2193,7 +2193,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            _sweepBold(v.batchManager, v.batchManagementFee);
+            _sweepEbusd(v.batchManager, v.batchManagementFee);
         }
     }
 
@@ -2316,7 +2316,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             _log();
         } else {
             // Cleanup (success)
-            _sweepBold(msg.sender, v.batchManagementFee);
+            _sweepEbusd(msg.sender, v.batchManagementFee);
         }
     }
 
@@ -2330,8 +2330,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         return _baseRate * decaySinceLastRedemption / DECIMAL_PRECISION;
     }
 
-    function _getBaseRateIncrease(uint256 boldSupply, uint256 redeemed) internal pure returns (uint256) {
-        return boldSupply > 0 ? redeemed * DECIMAL_PRECISION / boldSupply / REDEMPTION_BETA : 0;
+    function _getBaseRateIncrease(uint256 ebusdSupply, uint256 redeemed) internal pure returns (uint256) {
+        return ebusdSupply > 0 ? redeemed * DECIMAL_PRECISION / ebusdSupply / REDEMPTION_BETA : 0;
     }
 
     function _getRedemptionRate(uint256 baseRate) internal pure returns (uint256) {
@@ -2343,7 +2343,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
     }
 
     function _getUnbacked(uint256 i) internal view returns (uint256) {
-        uint256 sp = spBoldDeposits[i];
+        uint256 sp = spEbusdDeposits[i];
         uint256 totalDebt = _getTotalDebt(i);
 
         return sp < totalDebt ? totalDebt - sp : 0;
@@ -2496,9 +2496,9 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
     function _mintYield(uint256 i, uint256 pendingInterest, uint256 upfrontFee) internal {
         uint256 mintedYield = pendingInterest + upfrontFee;
-        uint256 mintedSPBoldYield = mintedYield * SP_YIELD_SPLIT / DECIMAL_PRECISION;
+        uint256 mintedSPEbusdYield = mintedYield * SP_YIELD_SPLIT / DECIMAL_PRECISION;
 
-        spBoldYield[i] += mintedSPBoldYield;
+        spEbusdYield[i] += mintedSPEbusdYield;
         _pendingInterest[i] = 0;
     }
 
@@ -2568,15 +2568,15 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         collToken.approve(spender, allowance - amount);
     }
 
-    function _dealBold(address to, uint256 amount) internal {
-        boldToken.transfer(to, amount);
-        _handlerBold -= amount;
+    function _dealEbusd(address to, uint256 amount) internal {
+        ebusdToken.transfer(to, amount);
+        _handlerEbusd -= amount;
     }
 
-    function _sweepBold(address from, uint256 amount) internal {
+    function _sweepEbusd(address from, uint256 amount) internal {
         vm.prank(from);
-        boldToken.transfer(address(this), amount);
-        _handlerBold += amount;
+        ebusdToken.transfer(address(this), amount);
+        _handlerEbusd += amount;
     }
 
     function _addToLiquidationBatch(address owner) internal {
@@ -2591,7 +2591,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         collRemaining -= collGasComp;
 
         // Offset debt by SP
-        uint256 spOffset = Math.min(trove.entireDebt, spBoldDeposits[i] - t.spOffset);
+        uint256 spOffset = Math.min(trove.entireDebt, spEbusdDeposits[i] - t.spOffset);
         t.spOffset += spOffset;
 
         // Send coll to SP
@@ -2775,7 +2775,7 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
                         owner: msg.sender,
                         ownerIndex: OWNER_INDEX,
                         collAmount: v.coll,
-                        boldAmount: v.borrowed,
+                        ebusdAmount: v.borrowed,
                         upperHint: v.upperHint,
                         lowerHint: v.lowerHint,
                         interestBatchManager: v.batchManager,
@@ -2824,9 +2824,9 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         if (prop == AdjustedTroveProperties.onlyDebt) {
             if (isDebtIncrease) {
-                return "withdrawBold()";
+                return "withdrawEbusd()";
             } else {
-                return "repayBold()";
+                return "repayEbusd()";
             }
         }
 
@@ -2856,9 +2856,9 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
         if (prop == AdjustedTroveProperties.onlyDebt) {
             if (isDebtIncrease) {
-                return abi.encodeCall(IBorrowerOperations.withdrawBold, (troveId, debtChange, maxUpfrontFee));
+                return abi.encodeCall(IBorrowerOperations.withdrawEbusd, (troveId, debtChange, maxUpfrontFee));
             } else {
-                return abi.encodeCall(IBorrowerOperations.repayBold, (troveId, debtChange));
+                return abi.encodeCall(IBorrowerOperations.repayEbusd, (troveId, debtChange));
             }
         }
 
@@ -3012,8 +3012,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
                 return (selector, "BorrowerOperations.CollWithdrawalTooHigh()");
             }
 
-            if (selector == BorrowerOperations.NotEnoughBoldBalance.selector) {
-                return (selector, "BorrowerOperations.NotEnoughBoldBalance()");
+            if (selector == BorrowerOperations.NotEnoughEbusdBalance.selector) {
+                return (selector, "BorrowerOperations.NotEnoughEbusdBalance()");
             }
 
             if (selector == BorrowerOperations.InterestRateNotNew.selector) {

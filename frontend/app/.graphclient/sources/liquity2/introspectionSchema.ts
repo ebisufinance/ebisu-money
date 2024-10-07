@@ -7214,7 +7214,7 @@ const schemaAST = {
           "kind": "FieldDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain",
+            "value": "ebusdGain",
           },
           "arguments": [],
           "type": {
@@ -7452,7 +7452,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain",
+            "value": "ebusdGain",
           },
           "type": {
             "kind": "NamedType",
@@ -7467,7 +7467,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_not",
+            "value": "ebusdGain_not",
           },
           "type": {
             "kind": "NamedType",
@@ -7482,7 +7482,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_gt",
+            "value": "ebusdGain_gt",
           },
           "type": {
             "kind": "NamedType",
@@ -7497,7 +7497,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_lt",
+            "value": "ebusdGain_lt",
           },
           "type": {
             "kind": "NamedType",
@@ -7512,7 +7512,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_gte",
+            "value": "ebusdGain_gte",
           },
           "type": {
             "kind": "NamedType",
@@ -7527,7 +7527,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_lte",
+            "value": "ebusdGain_lte",
           },
           "type": {
             "kind": "NamedType",
@@ -7542,7 +7542,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_in",
+            "value": "ebusdGain_in",
           },
           "type": {
             "kind": "ListType",
@@ -7563,7 +7563,7 @@ const schemaAST = {
           "kind": "InputValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain_not_in",
+            "value": "ebusdGain_not_in",
           },
           "type": {
             "kind": "ListType",
@@ -8411,7 +8411,7 @@ const schemaAST = {
           "kind": "EnumValueDefinition",
           "name": {
             "kind": "Name",
-            "value": "boldGain",
+            "value": "ebusdGain",
           },
           "directives": [],
         },

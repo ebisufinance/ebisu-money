@@ -35,7 +35,7 @@ export const WETHZapper = [
       { "name": "_troveId", "type": "uint256", "internalType": "uint256" },
       { "name": "_collChange", "type": "uint256", "internalType": "uint256" },
       { "name": "_isCollIncrease", "type": "bool", "internalType": "bool" },
-      { "name": "_boldChange", "type": "uint256", "internalType": "uint256" },
+      { "name": "_ebusdChange", "type": "uint256", "internalType": "uint256" },
       { "name": "_isDebtIncrease", "type": "bool", "internalType": "bool" },
       { "name": "_maxUpfrontFee", "type": "uint256", "internalType": "uint256" },
     ],
@@ -49,7 +49,7 @@ export const WETHZapper = [
       { "name": "_troveId", "type": "uint256", "internalType": "uint256" },
       { "name": "_collChange", "type": "uint256", "internalType": "uint256" },
       { "name": "_isCollIncrease", "type": "bool", "internalType": "bool" },
-      { "name": "_boldChange", "type": "uint256", "internalType": "uint256" },
+      { "name": "_ebusdChange", "type": "uint256", "internalType": "uint256" },
       { "name": "_isDebtIncrease", "type": "bool", "internalType": "bool" },
       { "name": "_upperHint", "type": "uint256", "internalType": "uint256" },
       { "name": "_lowerHint", "type": "uint256", "internalType": "uint256" },
@@ -60,9 +60,9 @@ export const WETHZapper = [
   },
   {
     "type": "function",
-    "name": "boldToken",
+    "name": "ebusdToken",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "contract IBoldToken" }],
+    "outputs": [{ "name": "", "type": "address", "internalType": "contract IEbusdToken" }],
     "stateMutability": "view",
   },
   {
@@ -89,7 +89,7 @@ export const WETHZapper = [
       "components": [
         { "name": "owner", "type": "address", "internalType": "address" },
         { "name": "ownerIndex", "type": "uint256", "internalType": "uint256" },
-        { "name": "boldAmount", "type": "uint256", "internalType": "uint256" },
+        { "name": "ebusdAmount", "type": "uint256", "internalType": "uint256" },
         { "name": "upperHint", "type": "uint256", "internalType": "uint256" },
         { "name": "lowerHint", "type": "uint256", "internalType": "uint256" },
         { "name": "annualInterestRate", "type": "uint256", "internalType": "uint256" },
@@ -115,9 +115,9 @@ export const WETHZapper = [
   },
   {
     "type": "function",
-    "name": "repayBold",
+    "name": "repayEbusd",
     "inputs": [{ "name": "_troveId", "type": "uint256", "internalType": "uint256" }, {
-      "name": "_boldAmount",
+      "name": "_ebusdAmount",
       "type": "uint256",
       "internalType": "uint256",
     }],
@@ -166,9 +166,9 @@ export const WETHZapper = [
   },
   {
     "type": "function",
-    "name": "withdrawBold",
+    "name": "withdrawEbusd",
     "inputs": [{ "name": "_troveId", "type": "uint256", "internalType": "uint256" }, {
-      "name": "_boldAmount",
+      "name": "_ebusdAmount",
       "type": "uint256",
       "internalType": "uint256",
     }, { "name": "_maxUpfrontFee", "type": "uint256", "internalType": "uint256" }],

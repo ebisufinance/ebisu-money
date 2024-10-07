@@ -24,14 +24,14 @@ export function RewardsPanel({
 
   const collateral = useCollateral(collIndex);
   const collPriceUsd = usePrice(collateral?.symbol ?? null);
-  const boldPriceUsd = usePrice("BOLD");
+  const ebusdPriceUsd = usePrice("EBUSD");
 
-  if (!collPriceUsd || !boldPriceUsd || !collateral) {
+  if (!collPriceUsd || !ebusdPriceUsd || !collateral) {
     return null;
   }
 
   const totalRewards = dn.add(
-    dn.mul(position?.rewards?.bold ?? DNUM_0, boldPriceUsd),
+    dn.mul(position?.rewards?.ebusd ?? DNUM_0, ebusdPriceUsd),
     dn.mul(position?.rewards?.coll ?? DNUM_0, collPriceUsd),
   );
 
@@ -78,15 +78,15 @@ export function RewardsPanel({
           })}
         >
           <RewardsAmount
-            symbol="BOLD"
+            symbol="EBUSD"
             tooltip={
               <InfoTooltip
                 {...infoTooltipProps(
-                  content.earnScreen.infoTooltips.rewardsBold,
+                  content.earnScreen.infoTooltips.rewardsEbusd,
                 )}
               />
             }
-            value={position?.rewards?.bold ?? DNUM_0}
+            value={position?.rewards?.ebusd ?? DNUM_0}
           />
           <RewardsAmount
             symbol={collateral.symbol}

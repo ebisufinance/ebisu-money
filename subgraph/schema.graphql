@@ -64,7 +64,7 @@ type StabilityPool @entity {
 
 type StabilityPoolDeposit @entity {
   id: ID!
-  boldGain: BigInt!
+  ebusdGain: BigInt!
   collGain: BigInt!
   collateral: Collateral!
   deposit: BigInt!

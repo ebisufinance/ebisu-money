@@ -85,7 +85,7 @@ export function InputFieldFixture({
 				]}
 			/>
 		))
-		.with("borrow", () => <Token name="BOLD" />)
+		.with("borrow", () => <Token name="EBUSD" />)
 		.with("slider", () => (
 			<div
 				style={{
@@ -117,7 +117,7 @@ export function InputFieldFixture({
 			"borrow",
 			() => `${parsedValue ? dn.format(parsedValue, 2) : "−"}  USD`,
 		)
-		.with("slider", () => "Total debt 0 BOLD")
+		.with("slider", () => "Total debt 0 EBUSD")
 		.otherwise(() => undefined);
 
 	const secondaryEnd = match(fixture)
@@ -139,7 +139,7 @@ export function InputFieldFixture({
 					Max LTV 80%:
 				</div>
 				<TextButton
-					label="24,405.69 BOLD"
+					label="24,405.69 EBUSD"
 					onClick={() => setValue("24405.69")}
 				/>
 			</div>
@@ -175,7 +175,7 @@ export function InputFieldFixture({
 			focused || !parsedValue ? value : `${dn.format(parsedValue)} ETH`,
 		)
 		.with("borrow", () =>
-			focused || !parsedValue ? value : `${dn.format(parsedValue)} BOLD`,
+			focused || !parsedValue ? value : `${dn.format(parsedValue)} EBUSD`,
 		)
 		.with("slider", () =>
 			focused || !parsedValue ? value : `$${dn.format(parsedValue)}`,
@@ -217,12 +217,12 @@ export function InputFieldFixture({
 	);
 }
 
-function Token({ name }: { name: "ETH" | "BOLD" }) {
+function Token({ name }: { name: "ETH" | "EBUSD" }) {
 	return (
 		<Action
 			icon={match(name)
 				.with("ETH", () => <IconEth />)
-				.with("BOLD", () => <IconBold />)
+				.with("EBUSD", () => <IconEbusd />)
 				.exhaustive()}
 			label={name}
 		/>
@@ -263,7 +263,7 @@ function Action({
 	);
 }
 
-function IconBold() {
+function IconEbusd() {
 	return (
 		<svg fill="none" height="24" width="24" xmlns="http://www.w3.org/2000/svg">
 			<circle cx="12" cy="12" r="12" fill="#63D77D" />

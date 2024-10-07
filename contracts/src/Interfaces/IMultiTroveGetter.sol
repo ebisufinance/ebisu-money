@@ -15,7 +15,7 @@ interface IMultiTroveGetter {
         uint256 batchDebtShares;
         uint256 batchCollShares;
         uint256 snapshotETH;
-        uint256 snapshotBoldDebt;
+        uint256 snapshotEbusdDebt;
     }
 
     struct DebtPerInterestRate {

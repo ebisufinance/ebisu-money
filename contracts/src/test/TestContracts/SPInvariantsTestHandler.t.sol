@@ -3,7 +3,7 @@ pragma solidity 0.8.18;
 
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {IBorrowerOperations} from "../../Interfaces/IBorrowerOperations.sol";
-import {IBoldToken} from "../../Interfaces/IBoldToken.sol";
+import {IEbusdToken} from "../../Interfaces/IEbusdToken.sol";
 import {IStabilityPool} from "../../Interfaces/IStabilityPool.sol";
 import {ITroveManager} from "../../Interfaces/ITroveManager.sol";
 import {ICollSurplusPool} from "../../Interfaces/ICollSurplusPool.sol";
@@ -38,7 +38,7 @@ contract SPInvariantsTestHandler is BaseHandler {
     using StringFormatting for uint256;
 
     struct Contracts {
-        IBoldToken boldToken;
+        IEbusdToken ebusdToken;
         IBorrowerOperations borrowerOperations;
         IERC20 collateralToken;
         IPriceFeedTestnet priceFeed;
@@ -47,7 +47,7 @@ contract SPInvariantsTestHandler is BaseHandler {
         ICollSurplusPool collSurplusPool;
     }
 
-    IBoldToken immutable boldToken;
+    IEbusdToken immutable ebusdToken;
     IBorrowerOperations immutable borrowerOperations;
     IERC20 collateralToken;
     IPriceFeedTestnet immutable priceFeed;
@@ -59,15 +59,15 @@ contract SPInvariantsTestHandler is BaseHandler {
     uint256 immutable initialPrice;
 
     // Ghost variables
-    uint256 myBold = 0;
-    uint256 spBold = 0;
+    uint256 myEbusd = 0;
+    uint256 spEbusd = 0;
     uint256 spColl = 0;
 
     // Fixtures
     uint256[] fixtureDeposited;
 
     constructor(Contracts memory contracts, HintHelpers hintHelpers_) {
-        boldToken = contracts.boldToken;
+        ebusdToken = contracts.ebusdToken;
         borrowerOperations = contracts.borrowerOperations;
         collateralToken = contracts.collateralToken;
         priceFeed = contracts.priceFeed;
@@ -121,9 +121,9 @@ contract SPInvariantsTestHandler is BaseHandler {
 
         // Sweep funds
         vm.prank(msg.sender);
-        boldToken.transfer(address(this), borrowed);
-        assertEqDecimal(boldToken.balanceOf(msg.sender), 0, 18, "Incomplete BOLD sweep");
-        myBold += borrowed;
+        ebusdToken.transfer(address(this), borrowed);
+        assertEqDecimal(ebusdToken.balanceOf(msg.sender), 0, 18, "Incomplete EBUSD sweep");
+        myEbusd += borrowed;
 
         // Use these interesting values as SP deposit amounts later
         fixtureDeposited.push(debt);
@@ -131,11 +131,11 @@ contract SPInvariantsTestHandler is BaseHandler {
     }
 
     function provideToSp(uint256 deposited, bool useFixture) external {
-        vm.assume(myBold > 0);
+        vm.assume(myEbusd > 0);
 
         uint256 collBefore = collateralToken.balanceOf(msg.sender);
         uint256 collGain = stabilityPool.getDepositorCollGain(msg.sender);
-        uint256 boldGain = stabilityPool.getDepositorYieldGainWithPending(msg.sender);
+        uint256 ebusdGain = stabilityPool.getDepositorYieldGainWithPending(msg.sender);
 
         // Poor man's fixturing, because Foundry's fixtures don't seem to work under invariant testing
         if (useFixture && fixtureDeposited.length > 0) {
@@ -143,32 +143,32 @@ contract SPInvariantsTestHandler is BaseHandler {
             deposited = fixtureDeposited[_bound(deposited, 0, fixtureDeposited.length - 1)];
         }
 
-        deposited = _bound(deposited, 1, myBold);
+        deposited = _bound(deposited, 1, myEbusd);
 
         logCall("provideToSp", deposited.decimal(), "false");
 
-        boldToken.transfer(msg.sender, deposited);
+        ebusdToken.transfer(msg.sender, deposited);
         vm.prank(msg.sender);
-        // Provide to SP and claim Coll and BOLD gains
+        // Provide to SP and claim Coll and EBUSD gains
         stabilityPool.provideToSP(deposited, true);
 
-        info("totalBoldDeposits = ", stabilityPool.getTotalBoldDeposits().decimal());
+        info("totalEbusdDeposits = ", stabilityPool.getTotalEbusdDeposits().decimal());
         _log();
 
         uint256 collAfter = collateralToken.balanceOf(msg.sender);
         assertEqDecimal(collAfter, collBefore + collGain, 18, "Wrong Coll gain");
 
-        // Sweep BOLD gain
+        // Sweep EBUSD gain
         vm.prank(msg.sender);
-        boldToken.transfer(address(this), boldGain);
-        assertEqDecimal(boldToken.balanceOf(msg.sender), 0, 18, "Incomplete BOLD sweep");
-        myBold += boldGain;
+        ebusdToken.transfer(address(this), ebusdGain);
+        assertEqDecimal(ebusdToken.balanceOf(msg.sender), 0, 18, "Incomplete EBUSD sweep");
+        myEbusd += ebusdGain;
 
-        myBold -= deposited;
-        spBold += deposited;
+        myEbusd -= deposited;
+        spEbusd += deposited;
         spColl -= collGain;
 
-        assertEqDecimal(spBold, stabilityPool.getTotalBoldDeposits(), 18, "Wrong SP BOLD balance");
+        assertEqDecimal(spEbusd, stabilityPool.getTotalEbusdDeposits(), 18, "Wrong SP EBUSD balance");
         assertEqDecimal(spColl, stabilityPool.getCollBalance(), 18, "Wrong SP Coll balance");
     }
 
@@ -178,7 +178,7 @@ contract SPInvariantsTestHandler is BaseHandler {
         vm.assume(TroveManagerTester(address(troveManager)).getTroveStatus(troveId) == ITroveManager.Status.active);
 
         (uint256 debt, uint256 coll,,,) = TroveManagerTester(address(troveManager)).getEntireDebtAndColl(troveId);
-        vm.assume(debt <= spBold); // only interested in SP offset, no redistribution
+        vm.assume(debt <= spEbusd); // only interested in SP offset, no redistribution
 
         logCall("liquidateMe");
 
@@ -203,7 +203,7 @@ contract SPInvariantsTestHandler is BaseHandler {
 
         priceFeed.setPrice(initialPrice);
 
-        info("totalBoldDeposits = ", stabilityPool.getTotalBoldDeposits().decimal());
+        info("totalEbusdDeposits = ", stabilityPool.getTotalEbusdDeposits().decimal());
         info("P = ", stabilityPool.P().decimal());
         _log();
 
@@ -216,10 +216,10 @@ contract SPInvariantsTestHandler is BaseHandler {
         uint256 accountSurplusDelta = accountSurplusAfter - accountSurplusBefore;
         assertEqDecimal(accountSurplusDelta, claimableColl, 18, "Wrong account surplus");
 
-        spBold -= debt;
+        spEbusd -= debt;
         spColl += coll - claimableColl - collCompensation;
 
-        assertEqDecimal(spBold, stabilityPool.getTotalBoldDeposits(), 18, "Wrong SP BOLD balance");
+        assertEqDecimal(spEbusd, stabilityPool.getTotalEbusdDeposits(), 18, "Wrong SP EBUSD balance");
         assertEqDecimal(spColl, stabilityPool.getCollBalance(), 18, "Wrong SP Coll balance");
     }
 }

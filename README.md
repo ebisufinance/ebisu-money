@@ -17,14 +17,14 @@
   - [TroveManager](#trovemanager)
   - [StabilityPool](#stabilitypool)
   - [All PriceFeeds](#all-pricefeeds)
-  - [BOLDToken](#boldtoken)
+  - [EBUSDToken](#ebusdtoken)
 - [Borrowing and interest rates](#borrowing-and-interest-rates)
   - [Applying a Trove’s interest](#applying-a-troves-interest)
   - [Interest rate scheme implementation](#interest-rate-scheme-implementation)
   - [Core debt invariant](#core-debt-invariant)
   - [Applying and minting pending aggregate interest](#applying-and-minting-pending-aggregate-interest)
   - [Interest rate adjustments, redemption evasion mitigation](#interest-rate-adjustments-redemption-evasion-mitigation)
-- [BOLD Redemptions](#bold-redemptions)
+- [EBUSD Redemptions](#ebusd-redemptions)
   - [Redemption routing](#redemption-routing)
   - [Redemptions at branch level](#redemptions-at-branch-level)
   - [Redemption fees](#redemption-fees)
@@ -36,7 +36,7 @@
   - [How deposits and ETH gains are calculated](#how-deposits-and-eth-gains-are-calculated)
   - [Collateral gains from Liquidations and the Product-Sum algorithm](#collateral-gains-from-liquidations-and-the-product-sum-algorithm)
   - [Scalable reward distribution for compounding, decreasing stake](#scalable-reward-distribution-for-compounding-decreasing-stake)
-  - [BOLD Yield Gains](#bold-yield-gains)
+  - [EBUSD Yield Gains](#ebusd-yield-gains)
 - [Liquidation and the Stability Pool](#liquidation-and-the-stability-pool)
   - [Liquidation logic](#liquidation-logic)
   - [Liquidation penalties and borrowers’ collateral surplus](#liquidation-penalties-and-borrowers-collateral-surplus)
@@ -90,15 +90,15 @@
  
 - **Collateral choices.** The system will contain collateral branches for WETH and two LSTs: rETH and wstETH. It does not accept native ETH as collateral.
 
-- **User-set interest rates.** When a borrower opens a Trove, they choose their own annual interest rate. They may change their annual interest rate at any point. Simple (non-compounding) interest accrues on their debt continuously, and gets compounded discretely every time the Trove is touched. Aggregate accrued Trove debt is periodically minted as BOLD. 
+- **User-set interest rates.** When a borrower opens a Trove, they choose their own annual interest rate. They may change their annual interest rate at any point. Simple (non-compounding) interest accrues on their debt continuously, and gets compounded discretely every time the Trove is touched. Aggregate accrued Trove debt is periodically minted as EBUSD. 
 
-- **Yield from interest paid to SP and LPs.** BOLD yields from Trove interest are periodically paid out in a split to the Stability Pool (SP), and to a router which in turn routes its yield share to DEX LP incentives.  Yield paid to the SP from Trove interest on a given branch is always paid to the SP on that same branch.
+- **Yield from interest paid to SP and LPs.** EBUSD yields from Trove interest are periodically paid out in a split to the Stability Pool (SP), and to a router which in turn routes its yield share to DEX LP incentives.  Yield paid to the SP from Trove interest on a given branch is always paid to the SP on that same branch.
 
-- **Redemption routing.** Redemptions of BOLD are routed by the CollateralRegistry. For a given redemption, the redemption volume that hits a given branch is proportional to its relative “unbackedness”. The primary goal of redemptions is to restore the BOLD peg. A secondary purpose is to reduce the unbackedness of the most unbacked branches relatively more than the more backed branches. Unbackedness is defined as the delta between the total BOLD debt of the branch, and the BOLD in the branch’s SP.
+- **Redemption routing.** Redemptions of EBUSD are routed by the CollateralRegistry. For a given redemption, the redemption volume that hits a given branch is proportional to its relative “unbackedness”. The primary goal of redemptions is to restore the EBUSD peg. A secondary purpose is to reduce the unbackedness of the most unbacked branches relatively more than the more backed branches. Unbackedness is defined as the delta between the total EBUSD debt of the branch, and the EBUSD in the branch’s SP.
 
 - **Redemption ordering.** In a given branch, redemptions hit Troves in order of their annual interest rate, from lowest to highest. Troves with higher annual interest rates are more shielded from redemptions - they have more “debt-in-front” of them than Troves with lower interest rates. A Trove’s collateral ratio is not taken into account at all for redemption ordering.
 
-- **Unredeemable Troves.** Redemptions now do not close Troves - they leave them open. Redemptions may now leave some Troves with a zero or very small BOLD debt < MIN_DEBT. These Troves are tagged as `unredeemable` in order to eliminate a redemption griefing attack vector. They become redeemable again when the borrower brings them back above the `MIN_DEBT`.
+- **Unredeemable Troves.** Redemptions now do not close Troves - they leave them open. Redemptions may now leave some Troves with a zero or very small EBUSD debt < MIN_DEBT. These Troves are tagged as `unredeemable` in order to eliminate a redemption griefing attack vector. They become redeemable again when the borrower brings them back above the `MIN_DEBT`.
 
 - **Troves represented by NFTs.** Troves are freely transferable and a given Ethereum address may own multiple Troves (by holding the corresponding NFTs).
 
@@ -114,22 +114,22 @@
 
 - **Gas compensation**. Liquidations now pay gas compensation to the liquidator in a mix of collateral and WETH. The liquidation reserve is denominated in WETH irrespective of the collateral plus a variable compensation in the collateral, which is capped to avoid excessive compensations. 
 
-- **More flexibility for SP reward claiming**.. SP depositors can now claim or stash their LST gains from liquidations, and either claim their BOLD yield gains or add them to their deposit.
+- **More flexibility for SP reward claiming**.. SP depositors can now claim or stash their LST gains from liquidations, and either claim their EBUSD yield gains or add them to their deposit.
 
 ### What remains the same in v2 from v1?
 
-- **Core redemption mechanism** - swaps 1 BOLD for $1 worth of collateral, less the fee, in order to maintain a hard BOLD price floor
+- **Core redemption mechanism** - swaps 1 EBUSD for $1 worth of collateral, less the fee, in order to maintain a hard EBUSD price floor
 
 
 - **Redemption fee mechanics at branch level**. The `baseRate` with fee spike based on redemption volume, and time-based decay.
 
 - **Ordered Troves**. Each branch maintains a sorted list of Troves (though now ordered by annual interest rate).
 
-- **Liquidation mechanisms**. Liquidated Troves are still offset against the BOLD in the SP and redistribution to active Troves in the branch if/when the SP deposits are insufficient (though the liquidation penalty applied to the borrower is reduced).
+- **Liquidation mechanisms**. Liquidated Troves are still offset against the EBUSD in the SP and redistribution to active Troves in the branch if/when the SP deposits are insufficient (though the liquidation penalty applied to the borrower is reduced).
 
-- **Similar smart contract architecture**. At branch level the system architecture closely resembles that of v1 - the `TroveManager`, `BorrowerOperations` and `StabilityPool` contracts contain most system logic and direct the flows of BOLD and collateral.
+- **Similar smart contract architecture**. At branch level the system architecture closely resembles that of v1 - the `TroveManager`, `BorrowerOperations` and `StabilityPool` contracts contain most system logic and direct the flows of EBUSD and collateral.
 
-- **Stability Pool algorithm**. Same arithmetic and logic is used for tracking deposits, collateral gains and BOLD yield gains over time as liquidations deplete the pool.
+- **Stability Pool algorithm**. Same arithmetic and logic is used for tracking deposits, collateral gains and EBUSD yield gains over time as liquidations deplete the pool.
 
 - **Individual overcollateralization**. Each Trove is individually overcollateralized and liquidated below the branch-specific MCR.
 
@@ -138,24 +138,24 @@
 
 ## Liquity v2 Overview
 
-Liquity v2 is a collateralized debt platform. Users can lock up WETH and/or select LSTs, and issue stablecoin tokens (BOLD) to their own Ethereum address. The individual collateralized debt positions are called Troves.
+Liquity v2 is a collateralized debt platform. Users can lock up WETH and/or select LSTs, and issue stablecoin tokens (EBUSD) to their own Ethereum address. The individual collateralized debt positions are called Troves.
 
 
-The stablecoin tokens are economically geared towards maintaining value of 1 BOLD = $1 USD, due to the following properties:
+The stablecoin tokens are economically geared towards maintaining value of 1 EBUSD = $1 USD, due to the following properties:
 
 
 1. The system is designed to always be over-collateralized - the dollar value of the locked collateral exceeds the dollar value of the issued stablecoins.
 
 
-2. The stablecoins are fully redeemable - users can always swap x BOLD for $x worth of a mix of WETH and LSTs (minus fees), directly with the system.
+2. The stablecoins are fully redeemable - users can always swap x EBUSD for $x worth of a mix of WETH and LSTs (minus fees), directly with the system.
    
 3. The system incorporates an adaptive interest rate mechanism, managing the attractiveness and thus the demand for holding and borrowing the stablecoin in a market-driven way.  
 
 
-Upon  opening a Trove by depositing a viable collateral ERC20, users may issue ("borrow") BOLD tokens such that the collateralization ratio of their Trove remains above the minimum collateral ratio (MCR) for their collateral branch. For example, for an MCR of 110%, a user with $10000 worth of WETH in a Trove can issue up to 9090.90 BOLD against it.
+Upon  opening a Trove by depositing a viable collateral ERC20, users may issue ("borrow") EBUSD tokens such that the collateralization ratio of their Trove remains above the minimum collateral ratio (MCR) for their collateral branch. For example, for an MCR of 110%, a user with $10000 worth of WETH in a Trove can issue up to 9090.90 EBUSD against it.
 
 
-The BOLD tokens are freely exchangeable - any Ethereum address can send or receive BOLD tokens, whether it has an open Trove or not. The BOLD tokens are burned upon repayment of a Trove's debt.
+The EBUSD tokens are freely exchangeable - any Ethereum address can send or receive EBUSD tokens, whether it has an open Trove or not. The EBUSD tokens are burned upon repayment of a Trove's debt.
 
 
 The Liquity v2 system prices collateral via Chainlink oracles. When a Trove falls below the MCR, it is considered under-collateralized, and is vulnerable to liquidation.
@@ -165,7 +165,7 @@ The Liquity v2 system prices collateral via Chainlink oracles. When a Trove fall
 
 The core Liquity contracts are organized in this manner:
 
-- There is a single `CollateralRegistry`, a single `BoldToken`, and a set of core system contracts deployed for each collateral “branch”.
+- There is a single `CollateralRegistry`, a single `EbusdToken`, and a set of core system contracts deployed for each collateral “branch”.
 
 - A single `CollateralRegistry` maps external collateral ERC20 tokens to a `TroveManager` address. The `CollateralRegistry` also routes redemptions across the different collateral branches.
 
@@ -180,29 +180,29 @@ The core Liquity contracts are organized in this manner:
 
 ### Top level contracts
 
-- `CollateralRegistry` - Records all LST collaterals and maps branch-level TroveManagers to LST collaterals. Calculates redemption fees and routes BOLD redemptions to the TroveManagers of different branches in proportion to their “outside” debt.
+- `CollateralRegistry` - Records all LST collaterals and maps branch-level TroveManagers to LST collaterals. Calculates redemption fees and routes EBUSD redemptions to the TroveManagers of different branches in proportion to their “outside” debt.
 
-- `BOLDToken` - the stablecoin token contract, which implements the ERC20 fungible token as well as EIP-2612 permit functionality. The contract mints, burns and transfers BOLD tokens.
+- `EBUSDToken` - the stablecoin token contract, which implements the ERC20 fungible token as well as EIP-2612 permit functionality. The contract mints, burns and transfers EBUSD tokens.
 
 ### Branch-level contracts
 
 The three main branch-level contracts - `BorrowerOperations`, `TroveManager` and `StabilityPool` - hold the user-facing public functions, and contain most of the internal system logic.
 
-- `BorrowerOperations`- contains the basic operations by which borrowers and managers interact with their Troves: Trove creation, collateral top-up / withdrawal, BOLD issuance and repayment, and interest rate adjustments. BorrowerOperations functions call in to TroveManager, telling it to update Trove state where necessary. BorrowerOperations functions also call in to the various Pools, telling them to move collateral/BOLD between Pools or between Pool <> user, where necessary, and it also tells the ActivePool to mint interest.
+- `BorrowerOperations`- contains the basic operations by which borrowers and managers interact with their Troves: Trove creation, collateral top-up / withdrawal, EBUSD issuance and repayment, and interest rate adjustments. BorrowerOperations functions call in to TroveManager, telling it to update Trove state where necessary. BorrowerOperations functions also call in to the various Pools, telling them to move collateral/EBUSD between Pools or between Pool <> user, where necessary, and it also tells the ActivePool to mint interest.
 
-- `TroveManager` - contains functionality for liquidations and redemptions and calculating individual Trove interest. Also contains the recorded  state of each Trove - i.e. a record of the Trove’s collateral, debt and interest rate, etc. TroveManager does not hold value (i.e. collateral or BOLD). TroveManager functions call in to the various Pools to tell them to move collateral or BOLD between Pools, where necessary.
+- `TroveManager` - contains functionality for liquidations and redemptions and calculating individual Trove interest. Also contains the recorded  state of each Trove - i.e. a record of the Trove’s collateral, debt and interest rate, etc. TroveManager does not hold value (i.e. collateral or EBUSD). TroveManager functions call in to the various Pools to tell them to move collateral or EBUSD between Pools, where necessary.
 
 - `TroveNFT` - Implements basic mint and burn functionality for Trove NFTs, controlled by the `TroveManager`. Implements the tokenURI functionality which serves Trove metadata, i.e. a unique image for each Trove.
 
 - `LiquityBase` - Contains common functions and is inherited by `CollateralRegistry`, `TroveManager`, `BorrowerOperations`, `StabilityPool`. 
 
-- `StabilityPool` - contains functionality for Stability Pool operations: making deposits, and withdrawing compounded deposits and accumulated collateral and BOLD yield gains. Holds the BOLD Stability Pool deposits, BOLD yield gains and collateral gains from liquidations for all depositors on that branch.
+- `StabilityPool` - contains functionality for Stability Pool operations: making deposits, and withdrawing compounded deposits and accumulated collateral and EBUSD yield gains. Holds the EBUSD Stability Pool deposits, EBUSD yield gains and collateral gains from liquidations for all depositors on that branch.
 
 - `SortedTroves` - a doubly linked list that stores addresses of Trove owners, sorted by their annual interest rate. It inserts and re-inserts Troves at the correct position, based on their interest rate. It also contains logic for inserting/re-inserting entire batches of Troves, modelled as doubly linked-list slices.
 
-- `ActivePool` - holds the branch collateral balance and records the total BOLD debt of the active Troves in the branch. Mints aggregate interest in a split to the StabilityPool as well as a (to-be) yield router for DEX LP incentives (currently, to MockInterestRouter)
+- `ActivePool` - holds the branch collateral balance and records the total EBUSD debt of the active Troves in the branch. Mints aggregate interest in a split to the StabilityPool as well as a (to-be) yield router for DEX LP incentives (currently, to MockInterestRouter)
 
-- `DefaultPool` - holds the total collateral balance and records the total BOLD debt of the liquidated Troves that are pending redistribution to active Troves. If an active Trove has pending collateral and debt “rewards” in the DefaultPool, then they will be applied to the Trove when it next undergoes a borrower operation, a redemption, or a liquidation.
+- `DefaultPool` - holds the total collateral balance and records the total EBUSD debt of the liquidated Troves that are pending redistribution to active Troves. If an active Trove has pending collateral and debt “rewards” in the DefaultPool, then they will be applied to the Trove when it next undergoes a borrower operation, a redemption, or a liquidation.
 
 - `CollSurplusPool` - holds and tracks the collateral surplus from Troves that have been liquidated. Sends out a borrower’s accumulated collateral surplus when they claim it. 
 
@@ -237,7 +237,7 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
 ### CollateralRegistry
 
 
-- `redeemCollateral(uint256 _boldAmount, uint256 _maxIterations, uint256 _maxFeePercentage)`: redeems `_boldAmount` of BOLD tokens from the system in exchange for a mix of collaterals. Splits the BOLD redemption according to the [redemption routing logic](#redemption-routing), redeems from a number of Troves in each collateral branch, burns `_boldAmount` from the caller’s BOLD balance, and transfers each redeemed collateral amount to the redeemer. Executes successfully if the caller has sufficient BOLD to redeem. The number of Troves redeemed from per branch is capped by `_maxIterationsPerCollateral`. The borrower has to provide a `_maxFeePercentage` that he/she is willing to accept which mitigates fee slippage, i.e. when another redemption transaction is processed first and drives up the redemption fee.  Troves left with `debt < MIN_DEBT` are flagged as `unredeemable`.
+- `redeemCollateral(uint256 _ebusdAmount, uint256 _maxIterations, uint256 _maxFeePercentage)`: redeems `_ebusdAmount` of EBUSD tokens from the system in exchange for a mix of collaterals. Splits the EBUSD redemption according to the [redemption routing logic](#redemption-routing), redeems from a number of Troves in each collateral branch, burns `_ebusdAmount` from the caller’s EBUSD balance, and transfers each redeemed collateral amount to the redeemer. Executes successfully if the caller has sufficient EBUSD to redeem. The number of Troves redeemed from per branch is capped by `_maxIterationsPerCollateral`. The borrower has to provide a `_maxFeePercentage` that he/she is willing to accept which mitigates fee slippage, i.e. when another redemption transaction is processed first and drives up the redemption fee.  Troves left with `debt < MIN_DEBT` are flagged as `unredeemable`.
 
 ### BorrowerOperations
 
@@ -245,34 +245,34 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
         address _owner,
         uint256 _ownerIndex,
         uint256 _collAmount,
-        uint256 _boldAmount,
+        uint256 _ebusdAmount,
         uint256 _upperHint,
         uint256 _lowerHint,
         uint256 _annualInterestRate,
         uint256 _maxUpfrontFee
-    )`: creates a Trove for the caller that is not part of a batch. Transfers `_collAmount` from the caller to the system, mints `_boldAmount` of BOLD to their address. Mints the Trove NFT to their address. The `ETH_GAS_COMPENSATION` of 0.0375 WETH is transferred from the caller to the GasPool. Opening a Trove must result in the Trove’s ICR > MCR, and also the system’s TCR > CCR. An `upfrontFee` is charged, based on the system’s _average_ interest rate, the BOLD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.
+    )`: creates a Trove for the caller that is not part of a batch. Transfers `_collAmount` from the caller to the system, mints `_ebusdAmount` of EBUSD to their address. Mints the Trove NFT to their address. The `ETH_GAS_COMPENSATION` of 0.0375 WETH is transferred from the caller to the GasPool. Opening a Trove must result in the Trove’s ICR > MCR, and also the system’s TCR > CCR. An `upfrontFee` is charged, based on the system’s _average_ interest rate, the EBUSD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.
 
 
 - `openTroveAndJoinInterestBatchManager(
         address _owner,
         uint256 _ownerIndex,
         uint256 _collAmount,
-        uint256 _boldAmount,
+        uint256 _ebusdAmount,
         uint256 _upperHint,
         uint256 _lowerHint,
         address _interestBatchManager,
         uint256 _maxUpfrontFee
-    )`: creates a Trove for the caller and adds it to the chosen `_interestBatchManager`’s batch. Transfers `_collAmount` from the caller to the system and mints `_boldAmount` of BOLD to their address.  Mints the Trove NFT to their address. The `ETH_GAS_COMPENSATION` of 0.0375 WETH is transferred from the caller to the GasPool. Opening a batch Trove must result in the Trove’s ICR >= MCR, and also the system’s TCR >= CCR. An `upfrontFee` is charged, based on the system’s _average_ interest rate, the BOLD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The fee is added to the Trove’s debt. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.
+    )`: creates a Trove for the caller and adds it to the chosen `_interestBatchManager`’s batch. Transfers `_collAmount` from the caller to the system and mints `_ebusdAmount` of EBUSD to their address.  Mints the Trove NFT to their address. The `ETH_GAS_COMPENSATION` of 0.0375 WETH is transferred from the caller to the GasPool. Opening a batch Trove must result in the Trove’s ICR >= MCR, and also the system’s TCR >= CCR. An `upfrontFee` is charged, based on the system’s _average_ interest rate, the EBUSD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The fee is added to the Trove’s debt. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.
 
 - `addColl(uint256 _troveId, uint256 _collAmount)`: Transfers the `_collAmount` from the user to the system, and adds the received collateral to the caller's active Trove.
 
 - `withdrawColl(uint256 _troveId, uint256 _amount)`: withdraws _amount of collateral from the caller’s Trove. Executes only if the user has an active Trove, must result in the user’s Trove `ICR >= MCR` and must obey the adjustment [CCR constraints](#critical-collateral-ratio-ccr-restrictions).
 
- - `withdrawBold(uint256 _troveId, uint256 _amount, uint256 _maxUpfrontFee)`: adds _amount of BOLD to the user’s Trove’s debt, mints BOLD stablecoins to the user. Must result in `ICR >= MCR` and must obey the adjustment [CCR constraints](#critical-collateral-ratio-ccr-restrictions). An `upfrontFee` is charged, based on the system’s _average_ interest rate, the BOLD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The fee is added to the Trove’s debt. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.	
+ - `withdrawEbusd(uint256 _troveId, uint256 _amount, uint256 _maxUpfrontFee)`: adds _amount of EBUSD to the user’s Trove’s debt, mints EBUSD stablecoins to the user. Must result in `ICR >= MCR` and must obey the adjustment [CCR constraints](#critical-collateral-ratio-ccr-restrictions). An `upfrontFee` is charged, based on the system’s _average_ interest rate, the EBUSD debt drawn and the `UPFRONT_INTEREST_PERIOD`. The fee is added to the Trove’s debt. The borrower chooses a `_maxUpfrontFee` that he/she is willing to accept in case of a fee slippage, i.e. when the system’s average interest rate increases and in turn increases the fee they’d pay.	
 
- - `repayBold(uint256 _troveId, uint256 _amount)`: repay `_amount` of BOLD to the caller’s Trove, canceling that amount of debt. Transfers the BOLD from the caller to the system.
+ - `repayEbusd(uint256 _troveId, uint256 _amount)`: repay `_amount` of EBUSD to the caller’s Trove, canceling that amount of debt. Transfers the EBUSD from the caller to the system.
 
- - `closeTrove(uint256 _troveId)`: repays all debt in the user’s Trove, withdraws all their collateral to their address, and closes their Trove. Requires the borrower have a BOLD balance sufficient to repay their Trove's debt. Burns the BOLD from the user’s address.
+ - `closeTrove(uint256 _troveId)`: repays all debt in the user’s Trove, withdraws all their collateral to their address, and closes their Trove. Requires the borrower have a EBUSD balance sufficient to repay their Trove's debt. Burns the EBUSD from the user’s address.
 
 - `adjustTrove(
         uint256 _troveId,
@@ -281,14 +281,14 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
         uint256 _debtChange,
         bool isDebtIncrease,
         uint256 _maxUpfrontFee
-    )`:  enables a borrower to simultaneously change both their collateral and debt, subject to the resulting `ICR >= MCR` and the adjustment [CCR constraints](#critical-collateral-ratio-ccr-restrictions). If the adjustment incorporates a `debtIncrease`, then an `upfrontFee` is charged as per `withdrawBold`.
+    )`:  enables a borrower to simultaneously change both their collateral and debt, subject to the resulting `ICR >= MCR` and the adjustment [CCR constraints](#critical-collateral-ratio-ccr-restrictions). If the adjustment incorporates a `debtIncrease`, then an `upfrontFee` is charged as per `withdrawEbusd`.
 
 
 - `adjustUnredeemableTrove(
         uint256 _troveId,
         uint256 _collChange,
         bool _isCollIncrease,
-        uint256 _boldChange,
+        uint256 _ebusdChange,
         bool _isDebtIncrease,
         uint256 _upperHint,
         uint256 _lowerHint,
@@ -311,9 +311,9 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
 
 -  `setAddManager(uint256 _troveId, address _manager)`: sets an “Add” manager for the caller’s chosen Trove, who has permission to add collateral and repay debt to their Trove.
 
--  `setRemoveManager(uint256 _troveId, address _manager)`: sets a “Remove” manager for the caller’s chosen Trove, who has permission to remove collateral from and draw new BOLD from their Trove.
+-  `setRemoveManager(uint256 _troveId, address _manager)`: sets a “Remove” manager for the caller’s chosen Trove, who has permission to remove collateral from and draw new EBUSD from their Trove.
 
-- `setRemoveManagerWithReceiver(uint256 _troveId, address _manager, address _receiver)`: sets a “Remove” manager for the caller’s chosen Trove, who has permission to remove collateral from and draw new BOLD from their Trove to the provided `_receiver` address.
+- `setRemoveManagerWithReceiver(uint256 _troveId, address _manager, address _receiver)`: sets a “Remove” manager for the caller’s chosen Trove, who has permission to remove collateral from and draw new EBUSD from their Trove to the provided `_receiver` address.
 
 - `setInterestIndividualDelegate(
         uint256 _troveId,
@@ -371,13 +371,13 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
 - `batchLiquidateTroves(uint256[] calldata _troveArray)`: Accepts a custom list of Troves IDs as an argument. Steps through the provided list and attempts to liquidate every Trove, until it reaches the end or it runs out of gas. A Trove is liquidated only if it meets the conditions for liquidation, i.e. ICR < MCR. Troves with ICR >= MCR are skipped in the loop. Permissionless.
 
 
-- `urgentRedemption(uint256 _boldAmount, uint256[] calldata _troveIds, uint256 _minCollateral)`: Executes successfully only when the collateral branch has already been shut down.  Redeems only from the branch it is called on. Redeems from Troves with a slight collateral bonus - that is, 1 BOLD redeems for $1.01 worth of LST collateral.  Does not flag any redeemed-from Troves as `unredeemable`. Caller specifies the `_minCollateral` they want to receive.
+- `urgentRedemption(uint256 _ebusdAmount, uint256[] calldata _troveIds, uint256 _minCollateral)`: Executes successfully only when the collateral branch has already been shut down.  Redeems only from the branch it is called on. Redeems from Troves with a slight collateral bonus - that is, 1 EBUSD redeems for $1.01 worth of LST collateral.  Does not flag any redeemed-from Troves as `unredeemable`. Caller specifies the `_minCollateral` they want to receive.
 
 ### StabilityPool
 
-- `provideToSP(uint256 _amount, bool _doClaim)`: deposit _amount of BOLD to the Stability Pool. It transfers _amount of BOLD from the caller’s address to the Pool, and tops up their BOLD deposit by _amount. `doClaim` determines how the depositor’s existing collateral and BOLD yield gains (if any exist) are treated: if true they’re transferred to the depositor’s address, otherwise the collateral is stashed (added to a balance tracker) and the BOLD gain is added to their deposit.
+- `provideToSP(uint256 _amount, bool _doClaim)`: deposit _amount of EBUSD to the Stability Pool. It transfers _amount of EBUSD from the caller’s address to the Pool, and tops up their EBUSD deposit by _amount. `doClaim` determines how the depositor’s existing collateral and EBUSD yield gains (if any exist) are treated: if true they’re transferred to the depositor’s address, otherwise the collateral is stashed (added to a balance tracker) and the EBUSD gain is added to their deposit.
 
-- `withdrawFromSP(uint256 _amount, bool doClaim)`: withdraws _amount of BOLD from the Stability Pool, up to the value of their remaining deposit. It increases their BOLD balance by _amount. If the user makes a partial withdrawal, their remaining deposit will earn further liquidation and yield gains.  `doClaim` determines how the depositor’s existing collateral and BOLD yield gains (if any exist) are treated: if true they’re transferred to the depositor’s address, otherwise the collateral is stashed (added to a balance tracker) and the BOLD gain is added to their deposit.
+- `withdrawFromSP(uint256 _amount, bool doClaim)`: withdraws _amount of EBUSD from the Stability Pool, up to the value of their remaining deposit. It increases their EBUSD balance by _amount. If the user makes a partial withdrawal, their remaining deposit will earn further liquidation and yield gains.  `doClaim` determines how the depositor’s existing collateral and EBUSD yield gains (if any exist) are treated: if true they’re transferred to the depositor’s address, otherwise the collateral is stashed (added to a balance tracker) and the EBUSD gain is added to their deposit.
 
 
 - `claimAllCollGains()`: Sends all stashed collateral gains to the caller and zeros their stashed balance. Used only when the caller has no current deposit yet has stashed collateral gains from the past.
@@ -386,7 +386,7 @@ Different PriceFeed contracts are needed for pricing collaterals on different br
 
 `fetchPrice()`:  Permissionless. Tells the PriceFeed to fetch price answers from oracles, and if necessary calculates the final derived LST-USD price. Checks if any oracle used has failed (i.e. if it reverted, returned a stale price, or a 0 price). If so, shuts the collateral branch down. Otherwise, stores the fetched price as `lastGoodPrice`. 
 
-### BOLDToken
+### EBUSDToken
 
 Standard ERC20 and EIP2612 (`permit()` ) functionality.
 
@@ -394,7 +394,7 @@ Standard ERC20 and EIP2612 (`permit()` ) functionality.
 
 ## Borrowing, fees and interest rates
 
-When a Trove is opened, borrowers commit an amount of their chosen LST token as collateral, select their BOLD debt, and select an interest rate in range `[INTEREST_RATE_MIN, INTEREST_RATE_MAX]`.
+When a Trove is opened, borrowers commit an amount of their chosen LST token as collateral, select their EBUSD debt, and select an interest rate in range `[INTEREST_RATE_MIN, INTEREST_RATE_MAX]`.
 
 ### Interest on Trove debt
 
@@ -488,14 +488,14 @@ Pending aggregate interest is “applied” upon most system actions. That is:
 
 - The  `aggRecordedDebt` is updated - the pending aggregate interest is calculated and added to `aggRecordedDebt`, and the `lastDebtUpdateTime` is updated to now.
 
-- The pending aggregate interest is minted by the ActivePool as fresh BOLD. This is considered system “yield”.  A fixed part (72%, final value TBD) of it is immediately sent to the branch’s SP and split proportionally between depositors, and the remainder is sent to a router to be used as LP incentives on DEXes (determined by governance).
+- The pending aggregate interest is minted by the ActivePool as fresh EBUSD. This is considered system “yield”.  A fixed part (72%, final value TBD) of it is immediately sent to the branch’s SP and split proportionally between depositors, and the remainder is sent to a router to be used as LP incentives on DEXes (determined by governance).
 
-This is the only way BOLD is ever minted as interest. Applying individual interest to a Trove updates its recorded debt, but interest is always minted in aggregate.
+This is the only way EBUSD is ever minted as interest. Applying individual interest to a Trove updates its recorded debt, but interest is always minted in aggregate.
 
 
 ### Redemption evasion mitigation
 
-In healthy system states (TCR > CCR) a borrower may adjust their Trove’s interest rate or debt at any time, as well as close their Trove. As such, a borrower may evade a redemption transaction by either frontrunning it with an interest rate adjustment, or closing and reopening their Trove. Both "hard" and "soft" frontrunning are viable: savvy borrowers may watch the mempool for redemption transactions, or simply watch the BOLD peg, and take evasive action when it is below $1 and redemptions are likely imminent.
+In healthy system states (TCR > CCR) a borrower may adjust their Trove’s interest rate or debt at any time, as well as close their Trove. As such, a borrower may evade a redemption transaction by either frontrunning it with an interest rate adjustment, or closing and reopening their Trove. Both "hard" and "soft" frontrunning are viable: savvy borrowers may watch the mempool for redemption transactions, or simply watch the EBUSD peg, and take evasive action when it is below $1 and redemptions are likely imminent.
 
 To disincentivize redemption evasion, two upfront fees are implemented: a borrowing fee, as well as a premature interest rate adjustment fee.
 
@@ -507,7 +507,7 @@ An upfront borrowing fee is applied when a borrower:
 
 The creates a cost for the borrower seeking to evade a redemption by closing and reopening their trove.
 
-The upfront borrowing fee is equal to 7 days of average interest on the respective collateral branch. It is charged in BOLD and is added to the Trove's debt.
+The upfront borrowing fee is equal to 7 days of average interest on the respective collateral branch. It is charged in EBUSD and is added to the Trove's debt.
 
 ### Premature adjustment fees
 
@@ -538,12 +538,12 @@ No upfront fee is charged, unless the interest rate is changed in the same trans
 As the function to switch batches is just a wrapper that calls the functions for leaving and joining a batch, this means that switching batches always incurs in upfront fee now (unless user doesn’t use the wrapper and waits for 1 week between leaving and joining).
 
 
-## BOLD Redemptions
+## EBUSD Redemptions
 
-Any BOLD holder (whether or not they have an active Trove) may redeem their BOLD directly with the system. Their BOLD is exchanged for a mixture of collaterals at face value: redeeming 1 BOLD token returns $1 worth of collaterals (minus a dynamic redemption fee), priced at their current market values according to their respective oracles. Redemptions have two purposes:
+Any EBUSD holder (whether or not they have an active Trove) may redeem their EBUSD directly with the system. Their EBUSD is exchanged for a mixture of collaterals at face value: redeeming 1 EBUSD token returns $1 worth of collaterals (minus a dynamic redemption fee), priced at their current market values according to their respective oracles. Redemptions have two purposes:
 
 
-1. When BOLD is trading at <$1 on the external market, arbitrageurs may redeem `$x` worth of BOLD for `>$x` worth of collaterals, and instantly sell those collaterals to make a profit. This reduces the circulating supply of BOLD which in turn should help restore the $1 BOLD peg.
+1. When EBUSD is trading at <$1 on the external market, arbitrageurs may redeem `$x` worth of EBUSD for `>$x` worth of collaterals, and instantly sell those collaterals to make a profit. This reduces the circulating supply of EBUSD which in turn should help restore the $1 EBUSD peg.
 
 
 2. Redemptions improve the relative health of the least healthy collateral branches (those with greater "outside" debt, i.e. debt not covered by their SP).
@@ -556,15 +556,15 @@ Any BOLD holder (whether or not they have an active Trove) may redeem their BOLD
 
 Redemptions are performed via the `CollateralRegistry.redeemCollateral` endpoint. A given redemption may be routed across several collateral branches.
 
-A given BOLD redemption is split across branches according in proportion to the **outside debt** of that branch, i.e. (pseudocode):
+A given EBUSD redemption is split across branches according in proportion to the **outside debt** of that branch, i.e. (pseudocode):
 
 `redeem_amount_i = redeem_amount * outside_debt_i / total_outside_debt`
 
-Where `outside_debt_i` for branch i is given by `bold_debt_i  - bold_in_SP_i`.
+Where `outside_debt_i` for branch i is given by `ebusd_debt_i  - ebusd_in_SP_i`.
 
 That is, a redemption reduces the outside debt on each branch by the same percentage.
 
-_Example: 2000 BOLD is redeemed across 4 branches_
+_Example: 2000 EBUSD is redeemed across 4 branches_
 
 <img width="704" alt="image" src="https://github.com/user-attachments/assets/21afcc49-ed50-4f3e-8b36-1949cd7a3809">
 
@@ -576,7 +576,7 @@ As can be seen in the above table and proven in generality (TBD), the outside de
 
 ## Redemptions at branch level
 
-When BOLD is redeemed for collaterals, the system cancels the BOLD with debt from Troves, and the corresponding collateral is removed.
+When EBUSD is redeemed for collaterals, the system cancels the EBUSD with debt from Troves, and the corresponding collateral is removed.
 
 In order to fulfill the redemption request on a given branch, Troves are redeemed from in ascending order of their annual interest rates.
 
@@ -619,9 +619,9 @@ Redemption fees are based on the `baseRate` state variable in `CollateralRegistr
 
 The current fee schedule:
 
-Upon each redemption of x BOLD:
+Upon each redemption of x EBUSD:
 
-- `baseRate` is decayed based on time passed since the last fee event and incremented by an amount proportional to the fraction of the total BOLD supply to be redeemed, i.e. `x/total_bold_supply`
+- `baseRate` is decayed based on time passed since the last fee event and incremented by an amount proportional to the fraction of the total EBUSD supply to be redeemed, i.e. `x/total_ebusd_supply`
 
 The redemption fee percentage is given by `min(REDEMPTION_FEE_FLOOR + baseRate , 1)`.
 
@@ -640,7 +640,7 @@ In Liquity v2, redemptions do not close Troves (unlike v1).
 
 Hence redemptions in v2 always leave Troves open. This ensures that normal redemptions never lower the TCR* of a branch.
 
-**Need for unredeemable Troves**: Leaving Troves open at redemption means redemptions may result in Troves with very small (or zero) `debt < MIN_DEBT`.  This could create a griefing risk - by creating many Troves with tiny `debt < MIN_DEBT` at the minimum interest rate, an attacker could “clog up” the bottom of the sorted list of Troves, and future redemptions would hit many Troves without redeeming much BOLD, or even be unprofitable due to gas costs.
+**Need for unredeemable Troves**: Leaving Troves open at redemption means redemptions may result in Troves with very small (or zero) `debt < MIN_DEBT`.  This could create a griefing risk - by creating many Troves with tiny `debt < MIN_DEBT` at the minimum interest rate, an attacker could “clog up” the bottom of the sorted list of Troves, and future redemptions would hit many Troves without redeeming much EBUSD, or even be unprofitable due to gas costs.
 
 Therefore, when a Trove is redeemed to below MIN_DEBT, it is tagged as unredeemable and removed from the sorted list.  
 
@@ -674,17 +674,17 @@ _(*as long as TCR > 100%. If TCR < 100%, then normal redemptions would lower the
 
 ## Stability Pool implementation
 
-BOLD depositors in the Stability Pool on a given branch earn:
+EBUSD depositors in the Stability Pool on a given branch earn:
 
-- BOLD yield paid from interest minted on Troves on that branch
+- EBUSD yield paid from interest minted on Troves on that branch
 - Collateral penalty gains from liquidated Troves on that branch
 
 
-Depositors deposit BOLD to the SP via `provideToSP` and withdraw it with `withdrawFromSP`. 
+Depositors deposit EBUSD to the SP via `provideToSP` and withdraw it with `withdrawFromSP`. 
 
-Their accumulated collateral gains and BOLD yield gains are calculated every time they touch their deposit - i.e. at top up or withdrawal. If the depositor chooses to withdraw gains (via the `doClaim` bool param), all their collateral and BOLD yield gain are sent to their address.
+Their accumulated collateral gains and EBUSD yield gains are calculated every time they touch their deposit - i.e. at top up or withdrawal. If the depositor chooses to withdraw gains (via the `doClaim` bool param), all their collateral and EBUSD yield gain are sent to their address.
 
-Otherwise, their collateral gain is stashed in a tracked balance and their BOLD yield gain is added to their deposit.
+Otherwise, their collateral gain is stashed in a tracked balance and their EBUSD yield gain is added to their deposit.
 
 
 
@@ -714,14 +714,14 @@ Each liquidation updates `P` and `S`. After a series of liquidations, a compound
 
 Any time a depositor updates their deposit (withdrawal, top-up) their collateral gain is paid out, and they receive new snapshots of `P` and `S`.
 
-### BOLD Yield Gains
+### EBUSD Yield Gains
 
-BOLD yield gains for Stability Pool depositors are triggered whenever the ActivePool mints aggregate system interest - that is, upon most system operations. The BOLD yield gain is minted to the Stability Pool and a BOLD gain for all depositors is triggered in proportion to their deposit size.
+EBUSD yield gains for Stability Pool depositors are triggered whenever the ActivePool mints aggregate system interest - that is, upon most system operations. The EBUSD yield gain is minted to the Stability Pool and a EBUSD gain for all depositors is triggered in proportion to their deposit size.
 
-To efficiently and accurately track BOLD yield gains for depositors as deposits decrease over time from liquidations, we re-use the above product-sum algorithm for deposit and gains.
+To efficiently and accurately track EBUSD yield gains for depositors as deposits decrease over time from liquidations, we re-use the above product-sum algorithm for deposit and gains.
 
 
-The same product `P` is used, and a sum `B` is used to track BOLD yield gains. Each deposit gets a new snapshot of `B` when it is updated.
+The same product `P` is used, and a sum `B` is used to track EBUSD yield gains. Each deposit gets a new snapshot of `B` when it is updated.
 
 ### TODO -  mention P Issue fix
 
@@ -734,25 +734,25 @@ In a liquidation, most of the Trove’s collateral is seized and the Trove is cl
 
 Liquity utilizes a two-step liquidation mechanism in the following order of priority:
 
-1. Offset under-collateralized Troves’ debt against the branch’s SP containing BOLD tokens, and award the seized collateral to the SP depositors
+1. Offset under-collateralized Troves’ debt against the branch’s SP containing EBUSD tokens, and award the seized collateral to the SP depositors
 2. When the SP is empty, Redistribute under-collateralized Troves debt and seized collateral to other Troves in the same branch
 
-Liquity primarily uses the BOLD tokens in its Stability Pool to absorb the under-collateralized debt, i.e. to repay the liquidated borrower's liability.
+Liquity primarily uses the EBUSD tokens in its Stability Pool to absorb the under-collateralized debt, i.e. to repay the liquidated borrower's liability.
 
-Any user may deposit BOLD tokens to any Stability Pool. This allows them to earn the collateral from Troves liquidated on the branch. When a liquidation occurs, the liquidated debt is cancelled with the same amount of BOLD in the Pool (which is burned as a result), and the seized collateral is proportionally distributed to depositors.
+Any user may deposit EBUSD tokens to any Stability Pool. This allows them to earn the collateral from Troves liquidated on the branch. When a liquidation occurs, the liquidated debt is cancelled with the same amount of EBUSD in the Pool (which is burned as a result), and the seized collateral is proportionally distributed to depositors.
 
 Stability Pool depositors can expect to earn net gains from liquidations, as in most cases, the value of the seized collateral will be greater than the value of the cancelled debt (since a liquidated Trove will likely have an ICR just slightly below the MCR). MCRs are constants and may differ between branches, but all take a value above 100%.
 
-If the liquidated debt is higher than the amount of BOLD in the Stability Pool, the system applies both steps 1) and then 2): that is, it cancels as much debt as possible with the BOLD in the Stability Pool, and then redistributes the remaining liquidated collateral and debt across all active Troves in the branch.
+If the liquidated debt is higher than the amount of EBUSD in the Stability Pool, the system applies both steps 1) and then 2): that is, it cancels as much debt as possible with the EBUSD in the Stability Pool, and then redistributes the remaining liquidated collateral and debt across all active Troves in the branch.
 
 
 ## Liquidation logic
 
 | Condition                         | Description                                                                                                                                                                                                                                                                                                                  |
 |-----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ICR < MCR & SP.BOLD >= Trove.debt | BOLD in the StabilityPool equal to the Trove's debt is offset with the Trove's debt. The Trove's seized collateral is shared between depositors.                                                                                                                                                                                    |
-| ICR < MCR & SP.BOLD < Trove.debt  | The total StabilityPool BOLD is offset with an equal amount of debt from the Trove. A portion of the Trove's collateral corresponding to the offset debt is shared between depositors. The remaining debt and seized collateral (minus collateral gas compensation) is redistributed to active Troves.  |
-| ICR < MCR & SP.BOLD = 0           | Redistribute all debt and seized collateral (minus collateral gas compensation) to active Troves.                                                                                                                                                                                                                                    |
+| ICR < MCR & SP.EBUSD >= Trove.debt | EBUSD in the StabilityPool equal to the Trove's debt is offset with the Trove's debt. The Trove's seized collateral is shared between depositors.                                                                                                                                                                                    |
+| ICR < MCR & SP.EBUSD < Trove.debt  | The total StabilityPool EBUSD is offset with an equal amount of debt from the Trove. A portion of the Trove's collateral corresponding to the offset debt is shared between depositors. The remaining debt and seized collateral (minus collateral gas compensation) is redistributed to active Troves.  |
+| ICR < MCR & SP.EBUSD = 0           | Redistribute all debt and seized collateral (minus collateral gas compensation) to active Troves.                                                                                                                                                                                                                                    |
 | ICR >= MCR                        | Liquidation not possible.                                                                                                                                                                                                                                                                                                     |
 
 
@@ -804,7 +804,7 @@ Thus the total funds the liquidator receives upon a Trove liquidation is:
 
 When a liquidation occurs and the Stability Pool is empty or smaller than the liquidated debt, the redistribution mechanism distributes the remaining collateral and debt of the liquidated Trove, to all active Troves in the system, in proportion to their collateral.
 
-Redistribution is performed in a gas-efficient O(1) manner - that is, rather than updating the `coll` and `debt` properties on every Trove (prohbitive due to gas costs),  global tracker sums `L_Coll` and `L_boldDebt` are updated, and each Trove records snapshots of these at every touch. A Trove’s pending redistribution gains are calculated using these trackers, and are incorporated in `TroveManager.getEntireDebtAndColl`.
+Redistribution is performed in a gas-efficient O(1) manner - that is, rather than updating the `coll` and `debt` properties on every Trove (prohbitive due to gas costs),  global tracker sums `L_Coll` and `L_ebusdDebt` are updated, and each Trove records snapshots of these at every touch. A Trove’s pending redistribution gains are calculated using these trackers, and are incorporated in `TroveManager.getEntireDebtAndColl`.
 
 When a borrower touches their Trove, redistribution gains are applied - i.e. added to their recorded `coll` and `debt` - and its tracker snapshots are updated.
 
@@ -891,10 +891,10 @@ Add managers and Remove managers may be set by the Trove owner when the Trove is
 
 #### Remove Managers
 
-Remove Managers may withdraw collateral or draw new BOLD debt.
+Remove Managers may withdraw collateral or draw new EBUSD debt.
 
 - Only the designated Remove manager, if any, and the Trove owner, are allowed 
-- A receiver address may be chosen which can be different from the Remove Manager and Trove owner. The receiver receives the collateral and BOLD drawn by the Remove Manager.
+- A receiver address may be chosen which can be different from the Remove Manager and Trove owner. The receiver receives the collateral and EBUSD drawn by the Remove Manager.
 - By default, a Trove has no Remove Manager - it must be explicitly set by the Trove owner upon opening or at a later point.
  - The receiver address can never be zero.
 
@@ -962,7 +962,7 @@ A thorough description of these batch Trove invariants is found in the [properti
 
 ## Collateral branch shutdown
 
-Under extreme conditions such as collateral price collapse or oracle failure, a collateral branch may be shut down in order to preserve wider system health and the stability of the BOLD token.
+Under extreme conditions such as collateral price collapse or oracle failure, a collateral branch may be shut down in order to preserve wider system health and the stability of the EBUSD token.
 
 A collateral branch is shut down when:
 
@@ -1007,13 +1007,13 @@ The following operations are still allowed after shut down:
 
  ### Urgent redemptions 
 
-During shutdown the redemption logic is modified to incentivize swift reduction of the branch’s debt, and even do so when BOLD is trading at peg ($1 USD). Redemptions in shutdown are known as “urgent” redemptions.
+During shutdown the redemption logic is modified to incentivize swift reduction of the branch’s debt, and even do so when EBUSD is trading at peg ($1 USD). Redemptions in shutdown are known as “urgent” redemptions.
 
 Urgent redemptions:
 
 - Are performed directly via the shut down branch’s `TroveManager`, and they only affect that branch. They are not routed across branches.
 - Charge no redemption fee
-- Pay a slight collateral bonus of 1% to the redeemer. That is, in exchange for every 1 BOLD redeemed, the redeemer receives $1.01 worth of the LST collateral.
+- Pay a slight collateral bonus of 1% to the redeemer. That is, in exchange for every 1 EBUSD redeemed, the redeemer receives $1.01 worth of the LST collateral.
 - Do not redeem Troves in order of interest rate. Instead, the redeemer passes a list of Troves to redeem from.
 - Do not create unredeemable Troves, even if the Trove is left with tiny or zero debt - since, due to the preceding point there is no risk of clogging up future urgent redemptions with tiny Troves.
 
@@ -1089,18 +1089,18 @@ This is intended to catch some obvious oracle failure modes, as well as the scen
 
 ### Using `lastGoodPrice` if an oracle has been disabled
 
-If an oracle has failed, then the best the branch can do is use the last good price seen by the system. Using an out-of-date price obviously has undesirable consequences, but it’s the best that can be done in this extreme scenario. The impacts are addressed in [Known Issue 4](https://github.com/liquity/bold/blob/main/README.md#4---oracle-failure-and-urgent-redemptions-with-the-frozen-last-good-price).
+If an oracle has failed, then the best the branch can do is use the last good price seen by the system. Using an out-of-date price obviously has undesirable consequences, but it’s the best that can be done in this extreme scenario. The impacts are addressed in [Known Issue 4](https://github.com/liquity/ebusd/blob/main/README.md#4---oracle-failure-and-urgent-redemptions-with-the-frozen-last-good-price).
 
 However, as mentioned there, a possible improvement exists whereby the ETH-USD price can be used alongside the canonical LST rate as a price fallback.  See this PR:
-https://github.com/liquity/bold/pull/393
+https://github.com/liquity/ebusd/pull/393
 
 ### Protection against upward market price manipulation
 
 The smaller LST i.e. RETH has lower liquidity and thus it is cheaper for a malicious actor to manipulate their market price.
 
-The impacts of downward market manipulation are bounded - it could result in excessive liquidations and branch shutdown, but should not affect other branches nor BOLD stability.
+The impacts of downward market manipulation are bounded - it could result in excessive liquidations and branch shutdown, but should not affect other branches nor EBUSD stability.
 
-However, upward market manipulation could be catastrophic as it would allow excessive BOLD minting from Troves, which could cause a depeg.
+However, upward market manipulation could be catastrophic as it would allow excessive EBUSD minting from Troves, which could cause a depeg.
 
 The system mitigates this by taking the minimum of the LST-USD prices derived from market and canonical rates on the RETHPriceFeed. As such, to manipulate the system price upward, an attacker would need to manipulate both the market oracle _and_ the canonical rate which would be much more difficult.
 
@@ -1117,14 +1117,14 @@ Push oracles are used for all collateral pricing. Since these oracles push price
 An attack sequence may look like this:
 
 - Observe collateral price increase oracle update in the mempool
-- Frontrun with redemption transaction for `$x` worth of BOLD and receive `$x - fee` worth of collateral
+- Frontrun with redemption transaction for `$x` worth of EBUSD and receive `$x - fee` worth of collateral
 - Oracle price increase update transaction is validated
 - Sell redeemed collateral for `$y` such that `$y > $x`, due to the price increase
 - Extracts `$(y-x)` from the system.
 
 This is “hard” frontrunning: the attacker directly frontrun the oracle price update. “Soft” frontrunning is also possible when the attacker sees the market price increase before even seeing the oracle price update transaction in the mempool.
 
-The value extracted is excessive, i.e. above and beyond the arbitrage profit expected from BOLD peg restoration. In fact, oracle frontrunning can even be performed when BOLD is trading >= $1.
+The value extracted is excessive, i.e. above and beyond the arbitrage profit expected from EBUSD peg restoration. In fact, oracle frontrunning can even be performed when EBUSD is trading >= $1.
 
 In Liquity v1, this issue was largely mitigated by the 0.5% minimum redemption fee which matched Chainlink’s ETH-USD oracle update threshold of 0.5%.
 
@@ -1151,16 +1151,16 @@ Solution 6 was provisionally chosen, as it involves minimal technical complexity
 
 The redemption routing logic reduces the “outside” debt of each branch by the same percentage, where outside debt for branch `i` is given by:
 
-`outside_debt_i = bold_debt_i  - bold_in_SP_i`.
+`outside_debt_i = ebusd_debt_i  - ebusd_in_SP_i`.
 
 It is clearly possible for a redeemer to temporarily manipulate the outside debt of one or more branches by depositing to the SP.
 
 Thus, an attacker could direct redemptions to their chosen branch(es) by depositing to SPs in branches they don’t wish to redeem from. 
 
-This sequence - deposit to SPs on unwanted branches, then redeem from chosen branch(es) -  can be performed in one transaction and a flash loan could be used to obtain the BOLD funds for deposits.
+This sequence - deposit to SPs on unwanted branches, then redeem from chosen branch(es) -  can be performed in one transaction and a flash loan could be used to obtain the EBUSD funds for deposits.
 
 By doing this redeemer extracts no extra value from the system, though it may increase their profit if they are able to choose LSTs to redeem which have lower slippage on external markets.
-The manipulation does not change the fee the attacker pays (which is based purely on the `baseRate`, the redeemed BOLD and the total BOLD supply).
+The manipulation does not change the fee the attacker pays (which is based purely on the `baseRate`, the redeemed EBUSD and the total EBUSD supply).
 
 #### Solution
 
@@ -1172,7 +1172,7 @@ Currently no fix is in place, because:
 
 ### 3 - Path-dependent redemptions: lower fee when chunking
 
-The redemption fee formula is path-dependent: that is, given some given prior system state, the fee incurred from redeeming one big chunk of BOLD in a single transaction is greater than the total fee incurred by redeeming the same BOLD amount in many smaller chunks with many transactions (assuming no other system state change in between chunks).
+The redemption fee formula is path-dependent: that is, given some given prior system state, the fee incurred from redeeming one big chunk of EBUSD in a single transaction is greater than the total fee incurred by redeeming the same EBUSD amount in many smaller chunks with many transactions (assuming no other system state change in between chunks).
 
 As such, redeemers may be incentivized to split their redemption into many transactions in order to pay a lower total redemption fee.
 
@@ -1186,7 +1186,7 @@ https://docs.google.com/spreadsheets/d/1MPVI6edLLbGnqsEo-abijaaLnXle-cJA_vE4CN16
 No fix is deemed necessary, since:
 
 - Redemption arbitrage is competitive and profit margins are thin. Chunking redemptions incurs a higher total gas cost and eats into arb profits.
-- Redemptions in Liquity v1 (with the same fee formula) have broadly functioned well, and proven effective in restoring the BOLD peg.
+- Redemptions in Liquity v1 (with the same fee formula) have broadly functioned well, and proven effective in restoring the EBUSD peg.
 - The redemption fee spike gain and decay half-life are “best-guess” parameters anyway - there’s little reason to believe that even the intended fee scheme is absolutely optimal.
 
 ### 4 - Oracle failure and urgent redemptions with the frozen last good price
@@ -1199,7 +1199,7 @@ When `lastGoodPrice` is used to price the LST, the _real_ market price may be hi
 
 | Scenario                     | Consequence                                                                                                                                       |
 |------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| lastGoodPrice > market price | Urgent redemptions return too little LST collateral, and may be unprofitable even when BOLD trades at $1 or below                                   |
+| lastGoodPrice > market price | Urgent redemptions return too little LST collateral, and may be unprofitable even when EBUSD trades at $1 or below                                   |
 | lastGoodPrice < market price | Urgent redemptions return too much LST collateral. They may be too profitable, compared to the market price.              |
 
 #### Solution
@@ -1207,11 +1207,11 @@ When `lastGoodPrice` is used to price the LST, the _real_ market price may be hi
 No fix is implemented for this, for the following reasons:
 
 - In the second case, although urgent redemptions return too much value to the redeemer, they can still clear all debt from the branch.
-- In the first case, the final result is that some uncleared BOLD debt remains on the shut down branch, and the system carries this unbacked debt burden going forward.  This is an inherent risk of a multicollateral system anyway, which relies on the economic health of the LST assets it integrates. A solution to clear bad debt is TODO, to be chosen and implemented - see [Branch shutdown and bad debt](https://github.com/liquity/bold?tab=readme-ov-file#10---branch-shutdown-and-bad-debt) section.
+- In the first case, the final result is that some uncleared EBUSD debt remains on the shut down branch, and the system carries this unbacked debt burden going forward.  This is an inherent risk of a multicollateral system anyway, which relies on the economic health of the LST assets it integrates. A solution to clear bad debt is TODO, to be chosen and implemented - see [Branch shutdown and bad debt](https://github.com/liquity/ebusd?tab=readme-ov-file#10---branch-shutdown-and-bad-debt) section.
 - Also an Oracle failure, if it occurs, will much more likely be due to a disabled Chainlink feed rather than hack or technical failure. A disabled LST oracle implies an LST with low liquidity/volume, which in turn probably implies that the LST constitutes a small fraction of total Liquity v2 collateral.
 
 #### Possible Improvement - use `ETH-USD * canonical_rate`
-If the primary oracle setup fails on a given LST branch, then using `lastGoodPrice` has the shortcoming noted above: when `lastGoodPrice > market price`, it may be unprofitable to redeem even with BOLD at $1, thus leaving excess bad debt in the branch.
+If the primary oracle setup fails on a given LST branch, then using `lastGoodPrice` has the shortcoming noted above: when `lastGoodPrice > market price`, it may be unprofitable to redeem even with EBUSD at $1, thus leaving excess bad debt in the branch.
 
 However, a fallback price utilizing the ETH-USD price and the LST's canonical rate could be used. The proposed fallback price calculation for each branch is here:
 
@@ -1221,12 +1221,12 @@ However, a fallback price utilizing the ETH-USD price and the LST's canonical ra
 | WSTETH     | STETH-USD * WSTETH-STETH_canonical                             | ETH-USD * WSTETH-STETH_canonical           |
 | RETH       | min(ETH-USD * RETH-ETH, ETH-USD * RETH-ETH_canonical)          | ETH-USD * RETH-ETH_canonical               |
 
-During shutdown no borrower ops are allowed, so the main risk of a manipulated canonical rate (inflated price and excess BOLD minting) is eliminated, and it will be safe to use the canonical rate in conjunction with ETH-USD.
+During shutdown no borrower ops are allowed, so the main risk of a manipulated canonical rate (inflated price and excess EBUSD minting) is eliminated, and it will be safe to use the canonical rate in conjunction with ETH-USD.
 
 Additionally, if the _ETH-USD_ oracle fails after shut down, then the LST PriceFeed should finally switch to the `lastGoodPrice`, and the branch remains shut down.
 
 The full logic is implemented in this PR:
-https://github.com/liquity/bold/pull/393
+https://github.com/liquity/ebusd/pull/393
 
 ### 5 - Stale oracle price before shutdown triggered
 
@@ -1237,7 +1237,7 @@ However, in case of a stale oracle (i.e. an oracle that has not updated for long
 The system could experience distortions in this period due to pricing collateral too low or too high relative to the real market price. Unwanted arbitrages and operations may be possible, such as:
 
 - Redeeming too profitably or unprofitably
-- Borrowing (and selling) BOLD with too little collateral provided
+- Borrowing (and selling) EBUSD with too little collateral provided
 - Liquidation of healthy Troves
 
 #### Solution
@@ -1283,17 +1283,17 @@ Though rounding error is inevitable, we have ensured that the error always “fa
 
 ### 8 - Discrepancy between `yieldGainsOwed` and sum of individual yield gains in StabilityPool
 
-StabilityPool increases `yieldGainsOwed` by the amount of BOLD yield it receives from interest minting, and decreases it by the claimed amount any time a depositor makes a claim. As such, `yieldGainsOwed` should always equal the sum of unclaimed yield present in deposits:
+StabilityPool increases `yieldGainsOwed` by the amount of EBUSD yield it receives from interest minting, and decreases it by the claimed amount any time a depositor makes a claim. As such, `yieldGainsOwed` should always equal the sum of unclaimed yield present in deposits:
 
 `StabilityPool.getYieldGainsOwed() = SUM(StabilityPool.getDepositorYieldGain())`
 
-Currently, the discrepancy between these 2 can be rather large, especially if yield is received immediately after a liquidation that results in very little remaining deposited BOLD in StabilityPool. What's worse, the discrepancy can sometimes be negative, meaning if every depositor were to try and claim their gains, at some point we would try to reduce `yieldGainsOwed` below zero, resulting in arithmetic underflow.
+Currently, the discrepancy between these 2 can be rather large, especially if yield is received immediately after a liquidation that results in very little remaining deposited EBUSD in StabilityPool. What's worse, the discrepancy can sometimes be negative, meaning if every depositor were to try and claim their gains, at some point we would try to reduce `yieldGainsOwed` below zero, resulting in arithmetic underflow.
 
 #### Solution
 
 Some imprecision in the StabilityPool arithmetic is inevitable, but we should avoid arithmetic underflow in `yieldGainsOwed` by ensuring the error stays positive. The root cause of the underflow is not yet clear, however it seems to be connected to our error feedback mechanism.
 
-[PR 261](https://github.com/liquity/bold/pull/261) contains a proof-of-concept patch that eliminates error correction while also simplifying the code in an effort make it easier to reason about. This fixes all currently known instances of arithmetic underflow.
+[PR 261](https://github.com/liquity/ebusd/pull/261) contains a proof-of-concept patch that eliminates error correction while also simplifying the code in an effort make it easier to reason about. This fixes all currently known instances of arithmetic underflow.
 
 **TODO**: we should analyze the issue more and understand the root cause better.
 
@@ -1326,7 +1326,7 @@ To mitigate the worst outcome of upward price manipulation, Liquity v2 uses solu
 
 Downward price manipulation is not protected against, however the impact should be contained to the branch (liquidations and shutdown). Also, downard manipulation likely implies a low liquidty LST, which in turn likely implies the LST is a small fraction of total collateral in Liquity v2. Thus the impact on the system and any bad debt created should be small.
 
-On the other hand, upward price manipulation would result in excessive BOLD minting, which is detrimental to the entire system health and BOLD peg.
+On the other hand, upward price manipulation would result in excessive EBUSD minting, which is detrimental to the entire system health and EBUSD peg.
 
 Taking the minimum of both market and canonical prices means that to make Liquity v2 consume an artificially high LST price, an attacker needs to manipulate both the market oracle _and_ the LST canonical rate at the same time, which seems much more difficult to do.
 
@@ -1336,41 +1336,41 @@ The best solution on paper seems to be 3) i.e. taking the minimum with an additi
 
 In the case of a collateral price collapse or oracle failure, a branch will shut down and urgent redemptions will be enabled. The collapsed branch may be left with 0 collateral (or collateral with 0 value), and some remaining bad debt.
 
-This could in the worst case lead to bank runs: a portion of the system debt can not be cleared, and hence a portion of the BOLD supply can never be redeemed.
+This could in the worst case lead to bank runs: a portion of the system debt can not be cleared, and hence a portion of the EBUSD supply can never be redeemed.
 
-Even though the entire system may be overcollateralized in aggregate, this unredeemable portion of BOLD is problematic: no user wants to be left holding unredeemable BOLD and so they may dump BOLD en masse (repay, redeem, sell).
+Even though the entire system may be overcollateralized in aggregate, this unredeemable portion of EBUSD is problematic: no user wants to be left holding unredeemable EBUSD and so they may dump EBUSD en masse (repay, redeem, sell).
 
-This would likely cause the entire system to evaporate, and may also break the BOLD peg. Even without a peg break, a bank run is still entirely possible and very undesirable.
+This would likely cause the entire system to evaporate, and may also break the EBUSD peg. Even without a peg break, a bank run is still entirely possible and very undesirable.
 
 **Potential solutions**
 
-Various solutions have been fielded. Generally, any solution which appears to credibly and eventually clear the bad debt should have a calming effect on any bank run dynamic: when bad debt exists yet users believe the BOLD peg will be maintained in the long-term, they are less likely to panic and repay/redeem/dump BOLD.
+Various solutions have been fielded. Generally, any solution which appears to credibly and eventually clear the bad debt should have a calming effect on any bank run dynamic: when bad debt exists yet users believe the EBUSD peg will be maintained in the long-term, they are less likely to panic and repay/redeem/dump EBUSD.
 
-1. **Redemption fees pay down bad debt**. When bad debt exists, direct normal redemption fees to clearing the bad debt. It works like this: when `x` BOLD is redeemed, `x-fee` debt on healthy branches is cleared 1:1 for collateral, and `fee` is canceled with debt on the shut down branch. This would slowly pay down the debt over time. It also makes bank runs via redemption nicely self-limiting: large redemption volume -> fee spike -> pays down the bad debt more quickly. 
+1. **Redemption fees pay down bad debt**. When bad debt exists, direct normal redemption fees to clearing the bad debt. It works like this: when `x` EBUSD is redeemed, `x-fee` debt on healthy branches is cleared 1:1 for collateral, and `fee` is canceled with debt on the shut down branch. This would slowly pay down the debt over time. It also makes bank runs via redemption nicely self-limiting: large redemption volume -> fee spike -> pays down the bad debt more quickly. 
 
-2. **Haircut for SP depositors**. If there is bad debt in the system, BOLD from all SPs could be burned pro-rata to cancel it.  This socializes the loss across SP depositors.
+2. **Haircut for SP depositors**. If there is bad debt in the system, EBUSD from all SPs could be burned pro-rata to cancel it.  This socializes the loss across SP depositors.
 
 3. **Redistribution to active Troves on healthy branches**. Socializes the loss across Troves. Could be used as a fallback for 2.
 
 4. **New multi-collateral Stability Pool.** This pool would absorb some fraction of liquidations from all branches, including shut down branches. 
 
-5. **Governance can direct BOLD interest to pay down bad debt**. BOLD interest could be voted to be redirected to paying down the bad debt over time.  Although this would not directly clear the bad debt, economically, it should have the same impact  - since ultimately, it is the redeemability of _circulating_ BOLD that determines the peg.  When an amount equal to the bad debt has been burned, then all circulating BOLD is fully redeemable. See this example:
+5. **Governance can direct EBUSD interest to pay down bad debt**. EBUSD interest could be voted to be redirected to paying down the bad debt over time.  Although this would not directly clear the bad debt, economically, it should have the same impact  - since ultimately, it is the redeemability of _circulating_ EBUSD that determines the peg.  When an amount equal to the bad debt has been burned, then all circulating EBUSD is fully redeemable. See this example:
 
 <img width="537" alt="image" src="https://github.com/user-attachments/assets/3045cba9-45a3-46b4-a5d0-58bed7f38a04">
 
-This provides a credible way of eventually "filling the hole" created by bad debt (unlike other approaches such as the SP haircut, which depends on SP funds). No additional core system code nor additional governance features are required. Governance may simply propose to redirect BOLD interest to a burn address. 
+This provides a credible way of eventually "filling the hole" created by bad debt (unlike other approaches such as the SP haircut, which depends on SP funds). No additional core system code nor additional governance features are required. Governance may simply propose to redirect EBUSD interest to a burn address. 
 
-If there is remaining collateral in the shutdown branch (albeit perhaps at zero USD value) and there are liquidateable Troves, Governance could alternatively vote to direct fees to a permissionless contract that deposits the BOLD to the SP of the shutdown branch and liquidates the Troves against those funds. The resulting collateral gains could, if they have non-zero value, be swapped on a DEX, e.g. for BOLD which could be then directed to LP incentives. All deposits and swaps could be handled permissionlessly by this governance-deployed contract.
+If there is remaining collateral in the shutdown branch (albeit perhaps at zero USD value) and there are liquidateable Troves, Governance could alternatively vote to direct fees to a permissionless contract that deposits the EBUSD to the SP of the shutdown branch and liquidates the Troves against those funds. The resulting collateral gains could, if they have non-zero value, be swapped on a DEX, e.g. for EBUSD which could be then directed to LP incentives. All deposits and swaps could be handled permissionlessly by this governance-deployed contract.
 
 And some additional solutions that may help reduce the chance of bad debt occurring in the first place:
 
 6. **Restrict SP withdrawals when TCR < 100%**. This ensure that SP depositors can’t flee when their branch is insolvent, and would be forced to eat the loss. This could lead to less bad debt than otherwise. On the other hand, when TCR > 100%, the expectation of this restriction kicking in could force pre-empting SP fleeing, which may limit liquidations and make bad debt _more_ likely.  An alternative would be to restrict SP withdrawals only when the LST-ETH price falls significantly below 1, indicating an adverse LST depeg event.
 
-7. **Pro-rata redemptions at TCR < 100% (branch specific, not routed)**. Urgent redemptions are helpful for shrinking the debt of a shut down branch when it is at `TCR > 100%`. However, at `TCR < 100%`, urgent redemptions do not help clear the bad debt. They simply remove all collateral and push it into its final state faster (and in fact, make it slightly worse since they pay a slight collateral bonus).  At `TCR < 100%`, we could offer special pro-rata redemptions only on the shut down branch - e.g. at `TCR = 80%`, users may redeem 1 BOLD for $0.80 worth of collateral. This would (in principle) allow someone to completely clear the bad debt via redemption. At first glance it seems unprofitable, but if the redeemer has reason to believe the collateral is underpriced and the price may rebound at some point in future, they may believe it to be profitable to redeem pro-rata.
+7. **Pro-rata redemptions at TCR < 100% (branch specific, not routed)**. Urgent redemptions are helpful for shrinking the debt of a shut down branch when it is at `TCR > 100%`. However, at `TCR < 100%`, urgent redemptions do not help clear the bad debt. They simply remove all collateral and push it into its final state faster (and in fact, make it slightly worse since they pay a slight collateral bonus).  At `TCR < 100%`, we could offer special pro-rata redemptions only on the shut down branch - e.g. at `TCR = 80%`, users may redeem 1 EBUSD for $0.80 worth of collateral. This would (in principle) allow someone to completely clear the bad debt via redemption. At first glance it seems unprofitable, but if the redeemer has reason to believe the collateral is underpriced and the price may rebound at some point in future, they may believe it to be profitable to redeem pro-rata.
 
 **Conclusion**
 
-Ultimately, no measures have been implemented in the protocol directly, so the protocol may end up with some bad debt in the case of a branch shut down.  Here there is a theoretical possibility that the BOLD supply may be reduced by either users accidentally burning BOLD, or that borrower's interest could be directed by governance to burn BOLD, which would restore its backing over time.
+Ultimately, no measures have been implemented in the protocol directly, so the protocol may end up with some bad debt in the case of a branch shut down.  Here there is a theoretical possibility that the EBUSD supply may be reduced by either users accidentally burning EBUSD, or that borrower's interest could be directed by governance to burn EBUSD, which would restore its backing over time.
 
 ### 11 - ## Inaccurate calculation of average branch interest rate
 
@@ -1444,8 +1444,8 @@ While this wouldn't result in the most accurate estimation of the average intere
 ## Setup
 
 ```sh
-git clone git@github.com:liquity/bold.git
-cd bold
+git clone git@github.com:liquity/ebusd.git
+cd ebusd
 pnpm install
 ```
 

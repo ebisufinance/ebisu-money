@@ -12,19 +12,10 @@ export default function Page() {
   return (
     <Screen title="You are adjusting your loan">
       <VFlex gap={32}>
-        <Row
-          label="You deposit"
-          value={[
-            "+8.00 ETH",
-            "10.00 → 18.00 ETH",
-          ]}
-        />
+        <Row label="You deposit" value={["+8.00 ETH", "10.00 → 18.00 ETH"]} />
         <Row
           label="You borrow"
-          value={[
-            "+ 2,000.00 BOLD",
-            "9,412.32 BOLD → 11,412.32 BOLD",
-          ]}
+          value={["+ 2,000.00 EBUSD", "9,412.32 EBUSD → 11,412.32 EBUSD"]}
         />
         <Row
           label="Liquidation risk"
@@ -37,13 +28,7 @@ export default function Page() {
             "Liq. price $1,200.00 → $600.00",
           ]}
         />
-        <Row
-          label="Interest rate"
-          value={[
-            "+0.6 %",
-            "6.00% → 6.60%",
-          ]}
-        />
+        <Row label="Interest rate" value={["+0.6 %", "6.00% → 6.60%"]} />
         <Row
           label="Redemption risk"
           value={[
@@ -56,10 +41,7 @@ export default function Page() {
         />
         <Row
           label="7-days fee"
-          value={[
-            "0.0001 ETH",
-            "~$22.06",
-          ]}
+          value={["0.0001 ETH", "~$22.06"]}
           valueSize="small"
         />
         <Row
@@ -69,10 +51,7 @@ export default function Page() {
               Gas
             </>
           }
-          value={[
-            "0.01 ETH",
-            "~$32.06",
-          ]}
+          value={["0.01 ETH", "~$32.06"]}
           valueSize="small"
         />
       </VFlex>
@@ -125,17 +104,10 @@ function Row({
   secondarySize?: "normal" | "large";
 }) {
   return (
-    <HFlex
-      alignItems="flex-start"
-      gap={16}
-      justifyContent="space-between"
-    >
+    <HFlex alignItems="flex-start" gap={16} justifyContent="space-between">
       {Array.isArray(label)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,
@@ -161,10 +133,7 @@ function Row({
         : <HFlex gap={8}>{label}</HFlex>}
       {Array.isArray(value)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,

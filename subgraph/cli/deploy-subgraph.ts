@@ -136,7 +136,7 @@ export async function main() {
 
   graphDeployCommand.push(options.name);
 
-  await updateNetworksWithLocalBoldToken();
+  await updateNetworksWithLocalEbusdToken();
   await generateNetworksJson(isLocal);
 
   echo`
@@ -185,17 +185,17 @@ async function generateNetworksJson(isLocal = false) {
   );
 }
 
-async function updateNetworksWithLocalBoldToken() {
+async function updateNetworksWithLocalEbusdToken() {
   const networksJson = JSON.parse(await fs.readFile(NETWORKS_JSON_PATH, "utf8"));
   const latestDeploymentContext = getLatestDeploymentContext();
 
-  const deployedAddress = latestDeploymentContext?.protocolContracts.BoldToken;
-  if (!deployedAddress || (networksJson.local.BoldToken.address === deployedAddress)) {
+  const deployedAddress = latestDeploymentContext?.protocolContracts.EbusdToken;
+  if (!deployedAddress || (networksJson.local.EbusdToken.address === deployedAddress)) {
     return;
   }
 
   const answer = await question(
-    `\nNew BoldToken detected (${deployedAddress}) for local network. Update networks.json? [Y/n] `,
+    `\nNew EbusdToken detected (${deployedAddress}) for local network. Update networks.json? [Y/n] `,
   );
 
   const confirmed = answer === "" || answer.toLowerCase() === "y" || answer.toLowerCase() === "yes";
@@ -204,11 +204,11 @@ async function updateNetworksWithLocalBoldToken() {
     return;
   }
 
-  networksJson.local.BoldToken.address = deployedAddress;
+  networksJson.local.EbusdToken.address = deployedAddress;
   await fs.writeFile(NETWORKS_JSON_PATH, JSON.stringify(networksJson, null, 2));
 
   console.log("");
-  console.log("networks.json updated with local BoldToken:", deployedAddress);
+  console.log("networks.json updated with local EbusdToken:", deployedAddress);
 }
 
 function getLatestDeploymentContext() {

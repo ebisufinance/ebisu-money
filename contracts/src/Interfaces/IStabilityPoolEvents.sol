@@ -10,7 +10,7 @@ interface IStabilityPoolEvents {
     }
 
     event StabilityPoolCollBalanceUpdated(uint256 _newBalance);
-    event StabilityPoolBoldBalanceUpdated(uint256 _newBalance);
+    event StabilityPoolEbusdBalanceUpdated(uint256 _newBalance);
 
     event P_Updated(uint256 _P);
     event S_Updated(uint256 _S, uint128 _epoch, uint128 _scale);

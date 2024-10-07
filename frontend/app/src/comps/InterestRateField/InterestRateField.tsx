@@ -38,19 +38,23 @@ import { match } from "ts-pattern";
 
 import icLogo from "./ic-logo.svg";
 
-const MODES = [{
-  label: "Manually",
-  secondary: "Set your interest rate manually and update it anytime.",
-}, {
-  label: "By Internet Computer (ICP) strategy",
-  secondary: "Choose a smart contract strategy on the decentralized Internet Computer (ICP) network.",
-}, {
-  label: "By Delegation",
-  secondary: `
+const MODES = [
+  {
+    label: "Manually",
+    secondary: "Set your interest rate manually and update it anytime.",
+  },
+  {
+    label: "By Internet Computer (ICP) strategy",
+    secondary: "Choose a smart contract strategy on the decentralized Internet Computer (ICP) network.",
+  },
+  {
+    label: "By Delegation",
+    secondary: `
     Delegates manage your interest rate, optimizing costs and preventing redemption.
     They charge a fee for this.
   `,
-}] as const;
+  },
+] as const;
 
 export function InterestRateField({
   debt,
@@ -65,7 +69,9 @@ export function InterestRateField({
   const [selectedMode, setSelectedMode] = useState<0 | 1 | 2>(0);
 
   const [delegate, setDelegate] = useState<null | { id: string }>(null);
-  const [delegatePicker, setDelegatePicker] = useState<null | "strategy" | "delegate">(null);
+  const [delegatePicker, setDelegatePicker] = useState<
+    null | "strategy" | "delegate"
+  >(null);
 
   const fieldValue = useInputFieldValue((value) => `${fmtnum(value)}%`, {
     defaultValue: interestRate
@@ -78,11 +84,14 @@ export function InterestRateField({
     },
   });
 
-  const boldInterestPerYear = interestRate && debt && dn.mul(interestRate, debt);
+  const ebusdInterestPerYear = interestRate && debt && dn.mul(interestRate, debt);
 
-  const boldRedeemableInFront = getDebtBeforeRateBucketIndex(
+  const ebusdRedeemableInFront = getDebtBeforeRateBucketIndex(
     interestRate
-      ? Math.round((dn.toNumber(interestRate) * 100 - INTEREST_RATE_MIN) / INTEREST_RATE_INCREMENT)
+      ? Math.round(
+        (dn.toNumber(interestRate) * 100 - INTEREST_RATE_MIN)
+          / INTEREST_RATE_INCREMENT,
+      )
       : 0,
   );
 
@@ -115,15 +124,13 @@ export function InterestRateField({
                 gradientMode="high-to-low"
                 chart={INTEREST_CHART}
                 onChange={(value) => {
-                  fieldValue.setValue(String(
-                    Math.round(
-                      lerp(
-                        INTEREST_RATE_MIN,
-                        INTEREST_RATE_MAX,
-                        value,
-                      ) * 10,
-                    ) / 10,
-                  ));
+                  fieldValue.setValue(
+                    String(
+                      Math.round(
+                        lerp(INTEREST_RATE_MIN, INTEREST_RATE_MAX, value) * 10,
+                      ) / 10,
+                    ),
+                  );
                 }}
                 value={norm(
                   interestRate ? dn.toNumber(dn.mul(interestRate, 100)) : 0,
@@ -136,7 +143,9 @@ export function InterestRateField({
           .with(1, () => (
             <TextButton
               size="large"
-              label={delegate ? IC_STRATEGIES.find(({ id }) => id === delegate.id)?.name : "Choose strategy"}
+              label={delegate
+                ? IC_STRATEGIES.find(({ id }) => id === delegate.id)?.name
+                : "Choose strategy"}
               onClick={() => {
                 setDelegatePicker("strategy");
               }}
@@ -145,7 +154,9 @@ export function InterestRateField({
           .with(2, () => (
             <TextButton
               size="large"
-              label={delegate ? DELEGATES.find(({ id }) => id === delegate.id)?.name : "Choose delegate"}
+              label={delegate
+                ? DELEGATES.find(({ id }) => id === delegate.id)?.name
+                : "Choose delegate"}
               onClick={() => {
                 setDelegatePicker("delegate");
               }}
@@ -176,11 +187,13 @@ export function InterestRateField({
           start: (
             <HFlex gap={4}>
               <div>
-                {boldInterestPerYear
-                  ? fmtnum(boldInterestPerYear, 2)
-                  : "−"} BOLD / year
+                {ebusdInterestPerYear ? fmtnum(ebusdInterestPerYear, 2) : "−"} EBUSD / year
               </div>
-              <InfoTooltip {...infoTooltipProps(content.borrowScreen.infoTooltips.interestRateBoldPerYear)} />
+              <InfoTooltip
+                {...infoTooltipProps(
+                  content.borrowScreen.infoTooltips.interestRateEbusdPerYear,
+                )}
+              />
             </HFlex>
           ),
           end: (
@@ -196,9 +209,9 @@ export function InterestRateField({
                     fontVariantNumeric: "tabular-nums",
                   })}
                 >
-                  {fmtnum(boldRedeemableInFront, "compact")}
+                  {fmtnum(ebusdRedeemableInFront, "compact")}
                 </span>
-                <span>{" BOLD to redeem"}</span>
+                <span>{" EBUSD to redeem"}</span>
               </span>
             </span>
           ),
@@ -212,9 +225,12 @@ export function InterestRateField({
         }
         valueUnfocused={
           // no delegate selected yet
-          (selectedMode === 1 || selectedMode === 2) && delegate === null
+          (selectedMode === 1 || selectedMode === 2)
+            && delegate === null
             ? null
-            : (!fieldValue.isEmpty && fieldValue.parsed && interestRate)
+            : !fieldValue.isEmpty
+                && fieldValue.parsed
+                && interestRate
             ? (
               <span
                 style={{
@@ -258,12 +274,7 @@ export function InterestRateField({
             })}
           >
             <div>IC Strategies</div>
-            <Image
-              alt=""
-              src={icLogo}
-              width={24}
-              height={24}
-            />
+            <Image alt="" src={icLogo} width={24} height={24} />
           </div>
         }
         visible={delegatePicker === "strategy"}
@@ -356,9 +367,7 @@ function DelegatesModalContent({
                       fontWeight: 500,
                     })}
                   >
-                    <h1>
-                      {delegate.name}
-                    </h1>
+                    <h1>{delegate.name}</h1>
                     <div
                       className={css({
                         display: "flex",
@@ -388,9 +397,7 @@ function DelegatesModalContent({
                     >
                       <div>{delegate.followers} followers</div>
                       <Bullet />
-                      <div>
-                        {fmtnum(delegate.boldAmount, "compact")} BOLD
-                      </div>
+                      <div>{fmtnum(delegate.ebusdAmount, "compact")} EBUSD</div>
                     </div>
                     <div
                       className={css({
@@ -433,8 +440,10 @@ function DelegatesModalContent({
                     })}
                   >
                     <div>Redemptions</div>
-                    <div title={`${fmtnum(delegate.redemptions, "full")} BOLD`}>
-                      {fmtnum(delegate.redemptions, "compact")} BOLD
+                    <div
+                      title={`${fmtnum(delegate.redemptions, "full")} EBUSD`}
+                    >
+                      {fmtnum(delegate.redemptions, "compact")} EBUSD
                     </div>
                   </div>
                   <div
@@ -448,7 +457,8 @@ function DelegatesModalContent({
                   >
                     <div>Interest rate change</div>
                     <div>
-                      {fmtnum(delegate.interestRateChange[0], 2, 100)}…{fmtnum(delegate.interestRateChange[1], 2, 100)}%
+                      {fmtnum(delegate.interestRateChange[0], 2, 100)}…
+                      {fmtnum(delegate.interestRateChange[1], 2, 100)}%
                     </div>
                   </div>
                   {delegate.fee && (
@@ -541,29 +551,27 @@ function DelegatesModalContent({
 }
 
 function MiniChart({ size = "small" }: { size?: "small" | "medium" }) {
-  return (
-    size === "medium"
-      ? (
-        <svg width="45" height="18" fill="none">
-          <path
-            stroke="#9EA2B8"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-            d="m1 10.607 1.66 2.61a2 2 0 0 0 1.688.926H7.31c.29 0 .576.063.84.185l4.684 2.168a2 2 0 0 0 2.142-.296l2.995-2.568a2 2 0 0 0 .662-1.137l1.787-9.191a2 2 0 0 1 .318-.756l.096-.138a2 2 0 0 1 3.303.02l1.421 2.107a2 2 0 0 1 .278.616l1.295 4.996a2 2 0 0 0 .431.815l1.691 1.932c.163.187.29.402.375.635l.731 2.015a2 2 0 0 0 3.029.955l.079-.056a2 2 0 0 0 .744-.99l2.539-7.42 2.477-5.005a2 2 0 0 1 2.924-.762L44 3.536"
-          />
-        </svg>
-      )
-      : (
-        <svg width="28" height="16" fill="none">
-          <path
-            stroke="#9EA2B8"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-            d="m2 8.893.618 1.009a2 2 0 0 0 1.706.955h.83a2 2 0 0 1 .867.198l1.731.832a2 2 0 0 0 2.197-.309l.901-.802a2 2 0 0 0 .636-1.126l.902-4.819c.028-.148.085-.288.169-.414v0a1.119 1.119 0 0 1 1.87.011l.64.986c.113.175.197.368.248.571l.613 2.458a2 2 0 0 0 .411.804l.686.814c.145.172.257.37.332.582l.339.97a1.09 1.09 0 0 0 1.671.522v0a1.09 1.09 0 0 0 .394-.54l1.361-4.13.847-1.778a2 2 0 0 1 2.966-.77l.065.047"
-          />
-        </svg>
-      )
-  );
+  return size === "medium"
+    ? (
+      <svg width="45" height="18" fill="none">
+        <path
+          stroke="#9EA2B8"
+          strokeLinecap="round"
+          strokeWidth="1.5"
+          d="m1 10.607 1.66 2.61a2 2 0 0 0 1.688.926H7.31c.29 0 .576.063.84.185l4.684 2.168a2 2 0 0 0 2.142-.296l2.995-2.568a2 2 0 0 0 .662-1.137l1.787-9.191a2 2 0 0 1 .318-.756l.096-.138a2 2 0 0 1 3.303.02l1.421 2.107a2 2 0 0 1 .278.616l1.295 4.996a2 2 0 0 0 .431.815l1.691 1.932c.163.187.29.402.375.635l.731 2.015a2 2 0 0 0 3.029.955l.079-.056a2 2 0 0 0 .744-.99l2.539-7.42 2.477-5.005a2 2 0 0 1 2.924-.762L44 3.536"
+        />
+      </svg>
+    )
+    : (
+      <svg width="28" height="16" fill="none">
+        <path
+          stroke="#9EA2B8"
+          strokeLinecap="round"
+          strokeWidth="1.5"
+          d="m2 8.893.618 1.009a2 2 0 0 0 1.706.955h.83a2 2 0 0 1 .867.198l1.731.832a2 2 0 0 0 2.197-.309l.901-.802a2 2 0 0 0 .636-1.126l.902-4.819c.028-.148.085-.288.169-.414v0a1.119 1.119 0 0 1 1.87.011l.64.986c.113.175.197.368.248.571l.613 2.458a2 2 0 0 0 .411.804l.686.814c.145.172.257.37.332.582l.339.97a1.09 1.09 0 0 0 1.671.522v0a1.09 1.09 0 0 0 .394-.54l1.361-4.13.847-1.778a2 2 0 0 1 2.966-.77l.065.047"
+        />
+      </svg>
+    );
 }
 
 function Bullet() {

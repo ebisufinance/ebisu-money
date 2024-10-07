@@ -31,7 +31,7 @@ library baseSVG {
             ),
             _styles(_assetReader),
             _leverageLogo(),
-            _boldLogo(_assetReader),
+            _ebusdLogo(_assetReader),
             _staticTextEls()
         );
     }
@@ -61,7 +61,7 @@ library baseSVG {
         );
     }
 
-    function _boldLogo(FixedAssetReader _assetReader) internal view returns (string memory) {
+    function _ebusdLogo(FixedAssetReader _assetReader) internal view returns (string memory) {
         return svg.el(
             "image",
             string.concat(
@@ -71,7 +71,7 @@ library baseSVG {
                 svg.prop("height", "20"),
                 svg.prop(
                     "href",
-                    string.concat("data:image/svg+xml;base64,", _assetReader.readAsset(bytes4(keccak256("BOLD"))))
+                    string.concat("data:image/svg+xml;base64,", _assetReader.readAsset(bytes4(keccak256("EBUSD"))))
                 )
             )
         );

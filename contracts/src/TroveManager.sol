@@ -6,7 +6,7 @@ import "./Interfaces/ITroveManager.sol";
 import "./Interfaces/IAddressesRegistry.sol";
 import "./Interfaces/IStabilityPool.sol";
 import "./Interfaces/ICollSurplusPool.sol";
-import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/IEbusdToken.sol";
 import "./Interfaces/ISortedTroves.sol";
 import "./Interfaces/ITroveEvents.sol";
 import "./Interfaces/ITroveNFT.sol";
@@ -24,7 +24,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     IStabilityPool public stabilityPool;
     address internal gasPoolAddress;
     ICollSurplusPool internal collSurplusPool;
-    IBoldToken internal boldToken;
+    IEbusdToken internal ebusdToken;
     // A doubly linked list of Troves, sorted by their sorted by their collateral ratios
     ISortedTroves public sortedTroves;
     ICollateralRegistry internal collateralRegistry;
@@ -87,23 +87,23 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     uint256 internal totalCollateralSnapshot;
 
     /*
-    * L_coll and L_boldDebt track the sums of accumulated liquidation rewards per unit staked. During its lifetime, each stake earns:
+    * L_coll and L_ebusdDebt track the sums of accumulated liquidation rewards per unit staked. During its lifetime, each stake earns:
     *
     * An Coll gain of ( stake * [L_coll - L_coll(0)] )
-    * A boldDebt increase  of ( stake * [L_boldDebt - L_boldDebt(0)] )
+    * A ebusdDebt increase  of ( stake * [L_ebusdDebt - L_ebusdDebt(0)] )
     *
-    * Where L_coll(0) and L_boldDebt(0) are snapshots of L_coll and L_boldDebt for the active Trove taken at the instant the stake was made
+    * Where L_coll(0) and L_ebusdDebt(0) are snapshots of L_coll and L_ebusdDebt for the active Trove taken at the instant the stake was made
     */
     uint256 internal L_coll;
-    uint256 internal L_boldDebt;
+    uint256 internal L_ebusdDebt;
 
     // Map active troves to their RewardSnapshot
     mapping(uint256 => RewardSnapshot) public rewardSnapshots;
 
-    // Object containing the Coll and Bold snapshots for a given active trove
+    // Object containing the Coll and Ebusd snapshots for a given active trove
     struct RewardSnapshot {
         uint256 coll;
-        uint256 boldDebt;
+        uint256 ebusdDebt;
     }
 
     // Array of all active trove addresses - used to compute an approximate hint off-chain, for the sorted list insertion
@@ -115,7 +115,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
     // Error trackers for the trove redistribution calculation
     uint256 internal lastCollError_Redistribution;
-    uint256 internal lastBoldDebtError_Redistribution;
+    uint256 internal lastEbusdDebtError_Redistribution;
 
     // Timestamp at which branch was shut down. 0 if not shut down.
     uint256 public shutdownTime;
@@ -144,10 +144,10 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     struct SingleRedemptionValues {
         uint256 troveId;
         address batchAddress;
-        uint256 boldLot;
+        uint256 ebusdLot;
         uint256 collLot;
         uint256 collFee;
-        uint256 appliedRedistBoldDebtGain;
+        uint256 appliedRedistEbusdDebtGain;
         uint256 oldWeightedRecordedDebt;
         uint256 newWeightedRecordedDebt;
         uint256 newStake;
@@ -164,14 +164,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     error CallerNotCollateralRegistry();
     error OnlyOneTroveLeft();
     error NotShutDown();
-    error NotEnoughBoldBalance();
+    error NotEnoughEbusdBalance();
     error MinCollNotReached(uint256 _coll);
 
     // --- Events ---
 
     event TroveNFTAddressChanged(address _newTroveNFTAddress);
     event BorrowerOperationsAddressChanged(address _newBorrowerOperationsAddress);
-    event BoldTokenAddressChanged(address _newBoldTokenAddress);
+    event EbusdTokenAddressChanged(address _newEbusdTokenAddress);
     event StabilityPoolAddressChanged(address _stabilityPoolAddress);
     event GasPoolAddressChanged(address _gasPoolAddress);
     event CollSurplusPoolAddressChanged(address _collSurplusPoolAddress);
@@ -190,7 +190,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         stabilityPool = _addressesRegistry.stabilityPool();
         gasPoolAddress = _addressesRegistry.gasPoolAddress();
         collSurplusPool = _addressesRegistry.collSurplusPool();
-        boldToken = _addressesRegistry.boldToken();
+        ebusdToken = _addressesRegistry.ebusdToken();
         sortedTroves = _addressesRegistry.sortedTroves();
         WETH = _addressesRegistry.WETH();
         collateralRegistry = _addressesRegistry.collateralRegistry();
@@ -200,7 +200,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         emit StabilityPoolAddressChanged(address(stabilityPool));
         emit GasPoolAddressChanged(gasPoolAddress);
         emit CollSurplusPoolAddressChanged(address(collSurplusPool));
-        emit BoldTokenAddressChanged(address(boldToken));
+        emit EbusdTokenAddressChanged(address(ebusdToken));
         emit SortedTrovesAddressChanged(address(sortedTroves));
         emit CollateralRegistryAddressChanged(address(collateralRegistry));
     }
@@ -223,7 +223,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     function _liquidate(
         IDefaultPool _defaultPool,
         uint256 _troveId,
-        uint256 _boldInStabPool,
+        uint256 _ebusdInStabPool,
         uint256 _price,
         LatestTroveData memory trove,
         LiquidationValues memory singleLiquidation
@@ -236,7 +236,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         LatestBatchData memory batch;
         if (isTroveInBatch) _getLatestBatchData(batchAddress, batch);
 
-        _movePendingTroveRewardsToActivePool(_defaultPool, trove.redistBoldDebtGain, trove.redistCollGain);
+        _movePendingTroveRewardsToActivePool(_defaultPool, trove.redistEbusdDebtGain, trove.redistCollGain);
 
         singleLiquidation.collGasCompensation = _getCollGasCompensation(trove.entireColl);
         uint256 collToLiquidate = trove.entireColl - singleLiquidation.collGasCompensation;
@@ -247,13 +247,13 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             singleLiquidation.debtToRedistribute,
             singleLiquidation.collToRedistribute,
             singleLiquidation.collSurplus
-        ) = _getOffsetAndRedistributionVals(trove.entireDebt, collToLiquidate, _boldInStabPool, _price);
+        ) = _getOffsetAndRedistributionVals(trove.entireDebt, collToLiquidate, _ebusdInStabPool, _price);
 
         TroveChange memory troveChange;
         troveChange.collDecrease = trove.entireColl;
         troveChange.debtDecrease = trove.entireDebt;
         troveChange.appliedRedistCollGain = trove.redistCollGain;
-        troveChange.appliedRedistBoldDebtGain = trove.redistBoldDebtGain;
+        troveChange.appliedRedistEbusdDebtGain = trove.redistEbusdDebtGain;
         _closeTrove(
             _troveId,
             troveChange,
@@ -265,12 +265,12 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         if (isTroveInBatch) {
             singleLiquidation.oldWeightedRecordedDebt =
-                batch.weightedRecordedDebt + (trove.entireDebt - trove.redistBoldDebtGain) * batch.annualInterestRate;
+                batch.weightedRecordedDebt + (trove.entireDebt - trove.redistEbusdDebtGain) * batch.annualInterestRate;
             singleLiquidation.newWeightedRecordedDebt = batch.entireDebtWithoutRedistribution * batch.annualInterestRate;
             // Mint batch management fee
             troveChange.batchAccruedManagementFee = batch.accruedManagementFee;
             troveChange.oldWeightedRecordedBatchManagementFee = batch.weightedRecordedBatchManagementFee
-                + (trove.entireDebt - trove.redistBoldDebtGain) * batch.annualManagementFee;
+                + (trove.entireDebt - trove.redistEbusdDebtGain) * batch.annualManagementFee;
             troveChange.newWeightedRecordedBatchManagementFee =
                 batch.entireDebtWithoutRedistribution * batch.annualManagementFee;
             activePool.mintBatchManagementFeeAndAccountForChange(troveChange, batchAddress);
@@ -300,7 +300,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _troveId: _troveId,
             _operation: Operation.liquidate,
             _annualInterestRate: 0,
-            _debtIncreaseFromRedist: trove.redistBoldDebtGain,
+            _debtIncreaseFromRedist: trove.redistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: 0,
             _debtChangeFromOperation: -int256(trove.entireDebt),
             _collIncreaseFromRedist: trove.redistCollGain,
@@ -332,7 +332,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     function _getOffsetAndRedistributionVals(
         uint256 _entireTroveDebt,
         uint256 _collToLiquidate, // gas compensation is already subtracted
-        uint256 _boldInStabPool,
+        uint256 _ebusdInStabPool,
         uint256 _price
     )
         internal
@@ -350,14 +350,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
          * Offset as much debt & collateral as possible against the Stability Pool, and redistribute the remainder
          * between all active troves.
          *
-         *  If the trove's debt is larger than the deposited Bold in the Stability Pool:
+         *  If the trove's debt is larger than the deposited Ebusd in the Stability Pool:
          *
-         *  - Offset an amount of the trove's debt equal to the Bold in the Stability Pool
+         *  - Offset an amount of the trove's debt equal to the Ebusd in the Stability Pool
          *  - Send a fraction of the trove's collateral to the Stability Pool, equal to the fraction of its offset debt
          *
          */
-        if (_boldInStabPool > 0) {
-            debtToOffset = LiquityMath._min(_entireTroveDebt, _boldInStabPool);
+        if (_ebusdInStabPool > 0) {
+            debtToOffset = LiquityMath._min(_entireTroveDebt, _ebusdInStabPool);
             collSPPortion = _collToLiquidate * debtToOffset / _entireTroveDebt;
             (collToSendToSP, collSurplus) =
                 _getCollPenaltyAndSurplus(collSPPortion, debtToOffset, LIQUIDATION_PENALTY_SP, _price);
@@ -411,10 +411,10 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         LiquidationValues memory totals;
 
         (uint256 price,) = priceFeed.fetchPrice();
-        uint256 boldInStabPool = stabilityPoolCached.getTotalBoldDeposits();
+        uint256 ebusdInStabPool = stabilityPoolCached.getTotalEbusdDeposits();
 
         // Perform the appropriate liquidation sequence - tally values and obtain their totals.
-        _batchLiquidateTroves(defaultPoolCached, price, boldInStabPool, _troveArray, totals, troveChange);
+        _batchLiquidateTroves(defaultPoolCached, price, ebusdInStabPool, _troveArray, totals, troveChange);
 
         if (troveChange.debtDecrease == 0) {
             revert NothingToLiquidate();
@@ -422,7 +422,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         activePoolCached.mintAggInterestAndAccountForTroveChange(troveChange, address(0));
 
-        // Move liquidated Coll and Bold to the appropriate pools
+        // Move liquidated Coll and Ebusd to the appropriate pools
         if (totals.debtToOffset > 0 || totals.collToSendToSP > 0) {
             stabilityPoolCached.offset(totals.debtToOffset, totals.collToSendToSP);
         }
@@ -446,7 +446,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             totals.collToRedistribute,
             totals.collSurplus,
             L_coll,
-            L_boldDebt,
+            L_ebusdDebt,
             price
         );
 
@@ -461,12 +461,12 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     function _batchLiquidateTroves(
         IDefaultPool _defaultPool,
         uint256 _price,
-        uint256 _boldInStabPool,
+        uint256 _ebusdInStabPool,
         uint256[] memory _troveArray,
         LiquidationValues memory totals,
         TroveChange memory troveChange
     ) internal {
-        uint256 remainingBoldInStabPool = _boldInStabPool;
+        uint256 remainingEbusdInStabPool = _ebusdInStabPool;
 
         for (uint256 i = 0; i < _troveArray.length; i++) {
             uint256 troveId = _troveArray[i];
@@ -480,8 +480,8 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 LiquidationValues memory singleLiquidation;
                 LatestTroveData memory trove;
 
-                _liquidate(_defaultPool, troveId, remainingBoldInStabPool, _price, trove, singleLiquidation);
-                remainingBoldInStabPool -= singleLiquidation.debtToOffset;
+                _liquidate(_defaultPool, troveId, remainingEbusdInStabPool, _price, trove, singleLiquidation);
+                remainingEbusdInStabPool -= singleLiquidation.debtToOffset;
 
                 // Add liquidation values to their respective running totals
                 _addLiquidationValuesToTotals(trove, singleLiquidation, totals, troveChange);
@@ -503,7 +503,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         totals.ETHGasCompensation += ETH_GAS_COMPENSATION;
         troveChange.debtDecrease += _trove.entireDebt;
         troveChange.collDecrease += _trove.entireColl;
-        troveChange.appliedRedistBoldDebtGain += _trove.redistBoldDebtGain;
+        troveChange.appliedRedistEbusdDebtGain += _trove.redistEbusdDebtGain;
         troveChange.oldWeightedRecordedDebt += _singleLiquidation.oldWeightedRecordedDebt;
         troveChange.newWeightedRecordedDebt += _singleLiquidation.newWeightedRecordedDebt;
         totals.debtToOffset += _singleLiquidation.debtToOffset;
@@ -524,9 +524,9 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     }
 
     // Move a Trove's pending debt and collateral rewards from distributions, from the Default Pool to the Active Pool
-    function _movePendingTroveRewardsToActivePool(IDefaultPool _defaultPool, uint256 _bold, uint256 _coll) internal {
-        if (_bold > 0) {
-            _defaultPool.decreaseBoldDebt(_bold);
+    function _movePendingTroveRewardsToActivePool(IDefaultPool _defaultPool, uint256 _ebusd, uint256 _coll) internal {
+        if (_ebusd > 0) {
+            _defaultPool.decreaseEbusdDebt(_ebusd);
         }
 
         if (_coll > 0) {
@@ -541,25 +541,25 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         SingleRedemptionValues memory _singleRedemption,
         bool _isTroveInBatch
     ) internal returns (uint256) {
-        // Decrease the debt and collateral of the current Trove according to the Bold lot and corresponding ETH to send
-        uint256 newDebt = _singleRedemption.trove.entireDebt - _singleRedemption.boldLot;
+        // Decrease the debt and collateral of the current Trove according to the Ebusd lot and corresponding ETH to send
+        uint256 newDebt = _singleRedemption.trove.entireDebt - _singleRedemption.ebusdLot;
         uint256 newColl = _singleRedemption.trove.entireColl - _singleRedemption.collLot;
 
-        _singleRedemption.appliedRedistBoldDebtGain = _singleRedemption.trove.redistBoldDebtGain;
+        _singleRedemption.appliedRedistEbusdDebtGain = _singleRedemption.trove.redistEbusdDebtGain;
 
         if (_isTroveInBatch) {
             _getLatestBatchData(_singleRedemption.batchAddress, _singleRedemption.batch);
-            // We know boldLot <= trove entire debt, so this subtraction is safe
+            // We know ebusdLot <= trove entire debt, so this subtraction is safe
             uint256 newAmountForWeightedDebt = _singleRedemption.batch.entireDebtWithoutRedistribution
-                + _singleRedemption.trove.redistBoldDebtGain - _singleRedemption.boldLot;
+                + _singleRedemption.trove.redistEbusdDebtGain - _singleRedemption.ebusdLot;
             _singleRedemption.oldWeightedRecordedDebt = _singleRedemption.batch.weightedRecordedDebt;
             _singleRedemption.newWeightedRecordedDebt =
                 newAmountForWeightedDebt * _singleRedemption.batch.annualInterestRate;
 
             TroveChange memory troveChange;
-            troveChange.debtDecrease = _singleRedemption.boldLot;
+            troveChange.debtDecrease = _singleRedemption.ebusdLot;
             troveChange.collDecrease = _singleRedemption.collLot;
-            troveChange.appliedRedistBoldDebtGain = _singleRedemption.trove.redistBoldDebtGain;
+            troveChange.appliedRedistEbusdDebtGain = _singleRedemption.trove.redistEbusdDebtGain;
             troveChange.appliedRedistCollGain = _singleRedemption.trove.redistCollGain;
             // batchAccruedManagementFee is handled in the outer function
             troveChange.oldWeightedRecordedBatchManagementFee =
@@ -588,7 +588,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         _singleRedemption.newStake = _updateStakeAndTotalStakes(_singleRedemption.troveId, newColl);
         _movePendingTroveRewardsToActivePool(
-            _defaultPool, _singleRedemption.trove.redistBoldDebtGain, _singleRedemption.trove.redistCollGain
+            _defaultPool, _singleRedemption.trove.redistEbusdDebtGain, _singleRedemption.trove.redistCollGain
         );
         _updateTroveRewardSnapshots(_singleRedemption.troveId);
 
@@ -600,7 +600,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 _coll: newColl,
                 _stake: _singleRedemption.newStake,
                 _snapshotOfTotalCollRedist: L_coll,
-                _snapshotOfTotalDebtRedist: L_boldDebt
+                _snapshotOfTotalDebtRedist: L_ebusdDebt
             });
         } else {
             emit TroveUpdated({
@@ -610,7 +610,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 _stake: _singleRedemption.newStake,
                 _annualInterestRate: _singleRedemption.trove.annualInterestRate,
                 _snapshotOfTotalCollRedist: L_coll,
-                _snapshotOfTotalDebtRedist: L_boldDebt
+                _snapshotOfTotalDebtRedist: L_ebusdDebt
             });
         }
 
@@ -618,9 +618,9 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _troveId: _singleRedemption.troveId,
             _operation: Operation.redeemCollateral,
             _annualInterestRate: _singleRedemption.trove.annualInterestRate,
-            _debtIncreaseFromRedist: _singleRedemption.trove.redistBoldDebtGain,
+            _debtIncreaseFromRedist: _singleRedemption.trove.redistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: 0,
-            _debtChangeFromOperation: -int256(_singleRedemption.boldLot),
+            _debtChangeFromOperation: -int256(_singleRedemption.ebusdLot),
             _collIncreaseFromRedist: _singleRedemption.trove.redistCollGain,
             _collChangeFromOperation: -int256(_singleRedemption.collLot)
         });
@@ -643,21 +643,21 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         return newDebt;
     }
 
-    // Redeem as much collateral as possible from _borrower's Trove in exchange for Bold up to _maxBoldamount
+    // Redeem as much collateral as possible from _borrower's Trove in exchange for Ebusd up to _maxEbusdamount
     function _redeemCollateralFromTrove(
         IDefaultPool _defaultPool,
         SingleRedemptionValues memory _singleRedemption,
-        uint256 _maxBoldamount,
+        uint256 _maxEbusdamount,
         uint256 _price,
         uint256 _redemptionRate
     ) internal {
         _getLatestTroveData(_singleRedemption.troveId, _singleRedemption.trove);
 
         // Determine the remaining amount (lot) to be redeemed, capped by the entire debt of the Trove
-        _singleRedemption.boldLot = LiquityMath._min(_maxBoldamount, _singleRedemption.trove.entireDebt);
+        _singleRedemption.ebusdLot = LiquityMath._min(_maxEbusdamount, _singleRedemption.trove.entireDebt);
 
-        // Get the amount of Coll equal in USD value to the boldLot redeemed
-        uint256 correspondingColl = _singleRedemption.boldLot * DECIMAL_PRECISION / _price;
+        // Get the amount of Coll equal in USD value to the ebusdLot redeemed
+        uint256 correspondingColl = _singleRedemption.ebusdLot * DECIMAL_PRECISION / _price;
         // Calculate the collFee separately (for events)
         _singleRedemption.collFee = correspondingColl * _redemptionRate / DECIMAL_PRECISION;
         // Get the final collLot to send to redeemer, leaving the fee in the Trove
@@ -706,7 +706,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         _activePool.mintAggInterestAndAccountForTroveChange(batchTroveChange, _batchAddress);
     }
 
-    /* Send _boldamount Bold to the system and redeem the corresponding amount of collateral from as many Troves as are needed to fill the redemption
+    /* Send _ebusdamount Ebusd to the system and redeem the corresponding amount of collateral from as many Troves as are needed to fill the redemption
     * request.  Applies redistribution gains to a Trove before reducing its debt and coll.
     *
     * Note that if _amount is very large, this function can run out of gas, specially if traversed troves are small. This can be easily avoided by
@@ -724,12 +724,12 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     *
     * If another transaction modifies the list between calling getRedemptionHints() and passing the hints to redeemCollateral(), it
     * is very likely that the last (partially) redeemed Trove would end up with a different ICR than what the hint is for. In this case the
-    * redemption will stop after the last completely redeemed Trove and the sender will keep the remaining Bold amount, which they can attempt
+    * redemption will stop after the last completely redeemed Trove and the sender will keep the remaining Ebusd amount, which they can attempt
     * to redeem later.
     */
     function redeemCollateral(
         address _redeemer,
-        uint256 _boldamount,
+        uint256 _ebusdamount,
         uint256 _price,
         uint256 _redemptionRate,
         uint256 _maxIterations
@@ -742,7 +742,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         TroveChange memory totalsTroveChange;
         uint256 totalCollFee;
 
-        uint256 remainingBold = _boldamount;
+        uint256 remainingEbusd = _ebusdamount;
 
         SingleRedemptionValues memory singleRedemption;
         // Let’s check if there’s a pending zombie trove from previous redemption
@@ -754,9 +754,9 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         }
         address lastBatchUpdatedInterest = address(0);
 
-        // Loop through the Troves starting from the one with lowest collateral ratio until _amount of Bold is exchanged for collateral
+        // Loop through the Troves starting from the one with lowest collateral ratio until _amount of Ebusd is exchanged for collateral
         if (_maxIterations == 0) _maxIterations = type(uint256).max;
-        while (singleRedemption.troveId != 0 && remainingBold > 0 && _maxIterations > 0) {
+        while (singleRedemption.troveId != 0 && remainingEbusd > 0 && _maxIterations > 0) {
             _maxIterations--;
             // Save the uint256 of the Trove preceding the current one
             uint256 nextUserToCheck;
@@ -783,11 +783,11 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 lastBatchUpdatedInterest = singleRedemption.batchAddress;
             }
 
-            _redeemCollateralFromTrove(defaultPool, singleRedemption, remainingBold, _price, _redemptionRate);
+            _redeemCollateralFromTrove(defaultPool, singleRedemption, remainingEbusd, _price, _redemptionRate);
 
             totalsTroveChange.collDecrease += singleRedemption.collLot;
-            totalsTroveChange.debtDecrease += singleRedemption.boldLot;
-            totalsTroveChange.appliedRedistBoldDebtGain += singleRedemption.appliedRedistBoldDebtGain;
+            totalsTroveChange.debtDecrease += singleRedemption.ebusdLot;
+            totalsTroveChange.appliedRedistEbusdDebtGain += singleRedemption.appliedRedistEbusdDebtGain;
             // For recorded and weighted recorded debt totals, we need to capture the increases and decreases,
             // since the net debt change for a given Trove could be positive or negative: redemptions decrease a Trove's recorded
             // (and weighted recorded) debt, but the accrued interest increases it.
@@ -795,7 +795,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             totalsTroveChange.oldWeightedRecordedDebt += singleRedemption.oldWeightedRecordedDebt;
             totalCollFee += singleRedemption.collFee;
 
-            remainingBold -= singleRedemption.boldLot;
+            remainingEbusd -= singleRedemption.ebusdLot;
             singleRedemption.troveId = nextUserToCheck;
             singleRedemption.isZombieTrove = false;
         }
@@ -804,36 +804,36 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         //require(totals.totalCollDrawn > 0, "TroveManager: Unable to redeem any amount");
 
         emit Redemption(
-            _boldamount, totalsTroveChange.debtDecrease, totalsTroveChange.collDecrease, totalCollFee, _price
+            _ebusdamount, totalsTroveChange.debtDecrease, totalsTroveChange.collDecrease, totalCollFee, _price
         );
 
         activePoolCached.mintAggInterestAndAccountForTroveChange(totalsTroveChange, address(0));
 
         // Send the redeemed Coll to sender
         activePoolCached.sendColl(_redeemer, totalsTroveChange.collDecrease);
-        // We’ll burn all the Bold together out in the CollateralRegistry, to save gas
+        // We’ll burn all the Ebusd together out in the CollateralRegistry, to save gas
 
         return totalsTroveChange.debtDecrease;
     }
 
-    // Redeem as much collateral as possible from _borrower's Trove in exchange for Bold up to _maxBoldamount
+    // Redeem as much collateral as possible from _borrower's Trove in exchange for Ebusd up to _maxEbusdamount
     function _urgentRedeemCollateralFromTrove(
         IDefaultPool _defaultPool,
-        uint256 _maxBoldamount,
+        uint256 _maxEbusdamount,
         uint256 _price,
         SingleRedemptionValues memory _singleRedemption
     ) internal {
         _getLatestTroveData(_singleRedemption.troveId, _singleRedemption.trove);
 
         // Determine the remaining amount (lot) to be redeemed, capped by the entire debt of the Trove minus the liquidation reserve
-        _singleRedemption.boldLot = LiquityMath._min(_maxBoldamount, _singleRedemption.trove.entireDebt);
+        _singleRedemption.ebusdLot = LiquityMath._min(_maxEbusdamount, _singleRedemption.trove.entireDebt);
 
-        // Get the amount of ETH equal in USD value to the BOLD lot redeemed
-        _singleRedemption.collLot = _singleRedemption.boldLot * (DECIMAL_PRECISION + URGENT_REDEMPTION_BONUS) / _price;
+        // Get the amount of ETH equal in USD value to the EBUSD lot redeemed
+        _singleRedemption.collLot = _singleRedemption.ebusdLot * (DECIMAL_PRECISION + URGENT_REDEMPTION_BONUS) / _price;
         // As here we can redeem when CR < 100%, we need to cap by collateral too
         if (_singleRedemption.collLot > _singleRedemption.trove.entireColl) {
             _singleRedemption.collLot = _singleRedemption.trove.entireColl;
-            _singleRedemption.boldLot =
+            _singleRedemption.ebusdLot =
                 _singleRedemption.trove.entireColl * _price / (DECIMAL_PRECISION + URGENT_REDEMPTION_BONUS);
         }
 
@@ -845,16 +845,16 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         // - Urgent redemptions aren't sequential, so they can't be griefed by tiny Troves.
     }
 
-    function urgentRedemption(uint256 _boldAmount, uint256[] calldata _troveIds, uint256 _minCollateral) external {
+    function urgentRedemption(uint256 _ebusdAmount, uint256[] calldata _troveIds, uint256 _minCollateral) external {
         _requireIsShutDown();
-        _requireBoldBalanceCoversRedemption(boldToken, msg.sender, _boldAmount);
+        _requireEbusdBalanceCoversRedemption(ebusdToken, msg.sender, _ebusdAmount);
 
         IActivePool activePoolCached = activePool;
         TroveChange memory totalsTroveChange;
 
         (uint256 price,) = priceFeed.fetchPrice();
 
-        uint256 remainingBold = _boldAmount;
+        uint256 remainingEbusd = _ebusdAmount;
         for (uint256 i = 0; i < _troveIds.length; i++) {
             SingleRedemptionValues memory singleRedemption;
             singleRedemption.troveId = _troveIds[i];
@@ -866,26 +866,26 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 _updateBatchInterestPriorToRedemption(activePoolCached, singleRedemption.batchAddress);
             }
 
-            _urgentRedeemCollateralFromTrove(defaultPool, remainingBold, price, singleRedemption);
+            _urgentRedeemCollateralFromTrove(defaultPool, remainingEbusd, price, singleRedemption);
 
             totalsTroveChange.collDecrease += singleRedemption.collLot;
-            totalsTroveChange.debtDecrease += singleRedemption.boldLot;
-            totalsTroveChange.appliedRedistBoldDebtGain += singleRedemption.appliedRedistBoldDebtGain;
+            totalsTroveChange.debtDecrease += singleRedemption.ebusdLot;
+            totalsTroveChange.appliedRedistEbusdDebtGain += singleRedemption.appliedRedistEbusdDebtGain;
             // For recorded and weighted recorded debt totals, we need to capture the increases and decreases,
             // since the net debt change for a given Trove could be positive or negative: redemptions decrease a Trove's recorded
             // (and weighted recorded) debt, but the accrued interest increases it.
             totalsTroveChange.newWeightedRecordedDebt += singleRedemption.newWeightedRecordedDebt;
             totalsTroveChange.oldWeightedRecordedDebt += singleRedemption.oldWeightedRecordedDebt;
 
-            remainingBold -= singleRedemption.boldLot;
-            if (remainingBold == 0) break;
+            remainingEbusd -= singleRedemption.ebusdLot;
+            if (remainingEbusd == 0) break;
         }
 
         if (totalsTroveChange.collDecrease < _minCollateral) {
             revert MinCollNotReached(totalsTroveChange.collDecrease);
         }
 
-        emit Redemption(_boldAmount, totalsTroveChange.debtDecrease, totalsTroveChange.collDecrease, 0, price);
+        emit Redemption(_ebusdAmount, totalsTroveChange.debtDecrease, totalsTroveChange.collDecrease, 0, price);
 
         // Since this branch is shut down, this will mint 0 interest.
         // We call this only to update the aggregate debt and weighted debt trackers.
@@ -893,8 +893,8 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         // Send the redeemed coll to caller
         activePoolCached.sendColl(msg.sender, totalsTroveChange.collDecrease);
-        // Burn bold
-        boldToken.burn(msg.sender, totalsTroveChange.debtDecrease);
+        // Burn ebusd
+        ebusdToken.burn(msg.sender, totalsTroveChange.debtDecrease);
     }
 
     function shutdown() external {
@@ -914,7 +914,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
     function _updateTroveRewardSnapshots(uint256 _troveId) internal {
         rewardSnapshots[_troveId].coll = L_coll;
-        rewardSnapshots[_troveId].boldDebt = L_boldDebt;
+        rewardSnapshots[_troveId].ebusdDebt = L_ebusdDebt;
     }
 
     // Return the Troves entire debt and coll, including redistribution gains from redistributions.
@@ -929,7 +929,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         }
 
         uint256 stake = Troves[_troveId].stake;
-        trove.redistBoldDebtGain = stake * (L_boldDebt - rewardSnapshots[_troveId].boldDebt) / DECIMAL_PRECISION;
+        trove.redistEbusdDebtGain = stake * (L_ebusdDebt - rewardSnapshots[_troveId].ebusdDebt) / DECIMAL_PRECISION;
         trove.redistCollGain = stake * (L_coll - rewardSnapshots[_troveId].coll) / DECIMAL_PRECISION;
 
         trove.recordedDebt = Troves[_troveId].debt;
@@ -939,7 +939,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         uint256 period = _getInterestPeriod(Troves[_troveId].lastDebtUpdateTime);
         trove.accruedInterest = _calcInterest(trove.weightedRecordedDebt, period);
 
-        trove.entireDebt = trove.recordedDebt + trove.redistBoldDebtGain + trove.accruedInterest;
+        trove.entireDebt = trove.recordedDebt + trove.redistEbusdDebtGain + trove.accruedInterest;
         trove.entireColl = Troves[_troveId].coll + trove.redistCollGain;
         trove.lastInterestRateAdjTime = Troves[_troveId].lastInterestRateAdjTime;
     }
@@ -956,9 +956,9 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         uint256 totalDebtShares = batch.totalDebtShares;
 
         uint256 stake = trove.stake;
-        //uint256 batchRedistBoldDebtGain = stake * (L_boldDebt - rewardBatchSnapshots[_batchAddress].boldDebt) / DECIMAL_PRECISION;
-        _latestTroveData.redistBoldDebtGain =
-            stake * (L_boldDebt - rewardSnapshots[_troveId].boldDebt) / DECIMAL_PRECISION;
+        //uint256 batchRedistEbusdDebtGain = stake * (L_ebusdDebt - rewardBatchSnapshots[_batchAddress].ebusdDebt) / DECIMAL_PRECISION;
+        _latestTroveData.redistEbusdDebtGain =
+            stake * (L_ebusdDebt - rewardSnapshots[_troveId].ebusdDebt) / DECIMAL_PRECISION;
         _latestTroveData.redistCollGain = stake * (L_coll - rewardSnapshots[_troveId].coll) / DECIMAL_PRECISION;
 
         if (totalDebtShares > 0) {
@@ -971,7 +971,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         _latestTroveData.annualInterestRate = _latestBatchData.annualInterestRate;
 
         // We can’t do pro-rata batch entireDebt, because redist gains are proportional to coll, not to debt
-        _latestTroveData.entireDebt = _latestTroveData.recordedDebt + _latestTroveData.redistBoldDebtGain
+        _latestTroveData.entireDebt = _latestTroveData.recordedDebt + _latestTroveData.redistEbusdDebtGain
             + _latestTroveData.accruedInterest + _latestTroveData.accruedBatchManagementFee;
         _latestTroveData.entireColl = trove.coll + _latestTroveData.redistCollGain;
         _latestTroveData.lastInterestRateAdjTime =
@@ -1061,7 +1061,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         /*
         * Add distributed coll and debt rewards-per-unit-staked to the running totals. Division uses a "feedback"
-        * error correction, to keep the cumulative error low in the running totals L_coll and L_boldDebt:
+        * error correction, to keep the cumulative error low in the running totals L_coll and L_ebusdDebt:
         *
         * 1) Form numerators which compensate for the floor division errors that occurred the last time this
         * function was called.
@@ -1071,20 +1071,20 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         * 5) Note: static analysis tools complain about this "division before multiplication", however, it is intended.
         */
         uint256 collNumerator = _collToRedistribute * DECIMAL_PRECISION + lastCollError_Redistribution;
-        uint256 boldDebtNumerator = _debtToRedistribute * DECIMAL_PRECISION + lastBoldDebtError_Redistribution;
+        uint256 ebusdDebtNumerator = _debtToRedistribute * DECIMAL_PRECISION + lastEbusdDebtError_Redistribution;
 
         // Get the per-unit-staked terms
         uint256 collRewardPerUnitStaked = collNumerator / totalStakes;
-        uint256 boldDebtRewardPerUnitStaked = boldDebtNumerator / totalStakes;
+        uint256 ebusdDebtRewardPerUnitStaked = ebusdDebtNumerator / totalStakes;
 
         lastCollError_Redistribution = collNumerator - collRewardPerUnitStaked * totalStakes;
-        lastBoldDebtError_Redistribution = boldDebtNumerator - boldDebtRewardPerUnitStaked * totalStakes;
+        lastEbusdDebtError_Redistribution = ebusdDebtNumerator - ebusdDebtRewardPerUnitStaked * totalStakes;
 
         // Add per-unit-staked terms to the running totals
         L_coll = L_coll + collRewardPerUnitStaked;
-        L_boldDebt = L_boldDebt + boldDebtRewardPerUnitStaked;
+        L_ebusdDebt = L_ebusdDebt + ebusdDebtRewardPerUnitStaked;
 
-        _defaultPool.increaseBoldDebt(_debtToRedistribute);
+        _defaultPool.increaseEbusdDebt(_debtToRedistribute);
         _activePool.sendCollToDefaultPool(_collToRedistribute);
     }
 
@@ -1164,13 +1164,13 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         }
     }
 
-    function _requireBoldBalanceCoversRedemption(IBoldToken _boldToken, address _redeemer, uint256 _amount)
+    function _requireEbusdBalanceCoversRedemption(IEbusdToken _ebusdToken, address _redeemer, uint256 _amount)
         internal
         view
     {
-        uint256 boldBalance = _boldToken.balanceOf(_redeemer);
-        if (boldBalance < _amount) {
-            revert NotEnoughBoldBalance();
+        uint256 ebusdBalance = _ebusdToken.balanceOf(_redeemer);
+        if (ebusdBalance < _amount) {
+            revert NotEnoughEbusdBalance();
         }
     }
 
@@ -1178,7 +1178,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
     function getUnbackedPortionPriceAndRedeemability() external returns (uint256, uint256, bool) {
         uint256 totalDebt = getEntireSystemDebt();
-        uint256 spSize = stabilityPool.getTotalBoldDeposits();
+        uint256 spSize = stabilityPool.getTotalEbusdDeposits();
         uint256 unbackedPortion = totalDebt > spSize ? totalDebt - spSize : 0;
 
         (uint256 price,) = priceFeed.fetchPrice();
@@ -1225,7 +1225,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _stake: newStake,
             _annualInterestRate: _annualInterestRate,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
@@ -1281,7 +1281,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _coll: _troveChange.collIncrease,
             _stake: newStake,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
@@ -1333,7 +1333,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         Troves[_troveId].lastInterestRateAdjTime = uint64(block.timestamp);
 
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         _updateTroveRewardSnapshots(_troveId);
@@ -1345,14 +1345,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _stake: Troves[_troveId].stake,
             _annualInterestRate: _newAnnualInterestRate,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _troveId,
             _operation: Operation.adjustTroveInterestRate,
             _annualInterestRate: _newAnnualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: 0,
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1370,7 +1370,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         Troves[_troveId].lastDebtUpdateTime = uint64(block.timestamp);
 
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         uint256 newStake = _updateStakeAndTotalStakes(_troveId, _newColl);
@@ -1383,14 +1383,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _stake: newStake,
             _annualInterestRate: Troves[_troveId].annualInterestRate,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _troveId,
             _operation: Operation.adjustTrove,
             _annualInterestRate: Troves[_troveId].annualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: int256(_troveChange.debtIncrease) - int256(_troveChange.debtDecrease),
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1408,7 +1408,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         _requireCallerIsBorrowerOperations();
         _closeTrove(_troveId, _troveChange, _batchAddress, _newBatchColl, _newBatchDebt, Status.closedByOwner);
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         emit TroveUpdated({
@@ -1425,7 +1425,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _troveId: _troveId,
             _operation: Operation.closeTrove,
             _annualInterestRate: 0,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: int256(_troveChange.debtIncrease) - int256(_troveChange.debtDecrease),
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1521,7 +1521,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         _updateBatchShares(_troveId, _batchAddress, _troveChange, _newBatchColl, _newBatchDebt);
 
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         emit BatchedTroveUpdated({
@@ -1531,14 +1531,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _coll: _newTroveColl,
             _stake: newStake,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _troveId,
             _operation: Operation.adjustTrove,
             _annualInterestRate: batches[_batchAddress].annualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: int256(_troveChange.debtIncrease) - int256(_troveChange.debtDecrease),
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1591,7 +1591,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         }
 
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         _updateTroveRewardSnapshots(_troveId);
@@ -1603,14 +1603,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _stake: Troves[_troveId].stake,
             _annualInterestRate: Troves[_troveId].annualInterestRate,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _troveId,
             _operation: Operation.applyPendingDebt,
             _annualInterestRate: Troves[_troveId].annualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: int256(_troveChange.debtIncrease) - int256(_troveChange.debtDecrease),
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1712,13 +1712,13 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         Troves[_params.troveId].lastInterestRateAdjTime = uint64(block.timestamp);
 
         _troveChange.collIncrease = _params.troveColl - _troveChange.appliedRedistCollGain;
-        _troveChange.debtIncrease = _params.troveDebt - _troveChange.appliedRedistBoldDebtGain - _troveChange.upfrontFee;
+        _troveChange.debtIncrease = _params.troveDebt - _troveChange.appliedRedistEbusdDebtGain - _troveChange.upfrontFee;
         _updateBatchShares(
             _params.troveId, _params.newBatchAddress, _troveChange, _params.newBatchColl, _params.newBatchDebt
         );
 
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         emit BatchedTroveUpdated({
@@ -1728,14 +1728,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _coll: _params.troveColl,
             _stake: Troves[_params.troveId].stake,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _params.troveId,
             _operation: Operation.setInterestBatchManager,
             _annualInterestRate: batches[_params.newBatchAddress].annualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: 0,
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1767,7 +1767,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         uint256 currentBatchDebtShares = batches[_batchAddress].totalDebtShares;
         uint256 batchDebtSharesDelta;
         uint256 debtIncrease =
-            _troveChange.debtIncrease + _troveChange.upfrontFee + _troveChange.appliedRedistBoldDebtGain;
+            _troveChange.debtIncrease + _troveChange.upfrontFee + _troveChange.appliedRedistEbusdDebtGain;
         uint256 debtDecrease;
         if (debtIncrease > _troveChange.debtDecrease) {
             debtIncrease -= _troveChange.debtDecrease;
@@ -1852,7 +1852,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         _updateTroveRewardSnapshots(_troveId);
         _movePendingTroveRewardsToActivePool(
-            defaultPool, _troveChange.appliedRedistBoldDebtGain, _troveChange.appliedRedistCollGain
+            defaultPool, _troveChange.appliedRedistEbusdDebtGain, _troveChange.appliedRedistCollGain
         );
 
         emit TroveUpdated({
@@ -1862,14 +1862,14 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             _stake: Troves[_troveId].stake,
             _annualInterestRate: _newAnnualInterestRate,
             _snapshotOfTotalCollRedist: L_coll,
-            _snapshotOfTotalDebtRedist: L_boldDebt
+            _snapshotOfTotalDebtRedist: L_ebusdDebt
         });
 
         emit TroveOperation({
             _troveId: _troveId,
             _operation: Operation.removeFromBatch,
             _annualInterestRate: _newAnnualInterestRate,
-            _debtIncreaseFromRedist: _troveChange.appliedRedistBoldDebtGain,
+            _debtIncreaseFromRedist: _troveChange.appliedRedistEbusdDebtGain,
             _debtIncreaseFromUpfrontFee: _troveChange.upfrontFee,
             _debtChangeFromOperation: 0,
             _collIncreaseFromRedist: _troveChange.appliedRedistCollGain,
@@ -1906,7 +1906,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         // We don’t need to increase the shares corresponding to redistribution first, because they would be subtracted immediately after
         // We don’t need to account for interest nor batch fee because it’s proportional to debt shares
-        uint256 batchDebtDecrease = _newTroveDebt - _troveChange.upfrontFee - _troveChange.appliedRedistBoldDebtGain;
+        uint256 batchDebtDecrease = _newTroveDebt - _troveChange.upfrontFee - _troveChange.appliedRedistEbusdDebtGain;
         uint256 batchCollDecrease = _newTroveColl - _troveChange.appliedRedistCollGain;
 
         batches[_batchAddress].totalDebtShares -= trove.batchDebtShares;

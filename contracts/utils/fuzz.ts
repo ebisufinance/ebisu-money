@@ -136,7 +136,7 @@ const main = async () => {
               await fs.writeJSON(file, counterexample, { spaces: 2 });
 
               log.info(
-                `  ${logPrefix} counterexample (${chalk.bold(shortReason(failure.reason))}): ${chalk.underline(file)}`,
+                `  ${logPrefix} counterexample (${chalk.ebusd(shortReason(failure.reason))}): ${chalk.underline(file)}`,
               );
             } else {
               log.error(`! ${logPrefix} failed: ${failure.reason}`);

@@ -30,13 +30,13 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         super.setUp();
 
         TestDeployer deployer = new TestDeployer();
-        (TestDeployer.LiquityContractsDev memory contracts,, IBoldToken boldToken, HintHelpers hintHelpers,,,) =
+        (TestDeployer.LiquityContractsDev memory contracts,, IEbusdToken ebusdToken, HintHelpers hintHelpers,,,) =
             deployer.deployAndConnectContracts();
         stabilityPool = contracts.stabilityPool;
 
         handler = new SPInvariantsTestHandler(
             SPInvariantsTestHandler.Contracts({
-                boldToken: boldToken,
+                ebusdToken: ebusdToken,
                 borrowerOperations: contracts.borrowerOperations,
                 collateralToken: contracts.collToken,
                 priceFeed: contracts.priceFeed,
@@ -64,32 +64,32 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
 
     function invariant_allFundsClaimable() internal view {
         uint256 stabilityPoolColl = stabilityPool.getCollBalance();
-        uint256 stabilityPoolBold = stabilityPool.getTotalBoldDeposits();
+        uint256 stabilityPoolEbusd = stabilityPool.getTotalEbusdDeposits();
         uint256 yieldGainsOwed = stabilityPool.getYieldGainsOwed();
 
         uint256 claimableColl = 0;
-        uint256 claimableBold = 0;
+        uint256 claimableEbusd = 0;
         uint256 sumYieldGains = 0;
 
         for (uint256 i = 0; i < actors.length; ++i) {
             claimableColl += stabilityPool.getDepositorCollGain(actors[i].account);
-            claimableBold += stabilityPool.getCompoundedBoldDeposit(actors[i].account);
+            claimableEbusd += stabilityPool.getCompoundedEbusdDeposit(actors[i].account);
             sumYieldGains += stabilityPool.getDepositorYieldGain(actors[i].account);
             //info("+sumYieldGains:              ", sumYieldGains.decimal());
         }
 
         info("stabilityPoolColl:          ", stabilityPoolColl.decimal());
         info("claimableColl:              ", claimableColl.decimal());
-        info("stabilityPoolBold:          ", stabilityPoolBold.decimal());
-        info("claimableBold:              ", claimableBold.decimal());
+        info("stabilityPoolEbusd:          ", stabilityPoolEbusd.decimal());
+        info("claimableEbusd:              ", claimableEbusd.decimal());
         info("yieldGainsOwed:             ", yieldGainsOwed.decimal());
         info("sumYieldGains:              ", sumYieldGains.decimal());
         info("");
         assertApproxEqAbsDecimal(stabilityPoolColl, claimableColl, 0.00001 ether, 18, "SP Coll !~ claimable Coll");
-        assertApproxEqAbsDecimal(stabilityPoolBold, claimableBold, 0.001 ether, 18, "SP BOLD !~ claimable BOLD");
+        assertApproxEqAbsDecimal(stabilityPoolEbusd, claimableEbusd, 0.001 ether, 18, "SP EBUSD !~ claimable EBUSD");
         assertApproxEqAbsDecimal(yieldGainsOwed, sumYieldGains, 0.001 ether, 18, "SP yieldGainsOwed !~= sum(yieldGain)");
 
-        assertGe(stabilityPoolBold, claimableBold, "Not enough deposits for all depositors");
+        assertGe(stabilityPoolEbusd, claimableEbusd, "Not enough deposits for all depositors");
         assertGe(stabilityPoolColl, claimableColl, "Not enough collateral for all depositors");
         assertGe(yieldGainsOwed, sumYieldGains, "Not enough yield gains for all depositors");
     }
@@ -125,12 +125,12 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(eric);
         handler.provideToSp(2_000.19178082191781022 ether, false);
 
-        // totalBoldDeposits = 2_000.19178082191781022 ether
+        // totalEbusdDeposits = 2_000.19178082191781022 ether
 
         vm.prank(eric);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 0.000000000000002001 ether
+        // totalEbusdDeposits = 0.000000000000002001 ether
         // P = 1.000404070842521948 ether
 
         // coll = 15.001438356164383562 ether, debt = 2_000.191780821917808219 ether
@@ -140,7 +140,7 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(eric);
         handler.provideToSp(2_000.191780821917808219 ether, false);
 
-        // totalBoldDeposits = 2_000.19178082191781022 ether
+        // totalEbusdDeposits = 2_000.19178082191781022 ether
 
         vm.prank(eric);
         handler.liquidateMe();
@@ -165,25 +165,25 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(gabe);
         handler.provideToSp(81_315.463650485373356083 ether, false);
 
-        // totalBoldDeposits = 81_315.463650485373356083 ether
+        // totalEbusdDeposits = 81_315.463650485373356083 ether
 
         // pulling `deposited` from fixture
         vm.prank(eric);
         handler.provideToSp(98_009.397260273972605648 ether, false);
 
-        // totalBoldDeposits = 179_324.860910759345961731 ether
+        // totalEbusdDeposits = 179_324.860910759345961731 ether
 
         vm.prank(barb);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 98_009.397260273972686964 ether
+        // totalEbusdDeposits = 98_009.397260273972686964 ether
         // P = 0.546546623610923366 ether
 
         vm.prank(dana);
         handler.liquidateMe();
         invariant_allFundsClaimable();
 
-        // totalBoldDeposits = 0.000000000000081316 ether
+        // totalEbusdDeposits = 0.000000000000081316 ether
         // P = 0.000000001294434626 ether
 
         // coll = 448.153242320289758012 ether, debt = 59_753.765642705301068218 ether
@@ -219,24 +219,24 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(eric);
         handler.provideToSp(75_040.36385402879938065 ether, false);
 
-        // totalBoldDeposits = 75_040.36385402879938065 ether
+        // totalEbusdDeposits = 75_040.36385402879938065 ether
 
         vm.prank(carl);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 0.000000000000075041 ether
+        // totalEbusdDeposits = 0.000000000000075041 ether
         // P = 0.000000001000008477 ether
 
         // pulling `deposited` from fixture
         vm.prank(gabe);
         handler.provideToSp(98_009.397260273972609312 ether, false);
 
-        // totalBoldDeposits = 98_009.397260273972684353 ether
+        // totalEbusdDeposits = 98_009.397260273972684353 ether
 
         vm.prank(eric);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 0.000000000000075041 ether
+        // totalEbusdDeposits = 0.000000000000075041 ether
         // P = 0.000000000765657561 ether
 
         // coll = 456.581526480883492157 ether, debt = 60_877.53686411779895416 ether
@@ -258,13 +258,13 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(hope);
         handler.provideToSp(0.000001023636824878 ether, false);
 
-        // totalBoldDeposits = 0.000001023636824878 ether
+        // totalEbusdDeposits = 0.000001023636824878 ether
 
         // pulling `deposited` from fixture
         vm.prank(gabe);
         handler.provideToSp(98_009.398338924622100814 ether, false);
 
-        // totalBoldDeposits = 98_009.398339948258925692 ether
+        // totalEbusdDeposits = 98_009.398339948258925692 ether
 
         // coll = 735.070479452054794532 ether, debt = 98_009.397260273972604207 ether
         vm.prank(carl);
@@ -281,25 +281,25 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(adam);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 96_009.20655912634111747 ether
+        // totalEbusdDeposits = 96_009.20655912634111747 ether
         // P = 0.979591836959510777 ether
 
         vm.prank(carl);
         handler.provideToSp(0.000000000001265034 ether, false);
 
-        // totalBoldDeposits = 96_009.206559126342382504 ether
+        // totalEbusdDeposits = 96_009.206559126342382504 ether
 
         vm.prank(fran);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 87_983.111274272549632173 ether
+        // totalEbusdDeposits = 87_983.111274272549632173 ether
         // P = 0.89770075895273572 ether
 
         // pulling `deposited` from fixture
         vm.prank(hope);
         handler.provideToSp(2_000.191780821917810223 ether, false);
 
-        // totalBoldDeposits = 89_983.303055094467442396 ether
+        // totalEbusdDeposits = 89_983.303055094467442396 ether
 
         // coll = 568.201183566424575581 ether, debt = 75_760.157808856610077362 ether
         vm.prank(dana);
@@ -308,7 +308,7 @@ contract AnchoredSPInvariantsTest is DevTestSetup {
         vm.prank(dana);
         handler.liquidateMe();
 
-        // totalBoldDeposits = 14_223.145246237857365034 ether
+        // totalEbusdDeposits = 14_223.145246237857365034 ether
         // P = 0.141894416505527947 ether
 
         invariant_allFundsClaimable();

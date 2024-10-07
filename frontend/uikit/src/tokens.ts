@@ -1,6 +1,6 @@
 import type { Token } from "./types";
 
-import tokenBold from "./token-icons/bold.svg";
+import tokenEbusd from "./token-icons/ebusd.svg";
 import tokenEth from "./token-icons/eth.svg";
 import tokenLqty from "./token-icons/lqty.svg";
 import tokenLusd from "./token-icons/lusd.svg";
@@ -24,10 +24,10 @@ export const LUSD: Token = {
   symbol: "LUSD" as const,
 } as const;
 
-export const BOLD: Token = {
-  icon: tokenBold,
-  name: "BOLD",
-  symbol: "BOLD" as const,
+export const EBUSD: Token = {
+  icon: tokenEbusd,
+  name: "EBUSD",
+  symbol: "EBUSD" as const,
 } as const;
 
 export const LQTY: Token = {
@@ -72,7 +72,7 @@ export const COLLATERALS: CollateralToken[] = [
 ];
 
 export const TOKENS_BY_SYMBOL = {
-  BOLD,
+  EBUSD,
   ETH,
   LQTY,
   RETH,

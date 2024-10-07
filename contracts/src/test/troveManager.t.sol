@@ -37,9 +37,9 @@ contract TroveManagerTest is DevTestSetup {
         assertLt(troveManager.getCurrentICR(ATroveId, newPrice), _100pct);
         assertGt(troveManager.getCurrentICR(BTroveId, newPrice), _100pct);
 
-        uint256 redemptionAmount = 1000e18; // 1k BOLD
+        uint256 redemptionAmount = 1000e18; // 1k EBUSD
 
-        // C redeems 1k BOLD
+        // C redeems 1k EBUSD
         vm.startPrank(C);
         collateralRegistry.redeemCollateral(redemptionAmount, 10, 1e18);
         vm.stopPrank();
@@ -69,7 +69,7 @@ contract TroveManagerTest is DevTestSetup {
 
         priceFeed.setPrice(2000e18);
         openTroveNoHints100pct(A, 200 ether, 200000e18, 1e17);
-        // A redeems 0.01 BOLD, base rate goes down to almost zero (it’s updated on redemption)
+        // A redeems 0.01 EBUSD, base rate goes down to almost zero (it’s updated on redemption)
         vm.startPrank(A);
         collateralRegistry.redeemCollateral(1e16, 10, 1e18);
         vm.stopPrank();

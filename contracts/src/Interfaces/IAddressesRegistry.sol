@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./IActivePool.sol";
-import "./IBoldToken.sol";
+import "./IEbusdToken.sol";
 import "./IBorrowerOperations.sol";
 import "./ICollSurplusPool.sol";
 import "./IDefaultPool.sol";
@@ -36,7 +36,7 @@ interface IAddressesRegistry {
         IHintHelpers hintHelpers;
         IMultiTroveGetter multiTroveGetter;
         ICollateralRegistry collateralRegistry;
-        IBoldToken boldToken;
+        IEbusdToken ebusdToken;
         IWETH WETH;
     }
 
@@ -62,7 +62,7 @@ interface IAddressesRegistry {
     function hintHelpers() external view returns (IHintHelpers);
     function multiTroveGetter() external view returns (IMultiTroveGetter);
     function collateralRegistry() external view returns (ICollateralRegistry);
-    function boldToken() external view returns (IBoldToken);
+    function ebusdToken() external view returns (IEbusdToken);
     function WETH() external returns (IWETH);
 
     function setAddresses(AddressVars memory _vars) external;

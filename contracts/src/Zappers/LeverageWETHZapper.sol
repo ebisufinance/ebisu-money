@@ -31,9 +31,9 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
         flashLoanProvider = _flashLoanProvider;
         exchange = _exchange;
 
-        // Approve Coll and Bold to exchange module
+        // Approve Coll and Ebusd to exchange module
         _WETH.approve(address(_exchange), type(uint256).max);
-        boldToken.approve(address(_exchange), type(uint256).max);
+        ebusdToken.approve(address(_exchange), type(uint256).max);
         // Approve coll to BorrowerOperations
         _WETH.approve(address(_borrowerOperations), type(uint256).max);
     }
@@ -42,7 +42,7 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
         uint256 troveId;
         IBorrowerOperations borrowerOperations;
         IWETH WETH;
-        uint256 boldAmount;
+        uint256 ebusdAmount;
     }
 
     function openLeveragedTroveWithRawETH(OpenLeveragedTroveParams calldata _params) external payable {
@@ -71,14 +71,14 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
         vars.WETH = WETH;
 
         uint256 totalCollAmount = _params.collAmount + _effectiveFlashLoanAmount;
-        // We compute boldAmount off-chain for efficiency
+        // We compute ebusdAmount off-chain for efficiency
 
         // Open trove
         vars.troveId = vars.borrowerOperations.openTrove(
             _params.owner,
             _params.ownerIndex,
             totalCollAmount,
-            _params.boldAmount,
+            _params.ebusdAmount,
             _params.upperHint,
             _params.lowerHint,
             _params.annualInterestRate,
@@ -94,8 +94,8 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
         _setAddManager(vars.troveId, _params.addManager);
         _setRemoveManagerAndReceiver(vars.troveId, _params.removeManager, _params.receiver);
 
-        // Swap Bold to Coll
-        exchange.swapFromBold(_params.boldAmount, _params.flashLoanAmount, address(this));
+        // Swap Ebusd to Coll
+        exchange.swapFromEbusd(_params.ebusdAmount, _params.flashLoanAmount, address(this));
 
         // Send coll back to return flash loan
         vars.WETH.transfer(address(flashLoanProvider), _params.flashLoanAmount);
@@ -124,16 +124,16 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
             _params.troveId,
             _effectiveFlashLoanAmount, // flash loan amount minus fee
             true, // _isCollIncrease
-            _params.boldAmount,
+            _params.ebusdAmount,
             true, // _isDebtIncrease
             _params.maxUpfrontFee
         );
 
-        // Swap Bold to Coll
+        // Swap Ebusd to Coll
         // No need to use a min: if the obtained amount is not enough, the flash loan return below won’t be enough
         // And the flash loan provider will revert after this function exits
-        // The frontend should calculate in advance the `_params.boldAmount` needed for this to work
-        exchange.swapFromBold(_params.boldAmount, _params.flashLoanAmount, address(this));
+        // The frontend should calculate in advance the `_params.ebusdAmount` needed for this to work
+        exchange.swapFromEbusd(_params.ebusdAmount, _params.flashLoanAmount, address(this));
 
         // Send coll back to return flash loan
         WETH.transfer(address(flashLoanProvider), _params.flashLoanAmount);
@@ -155,19 +155,19 @@ contract LeverageWETHZapper is WETHZapper, IFlashLoanReceiver, ILeverageZapper {
     {
         require(msg.sender == address(flashLoanProvider), "LZ: Caller not FlashLoan provider");
 
-        // Swap Coll from flash loan to Bold, so we can repay and downsize trove
+        // Swap Coll from flash loan to Ebusd, so we can repay and downsize trove
         // We swap the flash loan minus the flash loan fee
-        // The frontend should calculate in advance the `_params.minBoldAmount` to achieve the desired leverage ratio
+        // The frontend should calculate in advance the `_params.minEbusdAmount` to achieve the desired leverage ratio
         // (with some slippage tolerance)
-        uint256 receivedBoldAmount =
-            exchange.swapToBold(_effectiveFlashLoanAmount, _params.minBoldAmount, address(this));
+        uint256 receivedEbusdAmount =
+            exchange.swapToEbusd(_effectiveFlashLoanAmount, _params.minEbusdAmount, address(this));
 
         // Adjust trove
         borrowerOperations.adjustTrove(
             _params.troveId,
             _params.flashLoanAmount,
             false, // _isCollIncrease
-            receivedBoldAmount,
+            receivedEbusdAmount,
             false, // _isDebtIncrease
             0
         );

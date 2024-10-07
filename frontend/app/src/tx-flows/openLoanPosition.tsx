@@ -34,7 +34,7 @@ const RequestSchema = v.object({
   owner: vAddress(),
   ownerIndex: v.number(),
   collAmount: vDnum(),
-  boldAmount: vDnum(),
+  ebusdAmount: vDnum(),
   upperHint: vDnum(),
   lowerHint: vDnum(),
   annualInterestRate: vDnum(),
@@ -64,7 +64,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           loadingState="success"
           loan={{
             troveId: "0x",
-            borrowed: flow.request.boldAmount,
+            borrowed: flow.request.ebusdAmount,
             collIndex: flow.request.collIndex,
             collateral: collateral.symbol,
             deposit: flow.request.collAmount,
@@ -81,7 +81,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
     const { request } = flow;
     const collateral = useCollateral(flow.request.collIndex);
     const collPrice = usePrice(collateral?.symbol ?? null);
-    const boldPrice = usePrice("BOLD");
+    const ebusdPrice = usePrice("EBUSD");
     return (
       collateral && (
         <>
@@ -95,15 +95,16 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           <TransactionDetailsRow
             label="You borrow"
             value={[
-              `${fmtnum(request.boldAmount)} BOLD`,
-              boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
+              `${fmtnum(request.ebusdAmount)} EBUSD`,
+              ebusdPrice
+              && `$${fmtnum(dn.mul(request.ebusdAmount, ebusdPrice))}`,
             ]}
           />
           <TransactionDetailsRow
             label="Interest rate"
             value={[
               `${fmtnum(request.annualInterestRate, 2, 100)}%`,
-              `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
+              `${fmtnum(dn.mul(request.ebusdAmount, request.annualInterestRate))} EBUSD per year`,
             ]}
           />
         </>
@@ -180,7 +181,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           {
             owner: request.owner ?? ADDRESS_ZERO,
             ownerIndex: BigInt(request.ownerIndex),
-            boldAmount: request.boldAmount[0],
+            ebusdAmount: request.ebusdAmount[0],
             upperHint: request.upperHint[0],
             lowerHint: request.lowerHint[0],
             annualInterestRate: request.annualInterestRate[0],
@@ -203,7 +204,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
             owner: request.owner ?? ADDRESS_ZERO,
             ownerIndex: BigInt(request.ownerIndex),
             collAmount: request.collAmount[0],
-            boldAmount: request.boldAmount[0],
+            ebusdAmount: request.ebusdAmount[0],
             upperHint: request.upperHint[0],
             lowerHint: request.lowerHint[0],
             annualInterestRate: request.annualInterestRate[0],

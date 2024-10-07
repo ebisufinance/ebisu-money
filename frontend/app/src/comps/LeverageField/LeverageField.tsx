@@ -69,18 +69,22 @@ export function LeverageField({
       label={{
         end: (
           <div>
-            Total debt {!debt || isDepositNegative ? "−" : (
-              <>
-                <span
-                  className={css({
-                    fontVariantNumeric: "tabular-nums",
-                  })}
-                >
-                  {dn.format(debt, { digits: 2, trailingZeros: true })}
-                </span>
-                {" BOLD"}
-              </>
-            )}
+            Total debt {!debt || isDepositNegative
+              ? (
+                "−"
+              )
+              : (
+                <>
+                  <span
+                    className={css({
+                      fontVariantNumeric: "tabular-nums",
+                    })}
+                  >
+                    {dn.format(debt, { digits: 2, trailingZeros: true })}
+                  </span>
+                  {" EBUSD"}
+                </>
+              )}
           </div>
         ),
         start: content.leverageScreen.liquidationPriceField.label,
@@ -104,16 +108,18 @@ export function LeverageField({
             Leverage {
               <span
                 style={{
-                  color: liquidationRisk === "high"
-                    ? "#F36740"
-                    : "#2F3037",
+                  color: liquidationRisk === "high" ? "#F36740" : "#2F3037",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
                 {fmtnum(leverageFactor, "1z")}x
               </span>
             }
-            <InfoTooltip {...infoTooltipProps(content.leverageScreen.infoTooltips.leverageLevel)} />
+            <InfoTooltip
+              {...infoTooltipProps(
+                content.leverageScreen.infoTooltips.leverageLevel,
+              )}
+            />
           </HFlex>
         ),
       }}
@@ -128,7 +134,9 @@ export function LeverageField({
             N/A
           </span>
         )
-        : liquidationPriceField.inputFieldProps.value}
+        : (
+          liquidationPriceField.inputFieldProps.value
+        )}
     />
   );
 }
@@ -167,26 +175,37 @@ export function useLeverageField({
   const ltv = getLtvFromLeverageFactor(leverageFactor);
   const liquidationRisk = ltv && getLiquidationRisk(ltv, maxLtv);
 
-  const mediumRiskLeverageFactor = getLeverageFactorFromLtv(dn.mul(maxLtv, LTV_RISK.medium));
-  const highRiskLeverageFactor = getLeverageFactorFromLtv(dn.mul(maxLtv, LTV_RISK.high));
+  const mediumRiskLeverageFactor = getLeverageFactorFromLtv(
+    dn.mul(maxLtv, LTV_RISK.medium),
+  );
+  const highRiskLeverageFactor = getLeverageFactorFromLtv(
+    dn.mul(maxLtv, LTV_RISK.high),
+  );
 
   // liquidation prices based on the min and max leverage factors
   const liquidationPriceBoundaries = [
-    getLiquidationPriceFromLeverage(LEVERAGE_FACTOR_MIN, collPrice, collateralRatio),
-    getLiquidationPriceFromLeverage(maxLeverageFactor, collPrice, collateralRatio),
+    getLiquidationPriceFromLeverage(
+      LEVERAGE_FACTOR_MIN,
+      collPrice,
+      collateralRatio,
+    ),
+    getLiquidationPriceFromLeverage(
+      maxLeverageFactor,
+      collPrice,
+      collateralRatio,
+    ),
   ];
 
   const deposit = depositPreLeverage && leverageFactor > 1
     ? dn.mul(depositPreLeverage, leverageFactor)
     : null;
 
-  const debt = depositPreLeverage && calculateDebt(
-    depositPreLeverage,
-    leverageFactor,
-    collPrice,
-  );
+  const debt = depositPreLeverage
+    && calculateDebt(depositPreLeverage, leverageFactor, collPrice);
 
-  const getLeverageFactorFromLiquidationPriceClamped = (liquidationPrice: Dnum) => {
+  const getLeverageFactorFromLiquidationPriceClamped = (
+    liquidationPrice: Dnum,
+  ) => {
     const leverageFactor = getLeverageFactorFromLiquidationPrice(
       liquidationPrice,
       collPrice,
@@ -205,16 +224,25 @@ export function useLeverageField({
   };
 
   const leverageFactorSuggestions = useMemo(() => {
-    return LEVERAGE_FACTOR_SUGGESTIONS.map((factor) => (
-      getLeverageFactorFromRatio(LEVERAGE_FACTOR_MIN, maxLeverageFactor, factor)
-    ));
+    return LEVERAGE_FACTOR_SUGGESTIONS.map((factor) =>
+      getLeverageFactorFromRatio(
+        LEVERAGE_FACTOR_MIN,
+        maxLeverageFactor,
+        factor,
+      )
+    );
   }, [maxLeverageFactor]);
 
   const liquidationPriceField = useInputFieldValue(
     (value) => `$ ${dn.format(value, { digits: 2, trailingZeros: true })}`,
     {
       onChange: ({ parsed: liquidationPrice, focused }) => {
-        if (liquidationPrice && dn.gt(liquidationPrice, 0) && liquidationPriceField.isFocused && focused) {
+        if (
+          liquidationPrice
+          && dn.gt(liquidationPrice, 0)
+          && liquidationPriceField.isFocused
+          && focused
+        ) {
           const lf = getLeverageFactorFromLiquidationPriceClamped(liquidationPrice);
           if (lf !== null) {
             setLeverageFactor(lf);
@@ -237,28 +265,39 @@ export function useLeverageField({
     },
   );
 
-  const updateLeverageFactor = useCallback((leverageFactor: number) => {
-    setLeverageFactor(leverageFactor);
-    if (deposit && debt) {
-      liquidationPriceField.setValue(dn.toString(
-        getLiquidationPriceFromLeverage(leverageFactor, collPrice, collateralRatio),
-        2,
-      ));
-    }
-  }, [
-    collPrice,
-    collateralRatio,
-    liquidationPriceField,
-  ]);
+  const updateLeverageFactor = useCallback(
+    (leverageFactor: number) => {
+      setLeverageFactor(leverageFactor);
+      if (deposit && debt) {
+        liquidationPriceField.setValue(
+          dn.toString(
+            getLiquidationPriceFromLeverage(
+              leverageFactor,
+              collPrice,
+              collateralRatio,
+            ),
+            2,
+          ),
+        );
+      }
+    },
+    [collPrice, collateralRatio, liquidationPriceField],
+  );
 
   // update the leverage factor when the collateral price changes
   const previousCollPrice = useRef(collPrice);
   useEffect(() => {
     if (!dn.eq(previousCollPrice.current, collPrice) && deposit && debt) {
-      liquidationPriceField.setValue(dn.toString(
-        getLiquidationPriceFromLeverage(leverageFactor, collPrice, collateralRatio),
-        2,
-      ));
+      liquidationPriceField.setValue(
+        dn.toString(
+          getLiquidationPriceFromLeverage(
+            leverageFactor,
+            collPrice,
+            collateralRatio,
+          ),
+          2,
+        ),
+      );
       previousCollPrice.current = collPrice;
     }
   }, [
@@ -279,19 +318,30 @@ export function useLeverageField({
         ),
       );
     },
-    value: norm(
-      leverageFactor,
-      LEVERAGE_FACTOR_MIN,
-      maxLeverageFactorAllowed,
-    ),
+    value: norm(leverageFactor, LEVERAGE_FACTOR_MIN, maxLeverageFactorAllowed),
   };
 
-  function calculateTotalPositionValue(deposit: Dnum, leverageFactor: number, collateralPrice: Dnum): Dnum {
-    return dn.mul(dn.mul(deposit, dn.from(leverageFactor, 18)), collateralPrice);
+  function calculateTotalPositionValue(
+    deposit: Dnum,
+    leverageFactor: number,
+    collateralPrice: Dnum,
+  ): Dnum {
+    return dn.mul(
+      dn.mul(deposit, dn.from(leverageFactor, 18)),
+      collateralPrice,
+    );
   }
 
-  function calculateDebt(deposit: Dnum, leverageFactor: number, collateralPrice: Dnum): Dnum {
-    const totalPositionValue = calculateTotalPositionValue(deposit, leverageFactor, collateralPrice);
+  function calculateDebt(
+    deposit: Dnum,
+    leverageFactor: number,
+    collateralPrice: Dnum,
+  ): Dnum {
+    const totalPositionValue = calculateTotalPositionValue(
+      deposit,
+      leverageFactor,
+      collateralPrice,
+    );
     const initialDepositValue = dn.mul(deposit, collateralPrice);
     return dn.sub(totalPositionValue, initialDepositValue);
   }
@@ -317,9 +367,15 @@ export function useLeverageField({
   };
 }
 
-function getLeverageFactorFromRatio(minLeverageFactor: number, maxLeverageFactor: number, ratio: number) {
-  return Math.max(
-    LEVERAGE_FACTOR_MIN,
-    Math.round(lerp(minLeverageFactor, maxLeverageFactor, ratio)) * 10,
-  ) / 10;
+function getLeverageFactorFromRatio(
+  minLeverageFactor: number,
+  maxLeverageFactor: number,
+  ratio: number,
+) {
+  return (
+    Math.max(
+      LEVERAGE_FACTOR_MIN,
+      Math.round(lerp(minLeverageFactor, maxLeverageFactor, ratio)) * 10,
+    ) / 10
+  );
 }

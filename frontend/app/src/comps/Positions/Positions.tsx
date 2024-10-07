@@ -40,11 +40,10 @@ export function Positions({
   address,
   columns,
   showNewPositionCard = true,
-  title = (mode) => (
+  title = (mode) =>
     mode === "actions"
       ? content.home.openPositionTitle
-      : content.home.myPositionsTitle
-  ),
+      : content.home.myPositionsTitle,
 }: {
   address: null | Address;
   columns?: number;
@@ -62,17 +61,13 @@ export function Positions({
       if (DEMO_MODE) {
         return ACCOUNT_POSITIONS;
       }
-      return [
-        ...loans.data ?? [],
-        ...earnPositions.data ?? [],
-      ];
+      return [...(loans.data ?? []), ...(earnPositions.data ?? [])];
     },
   });
 
   const positionsPending = Boolean(
-    address && (
-      loans.isPending || earnPositions.isPending || positions.isPending
-    ),
+    address
+      && (loans.isPending || earnPositions.isPending || positions.isPending),
   );
 
   let mode: Mode = address && positions.data && positions.data.length > 0
@@ -84,15 +79,27 @@ export function Positions({
   const cards = match(mode)
     .returnType<Array<[number, ReactNode]>>()
     .with("positions", () => {
-      const cards = positions.data?.map((position, index) => (
+      const cards = positions.data?.map((position, index) =>
         match(position)
           .returnType<[number, ReactNode]>()
-          .with({ type: "borrow" }, (props) => [index, <PositionBorrow {...props} />])
-          .with({ type: "earn" }, (props) => [index, <PositionEarn {...props} />])
-          .with({ type: "leverage" }, (props) => [index, <PositionLeverage {...props} />])
-          .with({ type: "stake" }, (props) => [index, <PositionStake {...props} />])
+          .with({ type: "borrow" }, (props) => [
+            index,
+            <PositionBorrow {...props} />,
+          ])
+          .with({ type: "earn" }, (props) => [
+            index,
+            <PositionEarn {...props} />,
+          ])
+          .with({ type: "leverage" }, (props) => [
+            index,
+            <PositionLeverage {...props} />,
+          ])
+          .with({ type: "stake" }, (props) => [
+            index,
+            <PositionStake {...props} />,
+          ])
           .exhaustive()
-      )) ?? [];
+      ) ?? [];
       if (showNewPositionCard) {
         cards.push([positions.data?.length ?? -1, <NewPositionCard />]);
       }
@@ -123,11 +130,7 @@ export function Positions({
   });
 
   return (
-    <PositionsGroup
-      columns={columns}
-      mode={mode}
-      title={title}
-    >
+    <PositionsGroup columns={columns} mode={mode} title={title}>
       {positionTransitions((style, [_, card]) => (
         <a.div
           className={css({
@@ -234,17 +237,13 @@ function PositionBorrow({
 
   const title = [
     `Loan ID: ${troveId}`,
-    `Borrowed: ${fmtnum(borrowed, "full")} BOLD`,
+    `Borrowed: ${fmtnum(borrowed, "full")} EBUSD`,
     `Collateral: ${fmtnum(deposit, "full")} ${token.name}`,
     `Interest rate: ${fmtnum(interestRate, "full", 100)}%`,
   ];
 
   return (
-    <Link
-      href={`/loan?id=${collIndex}:${troveId}`}
-      legacyBehavior
-      passHref
-    >
+    <Link href={`/loan?id=${collIndex}:${troveId}`} legacyBehavior passHref>
       <StrongCard
         title={title.join("\n")}
         heading={
@@ -264,7 +263,7 @@ function PositionBorrow({
             >
               <IconBorrow size={16} />
             </div>
-            BOLD loan
+            EBUSD loan
           </div>
         }
         contextual={<EditSquare />}
@@ -272,10 +271,7 @@ function PositionBorrow({
           value: (
             <HFlex gap={8} alignItems="center" justifyContent="flex-start">
               {fmtnum(borrowed)}
-              <TokenIcon
-                size={24}
-                symbol="BOLD"
-              />
+              <TokenIcon size={24} symbol="EBUSD" />
             </HFlex>
           ),
           // label: "Total debt",
@@ -392,7 +388,11 @@ function PositionBorrow({
                       color: "strongSurfaceContent",
                     })}
                   >
-                    {redemptionRisk === "low" ? "Low" : redemptionRisk === "medium" ? "Medium" : "High"} redemption risk
+                    {redemptionRisk === "low"
+                      ? "Low"
+                      : redemptionRisk === "medium"
+                      ? "Medium"
+                      : "High"} redemption risk
                   </div>
                   <StatusDot
                     mode={riskLevelToStatusMode(redemptionRisk)}
@@ -438,11 +438,7 @@ function PositionLeverage({
   const liquidationRisk = ltv && getLiquidationRisk(ltv, maxLtv);
 
   return (
-    <Link
-      href={`/loan?id=${collIndex}:${troveId}`}
-      legacyBehavior
-      passHref
-    >
+    <Link href={`/loan?id=${collIndex}:${troveId}`} legacyBehavior passHref>
       <StrongCard
         heading={[
           <div
@@ -469,10 +465,7 @@ function PositionLeverage({
           value: (
             <HFlex gap={8} alignItems="center" justifyContent="flex-start">
               {deposit ? dn.format(deposit, 2) : "−"}
-              <TokenIcon
-                size={24}
-                symbol={token.symbol}
-              />
+              <TokenIcon size={24} symbol={token.symbol} />
             </HFlex>
           ),
           label: "Net value",
@@ -529,8 +522,11 @@ function PositionLeverage({
                       color: "strongSurfaceContent",
                     })}
                   >
-                    {liquidationRisk === "low" ? "Low" : liquidationRisk === "medium" ? "Medium" : "High"}{" "}
-                    liquidation risk
+                    {liquidationRisk === "low"
+                      ? "Low"
+                      : liquidationRisk === "medium"
+                      ? "Medium"
+                      : "High"} liquidation risk
                   </div>
                   <StatusDot
                     mode={riskLevelToStatusMode(liquidationRisk)}
@@ -599,138 +595,120 @@ function PositionEarn({
   collIndex,
   deposit,
   rewards,
-}: Pick<
-  PositionEarn,
-  | "apr"
-  | "collIndex"
-  | "deposit"
-  | "rewards"
->) {
+}: Pick<PositionEarn, "apr" | "collIndex" | "deposit" | "rewards">) {
   const token = useCollateral(collIndex);
-  return token && (
-    <Link
-      href={`/earn/${token.symbol.toLowerCase()}`}
-      legacyBehavior
-      passHref
-    >
-      <StrongCard
-        heading={[
-          <div
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              color: "strongSurfaceContent",
-            })}
-          >
+  return (
+    token && (
+      <Link
+        href={`/earn/${token.symbol.toLowerCase()}`}
+        legacyBehavior
+        passHref
+      >
+        <StrongCard
+          heading={[
             <div
               className={css({
                 display: "flex",
-                color: "strongSurfaceContentAlt2",
+                alignItems: "center",
+                gap: 8,
+                color: "strongSurfaceContent",
               })}
             >
-              <IconEarn size={16} />
-            </div>
-            Earn position
-          </div>,
-        ]}
-        contextual={<EditSquare />}
-        main={{
-          value: (
-            <HFlex gap={8} alignItems="center" justifyContent="flex-start">
-              +{dn.format(rewards.bold, 2)}
-              <TokenIcon
-                size={24}
-                symbol="BOLD"
+              <div
+                className={css({
+                  display: "flex",
+                  color: "strongSurfaceContentAlt2",
+                })}
+              >
+                <IconEarn size={16} />
+              </div>
+              Earn position
+            </div>,
+          ]}
+          contextual={<EditSquare />}
+          main={{
+            value: (
+              <HFlex gap={8} alignItems="center" justifyContent="flex-start">
+                +{dn.format(rewards.ebusd, 2)}
+                <TokenIcon size={24} symbol="EBUSD" />
+              </HFlex>
+            ),
+            label: (
+              <HFlex gap={4} justifyContent="flex-start">
+                <span>+{dn.format(rewards.coll, 4)}</span>
+                <TokenIcon size="small" symbol={token.symbol} />
+              </HFlex>
+            ),
+          }}
+          secondary={
+            <CardRows>
+              <CardRow
+                start={
+                  <div
+                    className={css({
+                      display: "flex",
+                      gap: 8,
+                      fontSize: 14,
+                    })}
+                  >
+                    <div
+                      className={css({
+                        color: "strongSurfaceContentAlt",
+                      })}
+                    >
+                      Current APR
+                    </div>
+                    <div
+                      className={css({
+                        color: "strongSurfaceContent",
+                      })}
+                    >
+                      {dn.format(dn.mul(apr, 100), 2)}%
+                    </div>
+                  </div>
+                }
               />
-            </HFlex>
-          ),
-          label: (
-            <HFlex gap={4} justifyContent="flex-start">
-              <span>+{dn.format(rewards.coll, 4)}</span>
-              <TokenIcon
-                size="small"
-                symbol={token.symbol}
+              <CardRow
+                start={
+                  <div
+                    className={css({
+                      display: "flex",
+                      gap: 8,
+                      fontSize: 14,
+                    })}
+                  >
+                    <div
+                      className={css({
+                        color: "strongSurfaceContentAlt",
+                      })}
+                    >
+                      Deposit
+                    </div>
+                    <div
+                      className={css({
+                        color: "strongSurfaceContent",
+                      })}
+                    >
+                      {dn.format(deposit, 4)} EBUSD
+                    </div>
+                  </div>
+                }
               />
-            </HFlex>
-          ),
-        }}
-        secondary={
-          <CardRows>
-            <CardRow
-              start={
-                <div
-                  className={css({
-                    display: "flex",
-                    gap: 8,
-                    fontSize: 14,
-                  })}
-                >
-                  <div
-                    className={css({
-                      color: "strongSurfaceContentAlt",
-                    })}
-                  >
-                    Current APR
-                  </div>
-                  <div
-                    className={css({
-                      color: "strongSurfaceContent",
-                    })}
-                  >
-                    {dn.format(dn.mul(apr, 100), 2)}%
-                  </div>
-                </div>
-              }
-            />
-            <CardRow
-              start={
-                <div
-                  className={css({
-                    display: "flex",
-                    gap: 8,
-                    fontSize: 14,
-                  })}
-                >
-                  <div
-                    className={css({
-                      color: "strongSurfaceContentAlt",
-                    })}
-                  >
-                    Deposit
-                  </div>
-                  <div
-                    className={css({
-                      color: "strongSurfaceContent",
-                    })}
-                  >
-                    {dn.format(deposit, 4)} BOLD
-                  </div>
-                </div>
-              }
-            />
-          </CardRows>
-        }
-      />
-    </Link>
+            </CardRows>
+          }
+        />
+      </Link>
+    )
   );
 }
 
 function PositionStake({
   deposit,
   rewards,
-}: Pick<
-  PositionStake,
-  | "deposit"
-  | "rewards"
->) {
+}: Pick<PositionStake, "deposit" | "rewards">) {
   const votingPower = dn.div(rewards.lusd, LQTY_SUPPLY);
   return (
-    <Link
-      href="/stake"
-      legacyBehavior
-      passHref
-    >
+    <Link href="/stake" legacyBehavior passHref>
       <StrongCard
         heading={[
           <div
@@ -757,19 +735,13 @@ function PositionStake({
           value: (
             <HFlex gap={8} alignItems="center" justifyContent="flex-start">
               +{dn.format(rewards.lusd, 2)}
-              <TokenIcon
-                size={24}
-                symbol="LUSD"
-              />
+              <TokenIcon size={24} symbol="LUSD" />
             </HFlex>
           ),
           label: (
             <HFlex gap={4} justifyContent="flex-start">
               <span>+{dn.format(rewards.eth, 4)}</span>
-              <TokenIcon
-                size="small"
-                symbol="ETH"
-              />
+              <TokenIcon size="small" symbol="ETH" />
             </HFlex>
           ),
         }}
@@ -835,14 +807,7 @@ function PositionStake({
 }
 
 function LoadingCard() {
-  return (
-    <StrongCard
-      loading={true}
-      heading=""
-      contextual=""
-      secondary=""
-    />
-  );
+  return <StrongCard loading={true} heading="" contextual="" secondary="" />;
 }
 
 function EditSquare() {

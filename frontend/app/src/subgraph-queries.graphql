@@ -54,7 +54,7 @@ query TroveById($id: ID!) {
 query StabilityPoolDepositsByAccount($account: Bytes!) {
   stabilityPoolDeposits(where: { depositor: $account, deposit_gt: 0 }) {
     id
-    boldGain
+    ebusdGain
     collGain
     deposit
     collateral {
@@ -66,7 +66,7 @@ query StabilityPoolDepositsByAccount($account: Bytes!) {
 query StabilityPoolDeposit($id: ID!) {
   stabilityPoolDeposit(id: $id) {
     id
-    boldGain
+    ebusdGain
     collGain
     deposit
     depositor

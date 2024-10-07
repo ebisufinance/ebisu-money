@@ -190,7 +190,7 @@ Deploying Liquity contracts with the following settings:
   }
 
   if ("CI" in process.env) {
-    echo("Workaround: deleting variable 'CI' from environment"); // See https://github.com/liquity/bold/pull/113
+    echo("Workaround: deleting variable 'CI' from environment"); // See https://github.com/liquity/ebusd/pull/113
     delete process.env.CI;
   }
 
@@ -203,7 +203,7 @@ Deploying Liquity contracts with the following settings:
 
   const deploymentManifestJson = fs.readFileSync("deployment-manifest.json", "utf-8");
   const deploymentManifest = JSON.parse(deploymentManifestJson) as {
-    boldToken: string;
+    ebusdToken: string;
     branches: Record<string, string>[];
     collateralRegistry: string;
     hintHelpers: string;
@@ -211,7 +211,7 @@ Deploying Liquity contracts with the following settings:
   };
 
   const protocolContracts = {
-    BoldToken: deploymentManifest.boldToken,
+    EbusdToken: deploymentManifest.ebusdToken,
     CollateralRegistry: deploymentManifest.collateralRegistry,
     HintHelpers: deploymentManifest.hintHelpers,
     MultiTroveGetter: deploymentManifest.multiTroveGetter,

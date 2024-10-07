@@ -19,13 +19,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export function DepositPanel({
-  accountBoldBalance,
-  boldQty,
+  accountEbusdBalance,
+  ebusdQty,
   collIndex,
   position,
 }: {
-  accountBoldBalance?: Dnum;
-  boldQty: Dnum;
+  accountEbusdBalance?: Dnum;
+  ebusdQty: Dnum;
   collIndex: null | CollIndex;
   position?: PositionEarn;
 }) {
@@ -39,7 +39,7 @@ export function DepositPanel({
 
   const parsedValue = parseInputFloat(value);
 
-  const value_ = (focused || !parsedValue) ? value : `${fmtnum(parsedValue, "full")} BOLD`;
+  const value_ = focused || !parsedValue ? value : `${fmtnum(parsedValue, "full")} EBUSD`;
 
   const depositDifference = parsedValue ?? dn.from(0, 18);
 
@@ -48,10 +48,10 @@ export function DepositPanel({
     depositDifference,
   );
 
-  const updatedBoldQty = dn.add(boldQty, depositDifference);
+  const updatedEbusdQty = dn.add(ebusdQty, depositDifference);
 
-  const updatedPoolShare = depositDifference && dn.gt(updatedBoldQty, 0)
-    ? dn.div(updatedDeposit, updatedBoldQty)
+  const updatedPoolShare = depositDifference && dn.gt(updatedEbusdQty, 0)
+    ? dn.div(updatedDeposit, updatedEbusdQty)
     : DNUM_0;
 
   const collateral = useCollateral(collIndex);
@@ -85,14 +85,14 @@ export function DepositPanel({
                   userSelect: "none",
                 }}
               >
-                <TokenIcon symbol="BOLD" />
+                <TokenIcon symbol="EBUSD" />
                 <div
                   style={{
                     fontSize: 24,
                     fontWeight: 500,
                   }}
                 >
-                  BOLD
+                  EBUSD
                 </div>
               </div>
             }
@@ -105,23 +105,21 @@ export function DepositPanel({
             secondary={{
               start: (
                 <HFlex gap={4}>
+                  <div>{content.earnScreen.depositPanel.shareLabel}</div>
                   <div>
-                    {content.earnScreen.depositPanel.shareLabel}
+                    <Amount format={2} percentage value={updatedPoolShare} />
                   </div>
-                  <div>
-                    <Amount
-                      format={2}
-                      percentage
-                      value={updatedPoolShare}
-                    />
-                  </div>
-                  <InfoTooltip {...infoTooltipProps(content.earnScreen.infoTooltips.depositPoolShare)} />
+                  <InfoTooltip
+                    {...infoTooltipProps(
+                      content.earnScreen.infoTooltips.depositPoolShare,
+                    )}
+                  />
                 </HFlex>
               ),
-              end: accountBoldBalance && (
+              end: accountEbusdBalance && (
                 <TextButton
-                  label={`Max ${fmtnum(accountBoldBalance, 2)} BOLD`}
-                  onClick={() => setValue(dn.toString(accountBoldBalance))}
+                  label={`Max ${fmtnum(accountEbusdBalance, 2)} EBUSD`}
+                  onClick={() => setValue(dn.toString(accountEbusdBalance))}
                 />
               ),
             }}
@@ -148,12 +146,13 @@ export function DepositPanel({
               userSelect: "none",
             })}
           >
-            <Checkbox
-              checked={claimRewards}
-              onChange={setClaimRewards}
-            />
+            <Checkbox checked={claimRewards} onChange={setClaimRewards} />
             {content.earnScreen.depositPanel.claimCheckbox}
-            <InfoTooltip {...infoTooltipProps(content.earnScreen.infoTooltips.alsoClaimRewardsCheckbox)} />
+            <InfoTooltip
+              {...infoTooltipProps(
+                content.earnScreen.infoTooltips.alsoClaimRewardsCheckbox,
+              )}
+            />
           </label>
           {position && (
             <div
@@ -163,24 +162,18 @@ export function DepositPanel({
               })}
             >
               <div>
-                <Amount
-                  format={2}
-                  value={position.rewards.bold}
-                />
+                <Amount format={2} value={position.rewards.ebusd} />
                 <span
                   className={css({
                     color: "contentAlt",
                   })}
                 >
-                  BOLD
+                  EBUSD
                 </span>
               </div>
               {collateral && (
                 <div>
-                  <Amount
-                    format={2}
-                    value={position.rewards.coll}
-                  />{" "}
+                  <Amount format={2} value={position.rewards.coll} />{" "}
                   <span
                     className={css({
                       color: "contentAlt",
@@ -196,7 +189,9 @@ export function DepositPanel({
         <ConnectWarningBox />
         <Button
           disabled={!allowSubmit}
-          label={claimRewards ? content.earnScreen.depositPanel.actionClaim : content.earnScreen.depositPanel.action}
+          label={claimRewards
+            ? content.earnScreen.depositPanel.actionClaim
+            : content.earnScreen.depositPanel.action}
           mode="primary"
           size="large"
           wide
@@ -212,7 +207,7 @@ export function DepositPanel({
                 successMessage: "The earn position has been created successfully.",
 
                 depositor: account.address,
-                boldAmount: depositDifference,
+                ebusdAmount: depositDifference,
                 claim: claimRewards,
                 collIndex,
               });

@@ -16,28 +16,16 @@ export default function Page() {
     >
       <VFlex gap={32}>
         <VFlex gap={0}>
+          <Row label="You repay with" value="3.00 rETH" />
           <Row
-            label="You repay with"
-            value="3.00 rETH"
-          />
-          <Row
-            label={[
-              null,
-              "9,412.32 BOLD ~ $9,400.01",
-            ]}
-            value={[
-              null,
-              "1 rETH = 3,100.23 BOLD",
-            ]}
+            label={[null, "9,412.32 EBUSD ~ $9,400.01"]}
+            value={[null, "1 rETH = 3,100.23 EBUSD"]}
             secondarySize="large"
           />
         </VFlex>
         <Row
           label="You reclaim"
-          value={[
-            "7.00 ETH",
-            "9,412.32 BOLD → 11,412.32 BOLD",
-          ]}
+          value={["7.00 ETH", "9,412.32 EBUSD → 11,412.32 EBUSD"]}
         />
         <Row
           label={
@@ -46,10 +34,7 @@ export default function Page() {
               Gas
             </>
           }
-          value={[
-            "0.01 ETH",
-            "~$32.06",
-          ]}
+          value={["0.01 ETH", "~$32.06"]}
           valueSize="small"
         />
       </VFlex>
@@ -102,17 +87,10 @@ function Row({
   secondarySize?: "normal" | "large";
 }) {
   return (
-    <HFlex
-      alignItems="flex-start"
-      gap={16}
-      justifyContent="space-between"
-    >
+    <HFlex alignItems="flex-start" gap={16} justifyContent="space-between">
       {Array.isArray(label)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,
@@ -138,10 +116,7 @@ function Row({
         : <HFlex gap={8}>{label}</HFlex>}
       {Array.isArray(value)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,

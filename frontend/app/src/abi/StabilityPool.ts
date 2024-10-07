@@ -36,9 +36,9 @@ export const StabilityPool = [
   },
   {
     "type": "function",
-    "name": "boldToken",
+    "name": "ebusdToken",
     "inputs": [],
-    "outputs": [{ "name": "", "type": "address", "internalType": "contract IBoldToken" }],
+    "outputs": [{ "name": "", "type": "address", "internalType": "contract IEbusdToken" }],
     "stateMutability": "view",
   },
   { "type": "function", "name": "claimAllCollGains", "inputs": [], "outputs": [], "stateMutability": "nonpayable" },
@@ -114,7 +114,7 @@ export const StabilityPool = [
   },
   {
     "type": "function",
-    "name": "getCompoundedBoldDeposit",
+    "name": "getCompoundedEbusdDeposit",
     "inputs": [{ "name": "_depositor", "type": "address", "internalType": "address" }],
     "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
     "stateMutability": "view",
@@ -156,7 +156,7 @@ export const StabilityPool = [
   },
   {
     "type": "function",
-    "name": "getTotalBoldDeposits",
+    "name": "getTotalEbusdDeposits",
     "inputs": [],
     "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
     "stateMutability": "view",
@@ -177,7 +177,7 @@ export const StabilityPool = [
   },
   {
     "type": "function",
-    "name": "lastBoldLossError_Offset",
+    "name": "lastEbusdLossError_Offset",
     "inputs": [],
     "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
     "stateMutability": "view",
@@ -227,8 +227,8 @@ export const StabilityPool = [
   },
   {
     "type": "function",
-    "name": "triggerBoldRewards",
-    "inputs": [{ "name": "_boldYield", "type": "uint256", "internalType": "uint256" }],
+    "name": "triggerEbusdRewards",
+    "inputs": [{ "name": "_ebusdYield", "type": "uint256", "internalType": "uint256" }],
     "outputs": [],
     "stateMutability": "nonpayable",
   },
@@ -269,8 +269,8 @@ export const StabilityPool = [
   },
   {
     "type": "event",
-    "name": "BoldTokenAddressChanged",
-    "inputs": [{ "name": "_newBoldTokenAddress", "type": "address", "indexed": false, "internalType": "address" }],
+    "name": "EbusdTokenAddressChanged",
+    "inputs": [{ "name": "_newEbusdTokenAddress", "type": "address", "indexed": false, "internalType": "address" }],
     "anonymous": false,
   },
   {
@@ -362,7 +362,7 @@ export const StabilityPool = [
   },
   {
     "type": "event",
-    "name": "StabilityPoolBoldBalanceUpdated",
+    "name": "StabilityPoolEbusdBalanceUpdated",
     "inputs": [{ "name": "_newBalance", "type": "uint256", "indexed": false, "internalType": "uint256" }],
     "anonymous": false,
   },

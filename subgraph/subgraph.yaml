@@ -3,9 +3,9 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum/contract
-    name: BoldToken
+    name: EbusdToken
     source:
-      abi: BoldToken
+      abi: EbusdToken
       address: "0x21a6370b245c05fade18c601f5efa23e1a3c9833"
       startBlock: 6684588
     mapping:
@@ -19,8 +19,8 @@ dataSources:
       abis:
         - name: BorrowerOperations
           file: ../contracts/out/BorrowerOperations.sol/BorrowerOperations.json
-        - name: BoldToken
-          file: ../contracts/out/BoldToken.sol/BoldToken.json
+        - name: EbusdToken
+          file: ../contracts/out/EbusdToken.sol/EbusdToken.json
         - name: CollateralRegistry
           file: ../contracts/out/CollateralRegistry.sol/CollateralRegistry.json
         - name: ERC20
@@ -30,7 +30,7 @@ dataSources:
       eventHandlers:
         - event: CollateralRegistryAddressChanged(address)
           handler: handleCollateralRegistryAddressChanged
-      file: ./src/BoldToken.mapping.ts
+      file: ./src/EbusdToken.mapping.ts
     network: sepolia
 templates:
   - name: TroveManager

@@ -37,14 +37,14 @@ contract MetadataDeployment is Script /* , StdAssertions */ {
 
         uint256 offset = 0;
 
-        //read bold file
+        //read ebusd file
 
-        bytes memory boldFile = bytes(vm.readFile(string.concat(root, "bold_logo.txt")));
-        File memory bold = File(boldFile, offset, offset + boldFile.length);
+        bytes memory ebusdFile = bytes(vm.readFile(string.concat(root, "ebusd_logo.txt")));
+        File memory ebusd = File(ebusdFile, offset, offset + ebusdFile.length);
 
-        offset += boldFile.length;
+        offset += ebusdFile.length;
 
-        files[bytes4(keccak256("BOLD"))] = bold;
+        files[bytes4(keccak256("EBUSD"))] = ebusd;
 
         //read eth file
         bytes memory ethFile = bytes(vm.readFile(string.concat(root, "weth_logo.txt")));
@@ -81,7 +81,7 @@ contract MetadataDeployment is Script /* , StdAssertions */ {
 
     function _storeFile() internal {
         bytes memory data = bytes.concat(
-            files[bytes4(keccak256("BOLD"))].data,
+            files[bytes4(keccak256("EBUSD"))].data,
             files[bytes4(keccak256("WETH"))].data,
             files[bytes4(keccak256("wstETH"))].data,
             files[bytes4(keccak256("rETH"))].data,
@@ -95,7 +95,7 @@ contract MetadataDeployment is Script /* , StdAssertions */ {
 
     function _deployFixedAssetReader(bytes32 _salt) internal {
         bytes4[] memory sigs = new bytes4[](5);
-        sigs[0] = bytes4(keccak256("BOLD"));
+        sigs[0] = bytes4(keccak256("EBUSD"));
         sigs[1] = bytes4(keccak256("WETH"));
         sigs[2] = bytes4(keccak256("wstETH"));
         sigs[3] = bytes4(keccak256("rETH"));
@@ -103,7 +103,7 @@ contract MetadataDeployment is Script /* , StdAssertions */ {
 
         FixedAssetReader.Asset[] memory FixedAssets = new FixedAssetReader.Asset[](5);
         FixedAssets[0] = FixedAssetReader.Asset(
-            uint128(files[bytes4(keccak256("BOLD"))].start), uint128(files[bytes4(keccak256("BOLD"))].end)
+            uint128(files[bytes4(keccak256("EBUSD"))].start), uint128(files[bytes4(keccak256("EBUSD"))].end)
         );
         FixedAssets[1] = FixedAssetReader.Asset(
             uint128(files[bytes4(keccak256("WETH"))].start), uint128(files[bytes4(keccak256("WETH"))].end)

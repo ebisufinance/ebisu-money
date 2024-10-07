@@ -21,15 +21,14 @@ contract("SortedTroves", async (accounts) => {
       const troveICR = await contracts.troveManager.getCurrentICR(trove, price);
       const prevTroveICR = await contracts.troveManager.getCurrentICR(
         prevTrove,
-        price,
+        price
       );
 
       assert.isTrue(prevTroveICR.gte(troveICR));
 
       const troveNICR = await contracts.troveManager.getNominalICR(trove);
-      const prevTroveNICR = await contracts.troveManager.getNominalICR(
-        prevTrove,
-      );
+      const prevTroveNICR =
+        await contracts.troveManager.getNominalICR(prevTrove);
 
       assert.isTrue(prevTroveNICR.gte(troveNICR));
 
@@ -70,7 +69,7 @@ contract("SortedTroves", async (accounts) => {
   let sortedTroves;
   let troveManager;
   let borrowerOperations;
-  let boldToken;
+  let ebusdToken;
 
   const [bountyAddress, lpRewardsAddress, multisig] = accounts.slice(997, 1000);
 
@@ -91,7 +90,7 @@ contract("SortedTroves", async (accounts) => {
       sortedTroves = contracts.sortedTroves;
       troveManager = contracts.troveManager;
       borrowerOperations = contracts.borrowerOperations;
-      boldToken = contracts.boldToken;
+      ebusdToken = contracts.ebusdToken;
     });
 
     it("contains(): returns true for addresses that have opened troves", async () => {
@@ -99,7 +98,10 @@ contract("SortedTroves", async (accounts) => {
         ICR: toBN(dec(150, 16)),
         extraParams: { from: alice },
       });
-      const { troveId: bobTroveId } = await openTrove({ ICR: toBN(dec(20, 18)), extraParams: { from: bob } });
+      const { troveId: bobTroveId } = await openTrove({
+        ICR: toBN(dec(20, 18)),
+        extraParams: { from: bob },
+      });
       const { troveId: carolTroveId } = await openTrove({
         ICR: toBN(dec(2000, 18)),
         extraParams: { from: carol },
@@ -139,7 +141,7 @@ contract("SortedTroves", async (accounts) => {
     it("contains(): returns false for addresses that opened and then closed a trove", async () => {
       await openTrove({
         ICR: toBN(dec(1000, 18)),
-        extraBoldAmount: toBN(dec(3000, 18)),
+        extraEbusdAmount: toBN(dec(3000, 18)),
         extraParams: { from: whale },
       });
 
@@ -147,16 +149,19 @@ contract("SortedTroves", async (accounts) => {
         ICR: toBN(dec(150, 16)),
         extraParams: { from: alice },
       });
-      const { troveId: bobTroveId } = await openTrove({ ICR: toBN(dec(20, 18)), extraParams: { from: bob } });
+      const { troveId: bobTroveId } = await openTrove({
+        ICR: toBN(dec(20, 18)),
+        extraParams: { from: bob },
+      });
       const { troveId: carolTroveId } = await openTrove({
         ICR: toBN(dec(2000, 18)),
         extraParams: { from: carol },
       });
 
       // to compensate borrowing fees
-      await boldToken.transfer(alice, dec(1000, 18), { from: whale });
-      await boldToken.transfer(bob, dec(1000, 18), { from: whale });
-      await boldToken.transfer(carol, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(alice, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(bob, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(carol, dec(1000, 18), { from: whale });
 
       // A, B, C close troves
       await borrowerOperations.closeTrove(aliceTroveId, { from: alice });
@@ -178,7 +183,7 @@ contract("SortedTroves", async (accounts) => {
     it("contains(): returns true for addresses that opened, closed and then re-opened a trove", async () => {
       await openTrove({
         ICR: toBN(dec(1000, 18)),
-        extraBoldAmount: toBN(dec(3000, 18)),
+        extraEbusdAmount: toBN(dec(3000, 18)),
         extraParams: { from: whale },
       });
 
@@ -186,16 +191,19 @@ contract("SortedTroves", async (accounts) => {
         ICR: toBN(dec(150, 16)),
         extraParams: { from: alice },
       });
-      const { troveId: bobTroveId } = await openTrove({ ICR: toBN(dec(20, 18)), extraParams: { from: bob } });
+      const { troveId: bobTroveId } = await openTrove({
+        ICR: toBN(dec(20, 18)),
+        extraParams: { from: bob },
+      });
       const { troveId: carolTroveId } = await openTrove({
         ICR: toBN(dec(2000, 18)),
         extraParams: { from: carol },
       });
 
       // to compensate borrowing fees
-      await boldToken.transfer(alice, dec(1000, 18), { from: whale });
-      await boldToken.transfer(bob, dec(1000, 18), { from: whale });
-      await boldToken.transfer(carol, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(alice, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(bob, dec(1000, 18), { from: whale });
+      await ebusdToken.transfer(carol, dec(1000, 18), { from: whale });
 
       // A, B, C close troves
       await borrowerOperations.closeTrove(aliceTroveId, { from: alice });
@@ -277,7 +285,10 @@ contract("SortedTroves", async (accounts) => {
         ICR: toBN(dec(250, 16)),
         extraParams: { from: C, annualInterestRate: toBN(dec(5, 17)) },
       }); // 50% interest rate
-      await openTrove({ ICR: toBN(dec(166, 16)), extraParams: { from: D, annualInterestRate: toBN(dec(25, 16)) } }); // 25% interest rate
+      await openTrove({
+        ICR: toBN(dec(166, 16)),
+        extraParams: { from: D, annualInterestRate: toBN(dec(25, 16)) },
+      }); // 25% interest rate
       const { troveId: ETroveId } = await openTrove({
         ICR: toBN(dec(125, 16)),
         extraParams: { from: E, annualInterestRate: toBN(dec(1, 16)) },
@@ -287,7 +298,11 @@ contract("SortedTroves", async (accounts) => {
       const targetAnnualIRate = toBN(dec(60, 16));
 
       // Pass addresses that loosely bound the right postiion
-      const hints = await sortedTroves.findInsertPosition(targetAnnualIRate, ATroveId, ETroveId);
+      const hints = await sortedTroves.findInsertPosition(
+        targetAnnualIRate,
+        ATroveId,
+        ETroveId
+      );
 
       // Expect the exact correct insert hints have been returned
       assert.isTrue(hints[0].eq(toBN(BTroveId)));
@@ -295,7 +310,11 @@ contract("SortedTroves", async (accounts) => {
 
       // The price doesn’t affect the hints
       await priceFeed.setPrice(dec(500, 18));
-      const hints2 = await sortedTroves.findInsertPosition(targetAnnualIRate, ATroveId, ETroveId);
+      const hints2 = await sortedTroves.findInsertPosition(
+        targetAnnualIRate,
+        ATroveId,
+        ETroveId
+      );
 
       // Expect the exact correct insert hints have been returned
       assert.isTrue(hints2[0].eq(BTroveId));
@@ -317,7 +336,7 @@ contract("SortedTroves", async (accounts) => {
       beforeEach("set addresses", async () => {
         await sortedTroves.setAddresses(
           sortedTrovesTester.address,
-          sortedTrovesTester.address,
+          sortedTrovesTester.address
         );
       });
 
@@ -325,21 +344,21 @@ contract("SortedTroves", async (accounts) => {
         await sortedTrovesTester.insert(alice, 1, alice, alice);
         await th.assertRevert(
           sortedTrovesTester.insert(alice, 1, alice, alice),
-          "SortedTroves: List already contains the node",
+          "SortedTroves: List already contains the node"
         );
       });
 
       it("insert(): fails if id is zero", async () => {
         await th.assertRevert(
           sortedTrovesTester.insert(toBN(0), 1, alice, alice),
-          "SortedTroves: Id cannot be zero",
+          "SortedTroves: Id cannot be zero"
         );
       });
 
       it("remove(): fails if id is not in the list", async () => {
         await th.assertRevert(
           sortedTrovesTester.remove(th.addressToTroveId(alice)),
-          "SortedTroves: List does not contain the id",
+          "SortedTroves: List does not contain the id"
         );
       });
 
@@ -349,9 +368,9 @@ contract("SortedTroves", async (accounts) => {
             th.addressToTroveId(alice),
             1,
             th.addressToTroveId(alice),
-            th.addressToTroveId(alice),
+            th.addressToTroveId(alice)
           ),
-          "SortedTroves: List does not contain the id",
+          "SortedTroves: List does not contain the id"
         );
       });
 

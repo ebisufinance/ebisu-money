@@ -577,7 +577,7 @@ export type StabilityPool = {
 
 export type StabilityPoolDeposit = {
   readonly id: Scalars["ID"]["output"];
-  readonly boldGain: Scalars["BigInt"]["output"];
+  readonly ebusdGain: Scalars["BigInt"]["output"];
   readonly collGain: Scalars["BigInt"]["output"];
   readonly collateral: Collateral;
   readonly deposit: Scalars["BigInt"]["output"];
@@ -593,14 +593,14 @@ export type StabilityPoolDeposit_filter = {
   readonly id_lte?: InputMaybe<Scalars["ID"]["input"]>;
   readonly id_in?: InputMaybe<ReadonlyArray<Scalars["ID"]["input"]>>;
   readonly id_not_in?: InputMaybe<ReadonlyArray<Scalars["ID"]["input"]>>;
-  readonly boldGain?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_not?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_lt?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
-  readonly boldGain_in?: InputMaybe<ReadonlyArray<Scalars["BigInt"]["input"]>>;
-  readonly boldGain_not_in?: InputMaybe<ReadonlyArray<Scalars["BigInt"]["input"]>>;
+  readonly ebusdGain?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_not?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_lt?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_gte?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_lte?: InputMaybe<Scalars["BigInt"]["input"]>;
+  readonly ebusdGain_in?: InputMaybe<ReadonlyArray<Scalars["BigInt"]["input"]>>;
+  readonly ebusdGain_not_in?: InputMaybe<ReadonlyArray<Scalars["BigInt"]["input"]>>;
   readonly collGain?: InputMaybe<Scalars["BigInt"]["input"]>;
   readonly collGain_not?: InputMaybe<Scalars["BigInt"]["input"]>;
   readonly collGain_gt?: InputMaybe<Scalars["BigInt"]["input"]>;
@@ -656,7 +656,7 @@ export type StabilityPoolDeposit_filter = {
 
 export type StabilityPoolDeposit_orderBy =
   | "id"
-  | "boldGain"
+  | "ebusdGain"
   | "collGain"
   | "collateral"
   | "collateral__id"
@@ -1515,7 +1515,7 @@ export type StabilityPoolDepositResolvers<
   ParentType extends ResolversParentTypes["StabilityPoolDeposit"] = ResolversParentTypes["StabilityPoolDeposit"],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes["ID"], ParentType, ContextType>;
-  boldGain?: Resolver<ResolversTypes["BigInt"], ParentType, ContextType>;
+  ebusdGain?: Resolver<ResolversTypes["BigInt"], ParentType, ContextType>;
   collGain?: Resolver<ResolversTypes["BigInt"], ParentType, ContextType>;
   collateral?: Resolver<ResolversTypes["Collateral"], ParentType, ContextType>;
   deposit?: Resolver<ResolversTypes["BigInt"], ParentType, ContextType>;
@@ -1982,7 +1982,7 @@ export type StabilityPoolDepositsByAccountQueryVariables = Exact<{
 export type StabilityPoolDepositsByAccountQuery = {
   readonly stabilityPoolDeposits: ReadonlyArray<
     (
-      & Pick<StabilityPoolDeposit, "id" | "boldGain" | "collGain" | "deposit">
+      & Pick<StabilityPoolDeposit, "id" | "ebusdGain" | "collGain" | "deposit">
       & { readonly collateral: Pick<Collateral, "collIndex"> }
     )
   >;
@@ -1995,7 +1995,7 @@ export type StabilityPoolDepositQueryVariables = Exact<{
 export type StabilityPoolDepositQuery = {
   readonly stabilityPoolDeposit?: Maybe<
     (
-      & Pick<StabilityPoolDeposit, "id" | "boldGain" | "collGain" | "deposit" | "depositor">
+      & Pick<StabilityPoolDeposit, "id" | "ebusdGain" | "collGain" | "deposit" | "depositor">
       & { readonly collateral: Pick<Collateral, "collIndex"> }
     )
   >;
@@ -2067,7 +2067,7 @@ export const StabilityPoolDepositsByAccountDocument = gql`
     query StabilityPoolDepositsByAccount($account: Bytes!) {
   stabilityPoolDeposits(where: {depositor: $account, deposit_gt: 0}) {
     id
-    boldGain
+    ebusdGain
     collGain
     deposit
     collateral {
@@ -2080,7 +2080,7 @@ export const StabilityPoolDepositDocument = gql`
     query StabilityPoolDeposit($id: ID!) {
   stabilityPoolDeposit(id: $id) {
     id
-    boldGain
+    ebusdGain
     collGain
     deposit
     depositor

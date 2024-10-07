@@ -50,7 +50,7 @@ contract DevTestSetup is BaseTest {
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev memory contracts;
         TestDeployer.Zappers memory zappers;
-        (contracts, collateralRegistry, boldToken, hintHelpers,, WETH, zappers) = deployer.deployAndConnectContracts();
+        (contracts, collateralRegistry, ebusdToken, hintHelpers,, WETH, zappers) = deployer.deployAndConnectContracts();
         addressesRegistry = contracts.addressesRegistry;
         collToken = contracts.collToken;
         activePool = contracts.activePool;
@@ -154,9 +154,9 @@ contract DevTestSetup is BaseTest {
         // A liquidates C
         liquidate(A, troveIDs.C);
 
-        // D sends BOLD to A and B so they have some to use in tests
-        transferBold(D, A, boldToken.balanceOf(D) / 2);
-        transferBold(D, B, boldToken.balanceOf(D));
+        // D sends EBUSD to A and B so they have some to use in tests
+        transferEbusd(D, A, ebusdToken.balanceOf(D) / 2);
+        transferEbusd(D, B, ebusdToken.balanceOf(D));
 
         assertEq(uint8(troveManager.getTroveStatus(troveIDs.C)), uint8(ITroveManager.Status.closedByLiquidation));
     }
@@ -170,9 +170,9 @@ contract DevTestSetup is BaseTest {
         // A liquidates C
         liquidate(A, troveIDs.C);
 
-        // D sends BOLD to A and B so they have some to use in tests
-        transferBold(D, A, boldToken.balanceOf(D) / 2);
-        transferBold(D, B, boldToken.balanceOf(D));
+        // D sends EBUSD to A and B so they have some to use in tests
+        transferEbusd(D, A, ebusdToken.balanceOf(D) / 2);
+        transferEbusd(D, B, ebusdToken.balanceOf(D));
 
         assertEq(uint8(troveManager.getTroveStatus(troveIDs.C)), uint8(ITroveManager.Status.closedByLiquidation));
     }
@@ -181,7 +181,7 @@ contract DevTestSetup is BaseTest {
         ABCDEF memory troveIDs;
         (troveIDs.A, troveIDs.B, troveIDs.C, troveIDs.D) = _setupForBatchLiquidateTrovesPureOffset();
         // B leaves so only A is in the pool
-        makeSPWithdrawalAndClaim(B, stabilityPool.getCompoundedBoldDeposit(B));
+        makeSPWithdrawalAndClaim(B, stabilityPool.getCompoundedEbusdDeposit(B));
         return troveIDs;
     }
 
@@ -227,11 +227,11 @@ contract DevTestSetup is BaseTest {
         troveIDs.C = openTroveNoHints100pct(C, coll, debtRequest, _troveInterestRates.C);
         troveIDs.D = openTroveNoHints100pct(D, coll, debtRequest, _troveInterestRates.D);
 
-        // A, B, C, D transfer all their Bold to E
-        transferBold(A, E, boldToken.balanceOf(A));
-        transferBold(B, E, boldToken.balanceOf(B));
-        transferBold(C, E, boldToken.balanceOf(C));
-        transferBold(D, E, boldToken.balanceOf(D));
+        // A, B, C, D transfer all their Ebusd to E
+        transferEbusd(A, E, ebusdToken.balanceOf(A));
+        transferEbusd(B, E, ebusdToken.balanceOf(B));
+        transferEbusd(C, E, ebusdToken.balanceOf(C));
+        transferEbusd(D, E, ebusdToken.balanceOf(D));
     }
 
     function _setupForRedemptionAscendingInterest() internal returns (uint256, uint256, ABCDEF memory) {

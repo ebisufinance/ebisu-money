@@ -4,13 +4,19 @@ import { css } from "@/styled-system/css";
 import { AnchorTextButton, IconExternal } from "@liquity2/uikit";
 import { a, useInView, useTransition } from "@react-spring/web";
 
-const INFO_ITEMS: Array<[
-  ComponentType<SVGProps<SVGSVGElement>>,
-  string,
-]> = [
-  [BoldIcon, "BOLD is always redeemable for $1 worth of protocol collateral, minus a fee."],
-  [RedemptionIcon, "Redemptions are processed against the lowest interest rate positions first."],
-  [InterestIcon, "Reduce your chance of redemption by raising your position’s interest rate."],
+const INFO_ITEMS: Array<[ComponentType<SVGProps<SVGSVGElement>>, string]> = [
+  [
+    EbusdIcon,
+    "EBUSD is always redeemable for $1 worth of protocol collateral, minus a fee.",
+  ],
+  [
+    RedemptionIcon,
+    "Redemptions are processed against the lowest interest rate positions first.",
+  ],
+  [
+    InterestIcon,
+    "Reduce your chance of redemption by raising your position’s interest rate.",
+  ],
 ];
 
 export function RedemptionInfo() {
@@ -133,9 +139,7 @@ export function RedemptionInfo() {
                 color: "accent",
               })}
             >
-              <span>
-                Learn more about redemptions
-              </span>
+              <span>Learn more about redemptions</span>
               <IconExternal size={16} />
             </span>
           }
@@ -146,7 +150,7 @@ export function RedemptionInfo() {
   );
 }
 
-function BoldIcon() {
+function EbusdIcon() {
   return (
     <svg width="24" height="24" fill="none">
       <rect width="24" height="24" fill="#63D77D" rx="12" />
@@ -181,7 +185,10 @@ function InterestIcon() {
       />
       <circle cx="6" cy="9" r="2" fill="#1C1D4F" />
       <circle cx="14" cy="15" r="2" fill="#1C1D4F" />
-      <path fill="#1C1D4F" d="m14.447 6.037 1.414 1.414-10.41 10.41-1.414-1.414z" />
+      <path
+        fill="#1C1D4F"
+        d="m14.447 6.037 1.414 1.414-10.41 10.41-1.414-1.414z"
+      />
     </svg>
   );
 }

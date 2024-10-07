@@ -16,7 +16,7 @@ uint256 constant ETH_GAS_COMPENSATION = 0.0375 ether;
 uint256 constant COLL_GAS_COMPENSATION_DIVISOR = 200; // dividing by 200 yields 0.5%
 uint256 constant COLL_GAS_COMPENSATION_CAP = 2 ether; // Max coll gas compensation capped at 2 ETH
 
-// Minimum amount of net Bold debt a trove must have
+// Minimum amount of net Ebusd debt a trove must have
 uint256 constant MIN_DEBT = 2000e18;
 
 uint256 constant MIN_ANNUAL_INTEREST_RATE = _1pct / 2; // 0.5%
@@ -36,7 +36,7 @@ uint256 constant REDEMPTION_MINUTE_DECAY_FACTOR = 999037758833783000;
 // Corresponds to (1 / ALPHA) in the white paper.
 uint256 constant REDEMPTION_BETA = 2;
 
-// To prevent redemptions unless Bold depegs below 0.95 and allow the system to take off
+// To prevent redemptions unless Ebusd depegs below 0.95 and allow the system to take off
 uint256 constant INITIAL_BASE_RATE = 5 * _1pct - REDEMPTION_FEE_FLOOR; // 5% initial redemption rate
 
 // Discount to be used once the shutdown thas been triggered

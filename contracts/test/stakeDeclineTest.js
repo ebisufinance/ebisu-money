@@ -22,7 +22,7 @@ contract("TroveManager", async (accounts) => {
 
   let contracts;
   let priceFeed;
-  let boldToken;
+  let ebusdToken;
   let sortedTroves;
   let troveManager;
   let activePool;
@@ -32,7 +32,8 @@ contract("TroveManager", async (accounts) => {
   let borrowerOperations;
   let hintHelpers;
 
-  const getOpenTroveBoldAmount = async (totalDebt) => th.getOpenTroveBoldAmount(contracts, totalDebt);
+  const getOpenTroveEbusdAmount = async (totalDebt) =>
+    th.getOpenTroveEbusdAmount(contracts, totalDebt);
 
   const getSnapshotsRatio = async () => {
     const ratio = (await troveManager.getTotalStakesSnapshot())
@@ -51,7 +52,7 @@ contract("TroveManager", async (accounts) => {
     const result = await deployFixture();
     contracts = result.contracts;
     priceFeed = contracts.priceFeedTestnet;
-    boldToken = contracts.boldToken;
+    ebusdToken = contracts.ebusdToken;
     sortedTroves = contracts.sortedTroves;
     troveManager = contracts.troveManager;
     activePool = contracts.activePool;
@@ -70,74 +71,77 @@ contract("TroveManager", async (accounts) => {
     // Make 1 mega troves A at ~50% total collateral
     const ATroveId = await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(1, 31)),
+      await getOpenTroveEbusdAmount(dec(1, 31)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: A, value: dec(2, 29) },
+      { from: A, value: dec(2, 29) }
     );
 
     // Make 5 large troves B, C, D, E, F at ~10% total collateral
     const BTroveId = await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(2, 30)),
+      await getOpenTroveEbusdAmount(dec(2, 30)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: B, value: dec(5, 28) },
+      { from: B, value: dec(5, 28) }
     );
     await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(2, 30)),
+      await getOpenTroveEbusdAmount(dec(2, 30)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: C, value: dec(4, 28) },
+      { from: C, value: dec(4, 28) }
     );
     await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(2, 30)),
+      await getOpenTroveEbusdAmount(dec(2, 30)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: D, value: dec(4, 28) },
+      { from: D, value: dec(4, 28) }
     );
     await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(2, 30)),
+      await getOpenTroveEbusdAmount(dec(2, 30)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: E, value: dec(4, 28) },
+      { from: E, value: dec(4, 28) }
     );
     await th.openTroveWrapper(
       contracts,
-      await getOpenTroveBoldAmount(dec(2, 30)),
+      await getOpenTroveEbusdAmount(dec(2, 30)),
       ZERO_ADDRESS,
       ZERO_ADDRESS,
       0,
-      { from: F, value: dec(4, 28) },
+      { from: F, value: dec(4, 28) }
     );
 
     // Make 10 tiny troves at relatively negligible collateral (~1e-9 of total)
     const tinyTroves = accounts.slice(10, 20);
     const eth_amount = dec(2, 20);
     for (const account of tinyTroves) {
-      await contracts.WETH.mint(account, toBN(eth_amount).add(ETH_GAS_COMPENSATION));
+      await contracts.WETH.mint(
+        account,
+        toBN(eth_amount).add(ETH_GAS_COMPENSATION)
+      );
       await th.openTroveWrapper(
         contracts,
-        await getOpenTroveBoldAmount(dec(1, 22)),
+        await getOpenTroveEbusdAmount(dec(1, 22)),
         ZERO_ADDRESS,
         ZERO_ADDRESS,
         0,
-        { from: account, value: eth_amount },
+        { from: account, value: eth_amount }
       );
     }
 
     // liquidate 1 trove at ~50% total system collateral
     await priceFeed.setPrice(dec(50, 18));
     assert.isTrue(
-      await troveManager.checkBelowCriticalThreshold(await priceFeed.getPrice()),
+      await troveManager.checkBelowCriticalThreshold(await priceFeed.getPrice())
     );
     await troveManager.liquidate(ATroveId);
 
@@ -163,7 +167,7 @@ contract("TroveManager", async (accounts) => {
       1,
       false,
       th.MAX_UINT256,
-      { from: B },
+      { from: B }
     ); // B repays 1 wei
     // console.log(`B stake after A1: ${(await troveManager.Troves(BTroveId))[2]}`);
     // console.log(`Snapshots ratio after A1: ${await getSnapshotsRatio()}`);
@@ -186,7 +190,7 @@ contract("TroveManager", async (accounts) => {
         1,
         false,
         th.MAX_UINT256,
-        { from: B },
+        { from: B }
       ); // A repays 1 wei
       // console.log(
       //   `B stake after A${idx + 2}: ${(await troveManager.Troves(B))[2]}`

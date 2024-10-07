@@ -24,7 +24,7 @@ contract LiquidationsLSTTest is DevTestSetup {
 
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev memory contracts;
-        (contracts, collateralRegistry, boldToken,,,,) =
+        (contracts, collateralRegistry, ebusdToken,,,,) =
             deployer.deployAndConnectContracts(TestDeployer.TroveManagerParams(160e16, 120e16, 1.2 ether, 5e16, 10e16));
         collToken = contracts.collToken;
         activePool = contracts.activePool;
@@ -49,7 +49,7 @@ contract LiquidationsLSTTest is DevTestSetup {
     }
 
     struct InitialValues {
-        uint256 spBoldBalance;
+        uint256 spEbusdBalance;
         uint256 spCollBalance;
         uint256 ACollBalance;
         uint256 AInterest;
@@ -118,7 +118,7 @@ contract LiquidationsLSTTest is DevTestSetup {
         assertEq(troveManager.getTroveIdsCount(), 1);
 
         // Check SP stays the same
-        assertEq(stabilityPool.getTotalBoldDeposits(), 0, "SP should be empty");
+        assertEq(stabilityPool.getTotalEbusdDeposits(), 0, "SP should be empty");
         assertEq(stabilityPool.getCollBalance(), 0, "SP should not have Coll rewards");
 
         // Check B has received debt
@@ -158,7 +158,7 @@ contract LiquidationsLSTTest is DevTestSetup {
     }
 
     struct FinalValues {
-        uint256 spBoldBalance;
+        uint256 spEbusdBalance;
         uint256 spCollBalance;
         uint256 collToLiquidate;
         uint256 collSPPortion;
@@ -219,7 +219,7 @@ contract LiquidationsLSTTest is DevTestSetup {
         console2.log(_finalPrice, "_finalPrice");
 
         InitialValues memory initialValues;
-        initialValues.spBoldBalance = stabilityPool.getTotalBoldDeposits();
+        initialValues.spEbusdBalance = stabilityPool.getTotalEbusdDeposits();
         initialValues.spCollBalance = stabilityPool.getCollBalance();
         initialValues.ACollBalance = collToken.balanceOf(A);
         initialValues.BDebt = troveManager.getTroveEntireDebt(BTroveId);
@@ -246,9 +246,9 @@ contract LiquidationsLSTTest is DevTestSetup {
         // Offset part
         FinalValues memory finalValues;
         finalValues.collToLiquidate = collAmount * 995 / 1000;
-        // Check SP Bold has decreased
-        finalValues.spBoldBalance = stabilityPool.getTotalBoldDeposits();
-        assertEq(initialValues.spBoldBalance - finalValues.spBoldBalance, _spAmount, "SP Bold balance mismatch");
+        // Check SP Ebusd has decreased
+        finalValues.spEbusdBalance = stabilityPool.getTotalEbusdDeposits();
+        assertEq(initialValues.spEbusdBalance - finalValues.spEbusdBalance, _spAmount, "SP Ebusd balance mismatch");
         // Check SP Coll has  increased
         finalValues.spCollBalance = stabilityPool.getCollBalance();
         finalValues.collSPPortion = finalValues.collToLiquidate * _spAmount / (liquidationAmount + AInterest);

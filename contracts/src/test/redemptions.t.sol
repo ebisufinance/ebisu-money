@@ -5,7 +5,7 @@ pragma solidity 0.8.18;
 import "./TestContracts/DevTestSetup.sol";
 
 contract Redemptions is DevTestSetup {
-    struct BoldRedeemAmounts {
+    struct EbusdRedeemAmounts {
         uint256 A;
         uint256 B;
         uint256 C;
@@ -134,7 +134,7 @@ contract Redemptions is DevTestSetup {
 
         LatestTroveData memory trove_A = troveManager.getLatestTroveData(troveIDs.A);
         assertGt(trove_A.accruedInterest, 0);
-        assertEq(trove_A.redistBoldDebtGain, 0);
+        assertEq(trove_A.redistEbusdDebtGain, 0);
 
         uint256 debt_B = troveManager.getTroveEntireDebt(troveIDs.B);
 
@@ -160,7 +160,7 @@ contract Redemptions is DevTestSetup {
         assertGt(correspondingColl, 0);
         assertGt(predictedCollFee, 0);
 
-        // Expect Trove's coll reduced by the Coll corresponding to the BOLD redeemed (less the Coll fee)
+        // Expect Trove's coll reduced by the Coll corresponding to the EBUSD redeemed (less the Coll fee)
         uint256 expectedRemainingColl =
             troveManager.getTroveEntireColl(troveIDs.B) - correspondingColl + predictedCollFee;
         assertGt(expectedRemainingColl, 0);
@@ -201,20 +201,20 @@ contract Redemptions is DevTestSetup {
         (,, ABCDEF memory troveIDs) = _setupForRedemptionAscendingInterest();
         uint256 price = priceFeed.getPrice();
 
-        BoldRedeemAmounts memory boldRedeemAmounts;
+        EbusdRedeemAmounts memory ebusdRedeemAmounts;
         CorrespondingColl memory correspondingColl;
 
-        boldRedeemAmounts.A = troveManager.getTroveDebt(troveIDs.A);
-        boldRedeemAmounts.B = troveManager.getTroveDebt(troveIDs.B);
-        boldRedeemAmounts.C = troveManager.getTroveDebt(troveIDs.C) / 2;
-        uint256 totalBoldRedeemAmount = boldRedeemAmounts.A + boldRedeemAmounts.B + boldRedeemAmounts.C;
+        ebusdRedeemAmounts.A = troveManager.getTroveDebt(troveIDs.A);
+        ebusdRedeemAmounts.B = troveManager.getTroveDebt(troveIDs.B);
+        ebusdRedeemAmounts.C = troveManager.getTroveDebt(troveIDs.C) / 2;
+        uint256 totalEbusdRedeemAmount = ebusdRedeemAmounts.A + ebusdRedeemAmounts.B + ebusdRedeemAmounts.C;
 
-        correspondingColl.A = boldRedeemAmounts.A * DECIMAL_PRECISION / price;
-        correspondingColl.B = boldRedeemAmounts.B * DECIMAL_PRECISION / price;
-        correspondingColl.C = boldRedeemAmounts.C * DECIMAL_PRECISION / price;
+        correspondingColl.A = ebusdRedeemAmounts.A * DECIMAL_PRECISION / price;
+        correspondingColl.B = ebusdRedeemAmounts.B * DECIMAL_PRECISION / price;
+        correspondingColl.C = ebusdRedeemAmounts.C * DECIMAL_PRECISION / price;
 
-        uint256 redemptionFeePct = collateralRegistry.getEffectiveRedemptionFeeInBold(totalBoldRedeemAmount)
-            * DECIMAL_PRECISION / totalBoldRedeemAmount;
+        uint256 redemptionFeePct = collateralRegistry.getEffectiveRedemptionFeeInEbusd(totalEbusdRedeemAmount)
+            * DECIMAL_PRECISION / totalEbusdRedeemAmount;
 
         uint256 predictedCollFee_A = correspondingColl.A * redemptionFeePct / DECIMAL_PRECISION;
         uint256 predictedCollFee_B = correspondingColl.B * redemptionFeePct / DECIMAL_PRECISION;
@@ -224,7 +224,7 @@ contract Redemptions is DevTestSetup {
         assertGt(predictedCollFee_B, 0);
         assertGt(predictedCollFee_C, 0);
 
-        // Expect each Trove's coll to reduce by the Coll corresponding to the bold redeemed, less the Coll fee
+        // Expect each Trove's coll to reduce by the Coll corresponding to the ebusd redeemed, less the Coll fee
         uint256 expectedRemainingColl_A =
             troveManager.getTroveEntireColl(troveIDs.A) - correspondingColl.A + predictedCollFee_A;
         uint256 expectedRemainingColl_B =
@@ -235,7 +235,7 @@ contract Redemptions is DevTestSetup {
         assertGt(expectedRemainingColl_B, 0);
         assertGt(expectedRemainingColl_C, 0);
 
-        redeem(E, totalBoldRedeemAmount);
+        redeem(E, totalEbusdRedeemAmount);
 
         assertApproxEqAbs(troveManager.getTroveEntireColl(troveIDs.A), expectedRemainingColl_A, 20);
         assertApproxEqAbs(troveManager.getTroveEntireColl(troveIDs.B), expectedRemainingColl_B, 20);
@@ -246,17 +246,17 @@ contract Redemptions is DevTestSetup {
         (,, ABCDEF memory troveIDs) = _setupForRedemptionAscendingInterest();
         uint256 price = priceFeed.getPrice();
 
-        BoldRedeemAmounts memory boldRedeemAmounts;
+        EbusdRedeemAmounts memory ebusdRedeemAmounts;
 
-        boldRedeemAmounts.A = troveManager.getTroveDebt(troveIDs.A);
-        boldRedeemAmounts.B = troveManager.getTroveDebt(troveIDs.B);
-        boldRedeemAmounts.C = troveManager.getTroveDebt(troveIDs.C) / 2;
+        ebusdRedeemAmounts.A = troveManager.getTroveDebt(troveIDs.A);
+        ebusdRedeemAmounts.B = troveManager.getTroveDebt(troveIDs.B);
+        ebusdRedeemAmounts.C = troveManager.getTroveDebt(troveIDs.C) / 2;
 
-        uint256 totalBoldRedeemAmount = boldRedeemAmounts.A + boldRedeemAmounts.B + boldRedeemAmounts.C;
-        uint256 totalCorrespondingColl = totalBoldRedeemAmount * DECIMAL_PRECISION / price;
+        uint256 totalEbusdRedeemAmount = ebusdRedeemAmounts.A + ebusdRedeemAmounts.B + ebusdRedeemAmounts.C;
+        uint256 totalCorrespondingColl = totalEbusdRedeemAmount * DECIMAL_PRECISION / price;
 
-        uint256 redemptionFeePct = collateralRegistry.getEffectiveRedemptionFeeInBold(totalBoldRedeemAmount)
-            * DECIMAL_PRECISION / totalBoldRedeemAmount;
+        uint256 redemptionFeePct = collateralRegistry.getEffectiveRedemptionFeeInEbusd(totalEbusdRedeemAmount)
+            * DECIMAL_PRECISION / totalEbusdRedeemAmount;
         uint256 totalCollFee = totalCorrespondingColl * redemptionFeePct / DECIMAL_PRECISION;
 
         uint256 expectedCollDelta = totalCorrespondingColl - totalCollFee;
@@ -267,7 +267,7 @@ contract Redemptions is DevTestSetup {
         assertGt(activePoolBalBefore, 0);
         assertGt(activePoolCollTrackerBefore, 0);
 
-        redeem(E, totalBoldRedeemAmount);
+        redeem(E, totalEbusdRedeemAmount);
 
         // Check Active Pool Coll reduced correctly
         assertApproxEqAbs(collToken.balanceOf(address(activePool)), activePoolBalBefore - expectedCollDelta, 30);
@@ -448,7 +448,7 @@ contract Redemptions is DevTestSetup {
         uint256 debt_B = troveManager.getTroveEntireDebt(troveIDs.B);
         assertGt(debt_B, 0, "B debt should be non zero");
 
-        deal(address(boldToken), B, debt_B);
+        deal(address(ebusdToken), B, debt_B);
         closeTrove(B, troveIDs.B);
 
         // Check B is closed
@@ -613,9 +613,9 @@ contract Redemptions is DevTestSetup {
 
         _redeemAndCreateZombieTrovesAAndB(troveIDs);
 
-        // E sends bold back to A and B so they can close
-        transferBold(E, A, boldToken.balanceOf(E) / 2);
-        transferBold(E, B, boldToken.balanceOf(E));
+        // E sends ebusd back to A and B so they can close
+        transferEbusd(E, A, ebusdToken.balanceOf(E) / 2);
+        transferEbusd(E, B, ebusdToken.balanceOf(E));
 
         assertEq(uint8(troveManager.getTroveStatus(troveIDs.A)), uint8(ITroveManager.Status.zombie));
         assertEq(uint8(troveManager.getTroveStatus(troveIDs.B)), uint8(ITroveManager.Status.zombie));
@@ -643,7 +643,7 @@ contract Redemptions is DevTestSetup {
 
         uint256 surplusDebt = 37;
 
-        // A and B withdraw Bold from their zombie Trove
+        // A and B withdraw Ebusd from their zombie Trove
         adjustZombieTrove(A, troveIDs.A, 0, false, debtDelta_A + surplusDebt, true);
         adjustZombieTrove(B, troveIDs.B, 0, false, debtDelta_A + surplusDebt, true);
 
@@ -668,7 +668,7 @@ contract Redemptions is DevTestSetup {
 
         uint256 surplusDebt = 37;
 
-        // A and B withdraw Bold from their zombie Trove
+        // A and B withdraw Ebusd from their zombie Trove
         adjustZombieTrove(A, troveIDs.A, 0, false, debtDelta_A + surplusDebt, true);
         adjustZombieTrove(B, troveIDs.B, 0, false, debtDelta_A + surplusDebt, true);
 
@@ -701,7 +701,7 @@ contract Redemptions is DevTestSetup {
         assertFalse(sortedTroves.contains(troveIDs.A));
         assertFalse(sortedTroves.contains(troveIDs.B));
 
-        // A and B withdraw Bold from their zombie Trove
+        // A and B withdraw Ebusd from their zombie Trove
         adjustZombieTrove(A, troveIDs.A, 0, false, debtDelta_A + surplusDebt, true);
         adjustZombieTrove(B, troveIDs.B, 0, false, debtDelta_A + surplusDebt, true);
 
@@ -733,7 +733,7 @@ contract Redemptions is DevTestSetup {
 
         uint256 surplusDebt = 37;
 
-        // A and B withdraw Bold from their zombie Trove
+        // A and B withdraw Ebusd from their zombie Trove
         adjustZombieTrove(A, troveIDs.A, 0, false, debtDelta_A + surplusDebt, true);
         adjustZombieTrove(B, troveIDs.B, 0, false, debtDelta_A + surplusDebt, true);
 
@@ -757,7 +757,7 @@ contract Redemptions is DevTestSetup {
         (uint256 borrow_A,) = findAmountToBorrowWithAdjustTrove(troveIDs.A, MIN_DEBT - debtDeficiency);
         (uint256 borrow_B,) = findAmountToBorrowWithAdjustTrove(troveIDs.B, MIN_DEBT - debtDeficiency);
 
-        // A and B attempt to withdraw Bold, but not enough
+        // A and B attempt to withdraw Ebusd, but not enough
         vm.expectRevert(BorrowerOperations.DebtBelowMin.selector);
         this.adjustZombieTrove(A, troveIDs.A, 0, false, borrow_A, true);
 
@@ -772,22 +772,22 @@ contract Redemptions is DevTestSetup {
 
         uint256 debtRepayment = 1;
 
-        // E sends Bold back to A and B
-        transferBold(E, A, boldToken.balanceOf(E) / 2);
-        transferBold(E, B, boldToken.balanceOf(E));
+        // E sends Ebusd back to A and B
+        transferEbusd(E, A, ebusdToken.balanceOf(E) / 2);
+        transferEbusd(E, B, ebusdToken.balanceOf(E));
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.TroveNotActive.selector);
-        borrowerOperations.repayBold(troveIDs.A, debtRepayment);
+        borrowerOperations.repayEbusd(troveIDs.A, debtRepayment);
         vm.stopPrank();
 
         vm.startPrank(B);
         vm.expectRevert(BorrowerOperations.TroveNotActive.selector);
-        borrowerOperations.repayBold(troveIDs.B, debtRepayment);
+        borrowerOperations.repayEbusd(troveIDs.B, debtRepayment);
         vm.stopPrank();
     }
 
-    function testZombieTroveBorrowerCanNotUseNormalWithdrawBoldFunction() public {
+    function testZombieTroveBorrowerCanNotUseNormalWithdrawEbusdFunction() public {
         (,, ABCDEF memory troveIDs) = _setupForRedemptionAscendingInterest();
 
         _redeemAndCreateZombieTrovesAAndB(troveIDs);
@@ -796,12 +796,12 @@ contract Redemptions is DevTestSetup {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.TroveNotActive.selector);
-        borrowerOperations.withdrawBold(troveIDs.A, debtWithdrawal, 0);
+        borrowerOperations.withdrawEbusd(troveIDs.A, debtWithdrawal, 0);
         vm.stopPrank();
 
         vm.startPrank(B);
         vm.expectRevert(BorrowerOperations.TroveNotActive.selector);
-        borrowerOperations.withdrawBold(troveIDs.B, debtWithdrawal, 0);
+        borrowerOperations.withdrawEbusd(troveIDs.B, debtWithdrawal, 0);
         vm.stopPrank();
     }
 
@@ -929,8 +929,8 @@ contract Redemptions is DevTestSetup {
         uint256 troveColl_E = 25000e18;
         // E  opens new Trove and deposits to SP
         openTroveNoHints100pct(E, troveColl_E, troveDebtRequest_E, interestRate_E);
-        makeSPDepositAndClaim(E, boldToken.balanceOf(E));
-        assertGt(stabilityPool.getTotalBoldDeposits(), troveManager.getTroveEntireDebt(troveIDs.B));
+        makeSPDepositAndClaim(E, ebusdToken.balanceOf(E));
+        assertGt(stabilityPool.getTotalEbusdDeposits(), troveManager.getTroveEntireDebt(troveIDs.B));
 
         // Price drops, B becomes liquidateable
         uint256 price = 10e18;

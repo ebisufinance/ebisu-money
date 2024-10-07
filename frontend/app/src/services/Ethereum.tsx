@@ -20,7 +20,7 @@ import {
   CHAIN_ID,
   CHAIN_NAME,
   CHAIN_RPC_URL,
-  CONTRACT_BOLD_TOKEN,
+  CONTRACT_EBUSD_TOKEN,
   LQTY_TOKEN,
   LUSD_TOKEN,
   WALLET_CONNECT_PROJECT_ID,
@@ -55,16 +55,17 @@ export function Ethereum({ children }: { children: ReactNode }) {
   return (
     <WagmiProvider config={wagmiConfig}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider {...rainbowKitProps}>
-          {children}
-        </RainbowKitProvider>
+        <RainbowKitProvider {...rainbowKitProps}>{children}</RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
 }
 
 export function useAccount():
-  & Omit<ReturnType<typeof useAccountWagmi>, "connector">
+  & Omit<
+    ReturnType<typeof useAccountWagmi>,
+    "connector"
+  >
   & {
     connect: () => void;
     disconnect: () => void;
@@ -76,12 +77,14 @@ export function useAccount():
   const { openConnectModal } = useConnectModal();
   const { openAccountModal } = useAccountModal();
   const ensName = useEnsName({ address: account?.address });
-  return demoMode.enabled ? demoMode.account : {
-    ...account,
-    connect: openConnectModal || noop,
-    disconnect: account.isConnected && openAccountModal || noop,
-    ensName: ensName.data ?? undefined,
-  };
+  return demoMode.enabled
+    ? demoMode.account
+    : {
+      ...account,
+      connect: openConnectModal || noop,
+      disconnect: (account.isConnected && openAccountModal) || noop,
+      ensName: ensName.data ?? undefined,
+    };
 }
 
 export function useBalance(
@@ -98,11 +101,13 @@ export function useBalance(
         if (!symbol || !isCollateralSymbol(symbol) || symbol === "ETH") {
           return null;
         }
-        const collateral = contracts.collaterals.find((c) => c.symbol === symbol);
+        const collateral = contracts.collaterals.find(
+          (c) => c.symbol === symbol,
+        );
         return collateral?.contracts.CollToken.address ?? null;
       },
     )
-    .with("BOLD", () => CONTRACT_BOLD_TOKEN)
+    .with("EBUSD", () => CONTRACT_EBUSD_TOKEN)
     .with("LQTY", () => LQTY_TOKEN)
     .with("LUSD", () => LUSD_TOKEN)
     .otherwise(() => null);
@@ -128,10 +133,15 @@ export function useBalance(
 
   return demoMode.enabled && token
     ? { data: ACCOUNT_BALANCES[token], isLoading: false }
-    : (token === "ETH" ? ethBalance : tokenBalance);
+    : token === "ETH"
+    ? ethBalance
+    : tokenBalance;
 }
 
-function useRainbowKitProps(): Omit<ComponentProps<typeof RainbowKitProvider>, "children"> {
+function useRainbowKitProps(): Omit<
+  ComponentProps<typeof RainbowKitProvider>,
+  "children"
+> {
   const theme = useTheme();
   return {
     modalSize: "compact",

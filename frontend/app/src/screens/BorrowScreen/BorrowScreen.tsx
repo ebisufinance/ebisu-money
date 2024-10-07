@@ -48,12 +48,16 @@ export function BorrowScreen() {
 
   // useParams() can return an array but not with the current
   // routing setup, so we can safely cast it to a string
-  const collSymbol = String(useParams().collateral ?? allCollContracts[0].symbol).toUpperCase();
+  const collSymbol = String(
+    useParams().collateral ?? allCollContracts[0].symbol,
+  ).toUpperCase();
   if (!isCollateralSymbol(collSymbol)) {
     throw new Error(`Invalid collateral symbol: ${collSymbol}`);
   }
 
-  const collIndex = allCollContracts.findIndex(({ symbol }) => symbol === collSymbol);
+  const collIndex = allCollContracts.findIndex(
+    ({ symbol }) => symbol === collSymbol,
+  );
   if (!isCollIndex(collIndex)) {
     throw new Error(`Unknown collateral symbol: ${collSymbol}`);
   }
@@ -68,17 +72,26 @@ export function BorrowScreen() {
 
   const collateral = collaterals[collIndex];
 
-  const deposit = useInputFieldValue((value) => `${fmtnum(value)} ${collateral.name}`);
-  const debt = useInputFieldValue((value) => `${fmtnum(value)} BOLD`);
-  const [interestRate, setInterestRate] = useState(dn.div(dn.from(INTEREST_RATE_DEFAULT, 18), 100));
+  const deposit = useInputFieldValue(
+    (value) => `${fmtnum(value)} ${collateral.name}`,
+  );
+  const debt = useInputFieldValue((value) => `${fmtnum(value)} EBUSD`);
+  const [interestRate, setInterestRate] = useState(
+    dn.div(dn.from(INTEREST_RATE_DEFAULT, 18), 100),
+  );
 
   const collPrice = usePrice(collateral.symbol);
 
-  const balances = Object.fromEntries(KNOWN_COLLATERAL_SYMBOLS.map((symbol) => ([
-    symbol,
-    // known collaterals are static so we can safely call this hook in a .map()
-    useBalance(account.address, symbol),
-  ] as const)));
+  const balances = Object.fromEntries(
+    KNOWN_COLLATERAL_SYMBOLS.map(
+      (symbol) =>
+        [
+          symbol,
+          // known collaterals are static so we can safely call this hook in a .map()
+          useBalance(account.address, symbol),
+        ] as const,
+    ),
+  );
 
   const collBalance = balances[collateral.symbol];
 
@@ -102,7 +115,9 @@ export function BorrowScreen() {
       && dn.gt(loanDetails.deposit, 0)
     ? DEBT_SUGGESTIONS.map((ratio) => {
       const debt = loanDetails.maxDebt && dn.mul(loanDetails.maxDebt, ratio);
-      const ltv = debt && loanDetails.deposit && getLtv(loanDetails.deposit, debt, collPrice);
+      const ltv = debt
+        && loanDetails.deposit
+        && getLtv(loanDetails.deposit, debt, collPrice);
       const risk = ltv && getLiquidationRisk(ltv, loanDetails.maxLtv);
       return { debt, ltv, risk };
     })
@@ -122,14 +137,9 @@ export function BorrowScreen() {
         <HFlex>
           {content.borrowScreen.headline(
             <TokenIcon.Group>
-              {allCollContracts.map(({ symbol }) => (
-                <TokenIcon
-                  key={symbol}
-                  symbol={symbol}
-                />
-              ))}
+              {allCollContracts.map(({ symbol }) => <TokenIcon key={symbol} symbol={symbol} />)}
             </TokenIcon.Group>,
-            <TokenIcon symbol="BOLD" />,
+            <TokenIcon symbol="EBUSD" />,
           )}
         </HFlex>
       }
@@ -160,10 +170,9 @@ export function BorrowScreen() {
                   onSelect={(index) => {
                     deposit.setValue("");
                     const { symbol } = collaterals[index];
-                    router.push(
-                      `/borrow/${symbol.toLowerCase()}`,
-                      { scroll: false },
-                    );
+                    router.push(`/borrow/${symbol.toLowerCase()}`, {
+                      scroll: false,
+                    });
                   }}
                   selected={collIndex}
                 />
@@ -207,36 +216,39 @@ export function BorrowScreen() {
             <InputField
               contextual={
                 <InputField.Badge
-                  icon={<TokenIcon symbol="BOLD" />}
-                  label="BOLD"
+                  icon={<TokenIcon symbol="EBUSD" />}
+                  label="EBUSD"
                 />
               }
               label={content.borrowScreen.borrowField.label}
               placeholder="0.00"
               secondary={{
-                start: `$${
-                  debt.parsed
-                    ? fmtnum(debt.parsed, "2z")
-                    : "0.00"
-                }`,
+                start: `$${debt.parsed ? fmtnum(debt.parsed, "2z") : "0.00"}`,
                 end: debtSuggestions && (
                   <HFlex gap={6}>
-                    {debtSuggestions.map((s) => (
-                      s.debt && s.risk && (
-                        <PillButton
-                          key={dn.toString(s.debt)}
-                          label={`$${fmtnum(s.debt, { compact: true, digits: 0 })}`}
-                          onClick={() => {
-                            if (s.debt) {
-                              debt.setValue(dn.toString(s.debt, 0));
-                            }
-                          }}
-                          warnLevel={s.risk}
-                        />
-                      )
-                    ))}
+                    {debtSuggestions.map(
+                      (s) =>
+                        s.debt
+                        && s.risk && (
+                          <PillButton
+                            key={dn.toString(s.debt)}
+                            label={`$${fmtnum(s.debt, { compact: true, digits: 0 })}`}
+                            onClick={() => {
+                              if (s.debt) {
+                                debt.setValue(dn.toString(s.debt, 0));
+                              }
+                            }}
+                            warnLevel={s.risk}
+                          />
+                        ),
+                    )}
                     {debtSuggestions.length > 0 && (
-                      <InfoTooltip {...infoTooltipProps(content.borrowScreen.infoTooltips.interestRateSuggestions)} />
+                      <InfoTooltip
+                        {...infoTooltipProps(
+                          content.borrowScreen.infoTooltips
+                            .interestRateSuggestions,
+                        )}
+                      />
                     )}
                   </HFlex>
                 ),
@@ -274,7 +286,9 @@ export function BorrowScreen() {
           }
           footer={[
             [
-              <Field.FooterInfoRedemptionRisk riskLevel={loanDetails.redemptionRisk} />,
+              <Field.FooterInfoRedemptionRisk
+                riskLevel={loanDetails.redemptionRisk}
+              />,
               <span
                 className={css({
                   display: "flex",
@@ -320,7 +334,7 @@ export function BorrowScreen() {
                   owner: account.address,
                   ownerIndex: troveCount.data ?? 0,
                   collAmount: deposit.parsed,
-                  boldAmount: debt.parsed,
+                  ebusdAmount: debt.parsed,
                   upperHint: dnum18(0),
                   lowerHint: dnum18(0),
                   annualInterestRate: interestRate,

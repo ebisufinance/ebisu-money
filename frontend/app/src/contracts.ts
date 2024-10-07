@@ -16,8 +16,8 @@ import { WETH } from "@/src/abi/WETH";
 import { WETHZapper } from "@/src/abi/WETHZapper";
 import {
   COLLATERAL_CONTRACTS,
-  CONTRACT_BOLD_TOKEN,
   CONTRACT_COLLATERAL_REGISTRY,
+  CONTRACT_EBUSD_TOKEN,
   CONTRACT_HINT_HELPERS,
   CONTRACT_MULTI_TROVE_GETTER,
   CONTRACT_WETH,
@@ -26,7 +26,7 @@ import { useMemo } from "react";
 import { erc20Abi } from "viem";
 
 const protocolAbis = {
-  BoldToken: erc20Abi,
+  EbUsdToken: erc20Abi,
   CollateralRegistry,
   HintHelpers,
   MultiTroveGetter,
@@ -89,7 +89,7 @@ export type Contracts = {
 export function useContracts(): Contracts {
   return useMemo(() => {
     return {
-      BoldToken: { abi: abis.BoldToken, address: CONTRACT_BOLD_TOKEN },
+      EbUsdToken: { abi: abis.EbUsdToken, address: CONTRACT_EBUSD_TOKEN },
       CollateralRegistry: { abi: abis.CollateralRegistry, address: CONTRACT_COLLATERAL_REGISTRY },
       HintHelpers: { abi: abis.HintHelpers, address: CONTRACT_HINT_HELPERS },
       MultiTroveGetter: { abi: abis.MultiTroveGetter, address: CONTRACT_MULTI_TROVE_GETTER },

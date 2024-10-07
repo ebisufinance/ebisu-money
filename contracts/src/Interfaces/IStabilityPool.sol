@@ -4,22 +4,22 @@ pragma solidity ^0.8.0;
 
 import "./IActivePool.sol";
 import "./ILiquityBase.sol";
-import "./IBoldToken.sol";
+import "./IEbusdToken.sol";
 import "./ITroveManager.sol";
-import "./IBoldRewardsReceiver.sol";
+import "./IEbusdRewardsReceiver.sol";
 
 /*
- * The Stability Pool holds Bold tokens deposited by Stability Pool depositors.
+ * The Stability Pool holds Ebusd tokens deposited by Stability Pool depositors.
  *
- * When a trove is liquidated, then depending on system conditions, some of its Bold debt gets offset with
- * Bold in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of Bold tokens in the Stability Pool is burned.
+ * When a trove is liquidated, then depending on system conditions, some of its Ebusd debt gets offset with
+ * Ebusd in the Stability Pool:  that is, the offset debt evaporates, and an equal amount of Ebusd tokens in the Stability Pool is burned.
  *
- * Thus, a liquidation causes each depositor to receive a Bold loss, in proportion to their deposit as a share of total deposits.
+ * Thus, a liquidation causes each depositor to receive a Ebusd loss, in proportion to their deposit as a share of total deposits.
  * They also receive an Coll gain, as the collateral of the liquidated trove is distributed among Stability depositors,
  * in the same proportion.
  *
  * When a liquidation occurs, it depletes every deposit by the same fraction: for example, a liquidation that depletes 40%
- * of the total Bold in the Stability Pool, depletes 40% of each deposit.
+ * of the total Ebusd in the Stability Pool, depletes 40% of each deposit.
  *
  * A deposit that has experienced a series of liquidations is termed a "compounded deposit": each liquidation depletes the deposit,
  * multiplying it by some factor in range ]0,1[
@@ -28,8 +28,8 @@ import "./IBoldRewardsReceiver.sol";
  * https://github.com/liquity/liquity/blob/master/papers/Scalable_Reward_Distribution_with_Compounding_Stakes.pdf
  *
 */
-interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
-    function boldToken() external view returns (IBoldToken);
+interface IStabilityPool is ILiquityBase, IEbusdRewardsReceiver {
+    function ebusdToken() external view returns (IEbusdToken);
     function troveManager() external view returns (ITroveManager);
 
     /*  provideToSP():
@@ -43,7 +43,7 @@ interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
     /*  withdrawFromSP():
     * - Calculates depositor's Coll gain
     * - Calculates the compounded deposit
-    * - Sends the requested BOLD withdrawal to depositor
+    * - Sends the requested EBUSD withdrawal to depositor
     * - (If _amount > userDeposit, the user withdraws all of their compounded deposit)
     * - Decreases deposit by withdrawn amount and takes new snapshots of accumulators P and S
     */
@@ -55,7 +55,7 @@ interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
      * Initial checks:
      * - Caller is TroveManager
      * ---
-     * Cancels out the specified debt against the Bold contained in the Stability Pool (as far as possible)
+     * Cancels out the specified debt against the Ebusd contained in the Stability Pool (as far as possible)
      * and transfers the Trove's collateral from ActivePool to StabilityPool.
      * Only called by liquidation functions in the TroveManager.
      */
@@ -71,9 +71,9 @@ interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
     function getCollBalance() external view returns (uint256);
 
     /*
-     * Returns Bold held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
+     * Returns Ebusd held in the pool. Changes when users deposit/withdraw, and when Trove debt is offset.
      */
-    function getTotalBoldDeposits() external view returns (uint256);
+    function getTotalEbusdDeposits() external view returns (uint256);
 
     function getYieldGainsOwed() external view returns (uint256);
     function getYieldGainsPending() external view returns (uint256);
@@ -84,7 +84,7 @@ interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
     function getDepositorCollGain(address _depositor) external view returns (uint256);
 
     /*
-     * Calculates the BOLD yield gain earned by the deposit since its last snapshots were taken.
+     * Calculates the EBUSD yield gain earned by the deposit since its last snapshots were taken.
      */
     function getDepositorYieldGain(address _depositor) external view returns (uint256);
 
@@ -96,7 +96,7 @@ interface IStabilityPool is ILiquityBase, IBoldRewardsReceiver {
     /*
      * Return the user's compounded deposit.
      */
-    function getCompoundedBoldDeposit(address _depositor) external view returns (uint256);
+    function getCompoundedEbusdDeposit(address _depositor) external view returns (uint256);
 
     function epochToScaleToS(uint128 _epoch, uint128 _scale) external view returns (uint256);
 

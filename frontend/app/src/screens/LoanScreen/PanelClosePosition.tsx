@@ -20,12 +20,12 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
   const txFlow = useTransactionFlow();
 
   const collPrice = usePrice(loan.collateral);
-  const boldPriceUsd = usePrice("BOLD");
+  const ebusdPriceUsd = usePrice("EBUSD");
   const [tokenIndex, setTokenIndex] = useState(0);
 
   const collateral = TOKENS_BY_SYMBOL[loan.collateral];
 
-  if (!collPrice || !boldPriceUsd) {
+  if (!collPrice || !ebusdPriceUsd) {
     return null;
   }
 
@@ -37,15 +37,13 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
     collPrice,
   );
 
-  const repayWith = tokenIndex === 0 ? "BOLD" : collateral.symbol;
+  const repayWith = tokenIndex === 0 ? "EBUSD" : collateral.symbol;
 
-  const amountToRepay = repayWith === "BOLD"
+  const amountToRepay = repayWith === "EBUSD"
     ? (loanDetails.debt ?? dn.from(0))
-    : (dn.div(loanDetails.debt ?? dn.from(0), collPrice));
+    : dn.div(loanDetails.debt ?? dn.from(0), collPrice);
 
-  const collToReclaim = repayWith === "BOLD"
-    ? loan.deposit
-    : dn.sub(loan.deposit, amountToRepay);
+  const collToReclaim = repayWith === "EBUSD" ? loan.deposit : dn.sub(loan.deposit, amountToRepay);
 
   const allowSubmit = account.isConnected && tokenIndex === 0;
 
@@ -76,42 +74,56 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
                 buttonDisplay={() => ({
                   label: (
                     <>
-                      {TOKENS_BY_SYMBOL[(["BOLD", collateral.symbol] as const)[tokenIndex]].name}
+                      {TOKENS_BY_SYMBOL[
+                        (["EBUSD", collateral.symbol] as const)[tokenIndex]
+                      ].name}
                       <span
                         className={css({
                           color: "contentAlt",
                           fontWeight: 400,
                         })}
                       >
-                        {TOKENS_BY_SYMBOL[(["BOLD", collateral.symbol] as const)[tokenIndex]].symbol === "BOLD"
+                        {TOKENS_BY_SYMBOL[
+                            (["EBUSD", collateral.symbol] as const)[tokenIndex]
+                          ].symbol === "EBUSD"
                           ? " account"
                           : " loan"}
                       </span>
                     </>
                   ),
-                  icon: <TokenIcon symbol={(["BOLD", collateral.symbol] as const)[tokenIndex]} />,
-                })}
-                items={(["BOLD", collateral.symbol] as const).map((symbol) => ({
-                  icon: <TokenIcon symbol={symbol} />,
-                  label: (
-                    <>
-                      {collateral.name} {symbol === "BOLD" ? "(account balance)" : "(loan collateral)"}
-                    </>
+                  icon: (
+                    <TokenIcon
+                      symbol={(["EBUSD", collateral.symbol] as const)[tokenIndex]}
+                    />
                   ),
-                }))}
+                })}
+                items={(["EBUSD", collateral.symbol] as const).map(
+                  (symbol) => ({
+                    icon: <TokenIcon symbol={symbol} />,
+                    label: (
+                      <>
+                        {collateral.name} {symbol === "EBUSD"
+                          ? "(account balance)"
+                          : "(loan collateral)"}
+                      </>
+                    ),
+                  }),
+                )}
                 menuWidth={300}
                 onSelect={setTokenIndex}
                 selected={tokenIndex}
               />
             </div>
           }
-          footer={[[
-            <Field.FooterInfo
-              label={`$${fmtnum(dn.mul(loan.borrowed, boldPriceUsd), 2)}`}
-              value={null}
-            />,
-            null,
-          ]]}
+          footer={[
+            [
+              <Field.FooterInfo
+                label={`$${fmtnum(dn.mul(loan.borrowed, ebusdPriceUsd), 2)}`}
+                value={null}
+              />,
+              null,
+            ],
+          ]}
           label="You repay with"
         />
         <Field
@@ -155,13 +167,15 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
             </div>
           }
           label="You reclaim"
-          footer={[[
-            <Field.FooterInfo
-              label={`$${fmtnum(dn.mul(loan.deposit, collPrice), 2)}`}
-              value={null}
-            />,
-            null,
-          ]]}
+          footer={[
+            [
+              <Field.FooterInfo
+                label={`$${fmtnum(dn.mul(loan.deposit, collPrice), 2)}`}
+                value={null}
+              />,
+              null,
+            ],
+          ]}
         />
       </VFlex>
       <div
@@ -172,7 +186,7 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
           borderRadius: 8,
         })}
       >
-        You are repaying your debt and closing the position. {repayWith === "BOLD"
+        You are repaying your debt and closing the position. {repayWith === "EBUSD"
           ? `The deposit will be returned to your wallet.`
           : `To close yor position, a part of your collateral will be sold to pay back the debt. The rest of your collateral will be returned to your wallet.`}
       </div>
@@ -204,7 +218,10 @@ export function PanelClosePosition({ loan }: { loan: PositionLoan }) {
                 successMessage: "The loan position has been closed successfully.",
 
                 collIndex: loan.collIndex,
-                prefixedTroveId: getPrefixedTroveId(loan.collIndex, loan.troveId),
+                prefixedTroveId: getPrefixedTroveId(
+                  loan.collIndex,
+                  loan.troveId,
+                ),
               });
               router.push("/transactions");
             }

@@ -11,7 +11,7 @@ interface ILeverageZapper {
         uint256 ownerIndex;
         uint256 collAmount;
         uint256 flashLoanAmount;
-        uint256 boldAmount;
+        uint256 ebusdAmount;
         uint256 upperHint;
         uint256 lowerHint;
         uint256 annualInterestRate;
@@ -24,14 +24,14 @@ interface ILeverageZapper {
     struct LeverUpTroveParams {
         uint256 troveId;
         uint256 flashLoanAmount;
-        uint256 boldAmount;
+        uint256 ebusdAmount;
         uint256 maxUpfrontFee;
     }
 
     struct LeverDownTroveParams {
         uint256 troveId;
         uint256 flashLoanAmount;
-        uint256 minBoldAmount;
+        uint256 minEbusdAmount;
     }
 
     function flashLoanProvider() external view returns (IFlashLoanProvider);

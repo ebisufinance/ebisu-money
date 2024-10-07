@@ -7,7 +7,7 @@ import "./TestContracts/DevTestSetup.sol";
 contract Deployment is DevTestSetup {
     function testContractsDeployed() public view {
         assertNotEq(address(activePool), address(0));
-        assertNotEq(address(boldToken), address(0));
+        assertNotEq(address(ebusdToken), address(0));
         assertNotEq(address(borrowerOperations), address(0));
         assertNotEq(address(collSurplusPool), address(0));
         assertNotEq(address(gasPool), address(0));
@@ -28,10 +28,10 @@ contract Deployment is DevTestSetup {
         assertEq(priceFeedAddress, recordedPriceFeedAddress);
     }
 
-    function testTroveManagerHasCorrectBoldTokenAddress() public view {
-        address boldTokenAddress = address(boldToken);
-        address recordedBoldTokenAddress = address(troveManager.boldToken());
-        assertEq(boldTokenAddress, recordedBoldTokenAddress);
+    function testTroveManagerHasCorrectEbusdTokenAddress() public view {
+        address ebusdTokenAddress = address(ebusdToken);
+        address recordedEbusdTokenAddress = address(troveManager.ebusdToken());
+        assertEq(ebusdTokenAddress, recordedEbusdTokenAddress);
     }
     */
 
@@ -110,10 +110,10 @@ contract Deployment is DevTestSetup {
         assertEq(activePoolAddress, recordedActivePoolAddress);
     }
 
-    function testStabilityPoolHasCorrectCorrectBoldTokenAddress() public view {
-        address boldTokenAddress = address(boldToken);
-        address recordedBoldTokenAddress = address(stabilityPool.boldToken());
-        assertEq(boldTokenAddress, recordedBoldTokenAddress);
+    function testStabilityPoolHasCorrectCorrectEbusdTokenAddress() public view {
+        address ebusdTokenAddress = address(ebusdToken);
+        address recordedEbusdTokenAddress = address(stabilityPool.ebusdToken());
+        assertEq(ebusdTokenAddress, recordedEbusdTokenAddress);
     }
 
     function testStabilityPoolHasCorrectTroveManagerAddress() public view {

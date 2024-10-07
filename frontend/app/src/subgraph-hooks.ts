@@ -191,7 +191,7 @@ function subgraphStabilityPoolDepositToEarnPosition(spDeposit: GraphStabilityPoo
     deposit: dnum18(spDeposit.deposit),
     collIndex,
     rewards: {
-      bold: dnum18(spDeposit.boldGain),
+      ebusd: dnum18(spDeposit.ebusdGain),
       coll: dnum18(spDeposit.collGain),
     },
   };

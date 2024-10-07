@@ -34,7 +34,7 @@ contract ShutdownTest is DevTestSetup {
 
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev[] memory _contractsArray;
-        (_contractsArray, collateralRegistry, boldToken,,, WETH,) =
+        (_contractsArray, collateralRegistry, ebusdToken,,, WETH,) =
             deployer.deployAndConnectContractsMultiColl(troveManagerParamsArray);
         // Unimplemented feature (...):Copying of type struct LiquityContracts memory[] memory to storage not yet supported.
         for (uint256 c = 0; c < NUM_COLLATERALS; c++) {
@@ -83,11 +83,11 @@ contract ShutdownTest is DevTestSetup {
         address _account,
         uint256 _index,
         uint256 _coll,
-        uint256 _boldAmount,
+        uint256 _ebusdAmount,
         uint256 _annualInterestRate
     ) public returns (uint256 troveId) {
         TroveChange memory troveChange;
-        troveChange.debtIncrease = _boldAmount;
+        troveChange.debtIncrease = _ebusdAmount;
         troveChange.newWeightedRecordedDebt = troveChange.debtIncrease * _annualInterestRate;
         uint256 avgInterestRate =
             contractsArray[_collIndex].activePool.getNewApproxAvgInterestRateFromTroveChange(troveChange);
@@ -99,7 +99,7 @@ contract ShutdownTest is DevTestSetup {
             _account,
             _index,
             _coll,
-            _boldAmount,
+            _ebusdAmount,
             0, // _upperHint
             0, // _lowerHint
             _annualInterestRate,
@@ -201,21 +201,21 @@ contract ShutdownTest is DevTestSetup {
         vm.stopPrank();
     }
 
-    function testCannotWithdrawBoldAfterShutdown() public {
+    function testCannotWithdrawEbusdAfterShutdown() public {
         uint256 troveId = prepareAndShutdownFirstBranch();
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.IsShutDown.selector);
-        borrowerOperations.withdrawBold(troveId, 1, 10000e18);
+        borrowerOperations.withdrawEbusd(troveId, 1, 10000e18);
         vm.stopPrank();
     }
 
-    function testCannotRepayBoldAfterShutdown() public {
+    function testCannotRepayEbusdAfterShutdown() public {
         uint256 troveId = prepareAndShutdownFirstBranch();
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.IsShutDown.selector);
-        borrowerOperations.repayBold(troveId, 1000e18);
+        borrowerOperations.repayEbusd(troveId, 1000e18);
         vm.stopPrank();
     }
 
@@ -224,7 +224,7 @@ contract ShutdownTest is DevTestSetup {
         openMulticollateralTroveNoHints100pctWithIndex(0, B, 0, 22e18, 20000e18, 6e16);
 
         // B redeems from A’s trove, to make it zombie
-        //deal(address(boldToken), B, 20000e18);
+        //deal(address(ebusdToken), B, 20000e18);
         vm.startPrank(B);
         collateralRegistry.redeemCollateral(10000e18, 0, 1e18);
         vm.stopPrank();
@@ -249,7 +249,7 @@ contract ShutdownTest is DevTestSetup {
 
         uint256 troveId = prepareAndShutdownFirstBranch();
 
-        deal(address(boldToken), A, 20000e18);
+        deal(address(ebusdToken), A, 20000e18);
         vm.startPrank(A);
         borrowerOperations.closeTrove(troveId);
         vm.stopPrank();
@@ -396,14 +396,14 @@ contract ShutdownTest is DevTestSetup {
         uint256 icr = troveManager.getCurrentICR(troveId, price);
         assertLt(icr, 1e18, "Trove CR should be below 100%");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = 100e18;
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId), 0);
         vm.stopPrank();
 
-        assertEq(boldToken.balanceOf(A), boldBalanceBefore - redemptionAmount, "Bold balance mismatch");
+        assertEq(ebusdToken.balanceOf(A), ebusdBalanceBefore - redemptionAmount, "Ebusd balance mismatch");
         assertEq(
             contractsArray[0].collToken.balanceOf(A),
             collBalanceBefore + redemptionAmount * DECIMAL_PRECISION / price * 101 / 100,
@@ -424,7 +424,7 @@ contract ShutdownTest is DevTestSetup {
         uint256 icr = troveManager.getCurrentICR(troveId, price);
         assertLt(icr, 1e18, "Trove CR should be below 100%");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = troveManager.getTroveEntireDebt(troveId);
         vm.startPrank(A);
@@ -432,9 +432,9 @@ contract ShutdownTest is DevTestSetup {
         vm.stopPrank();
 
         assertEq(
-            boldToken.balanceOf(A),
-            boldBalanceBefore - 11e18 * price / DECIMAL_PRECISION * 100 / 101,
-            "Bold balance mismatch"
+            ebusdToken.balanceOf(A),
+            ebusdBalanceBefore - 11e18 * price / DECIMAL_PRECISION * 100 / 101,
+            "Ebusd balance mismatch"
         );
         assertEq(contractsArray[0].collToken.balanceOf(A), collBalanceBefore + 11e18, "Coll balance mismatch");
     }
@@ -453,14 +453,14 @@ contract ShutdownTest is DevTestSetup {
         assertGt(icr, 1e18, "Trove CR should be above 100%");
         assertLt(icr, MCR, "Trove CR should be below MCR");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = 100e18;
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId), 0);
         vm.stopPrank();
 
-        assertEq(boldToken.balanceOf(A), boldBalanceBefore - redemptionAmount, "Bold balance mismatch");
+        assertEq(ebusdToken.balanceOf(A), ebusdBalanceBefore - redemptionAmount, "Ebusd balance mismatch");
         assertEq(
             contractsArray[0].collToken.balanceOf(A),
             collBalanceBefore + redemptionAmount * DECIMAL_PRECISION / price * 101 / 100,
@@ -482,14 +482,14 @@ contract ShutdownTest is DevTestSetup {
         assertGt(icr, 1e18, "Trove CR should be above 100%");
         assertLt(icr, MCR, "Trove CR should be below MCR");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = troveManager.getTroveEntireDebt(troveId);
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId), 0);
         vm.stopPrank();
 
-        assertEq(boldToken.balanceOf(A), boldBalanceBefore - redemptionAmount, "Bold balance mismatch");
+        assertEq(ebusdToken.balanceOf(A), ebusdBalanceBefore - redemptionAmount, "Ebusd balance mismatch");
         // TODO: determine why this is off by 1 wei - it should be exact
         assertApproximatelyEqual(
             contractsArray[0].collToken.balanceOf(A),
@@ -512,14 +512,14 @@ contract ShutdownTest is DevTestSetup {
         uint256 icr = troveManager.getCurrentICR(troveId, price);
         assertGt(icr, MCR, "Trove CR should be above MCR");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = 100e18;
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId), 0);
         vm.stopPrank();
 
-        assertEq(boldToken.balanceOf(A), boldBalanceBefore - redemptionAmount, "Bold balance mismatch");
+        assertEq(ebusdToken.balanceOf(A), ebusdBalanceBefore - redemptionAmount, "Ebusd balance mismatch");
         assertEq(
             contractsArray[0].collToken.balanceOf(A),
             collBalanceBefore + redemptionAmount * DECIMAL_PRECISION / price * 101 / 100,
@@ -540,14 +540,14 @@ contract ShutdownTest is DevTestSetup {
         uint256 icr = troveManager.getCurrentICR(troveId, price);
         assertGt(icr, MCR, "Trove CR should be above MCR");
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
+        uint256 ebusdBalanceBefore = ebusdToken.balanceOf(A);
         uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = troveManager.getTroveEntireDebt(troveId);
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId), 0);
         vm.stopPrank();
 
-        assertEq(boldToken.balanceOf(A), boldBalanceBefore - redemptionAmount, "Bold balance mismatch");
+        assertEq(ebusdToken.balanceOf(A), ebusdBalanceBefore - redemptionAmount, "Ebusd balance mismatch");
         // TODO: determine why this is off by 1 wei - it should be exact
         assertApproximatelyEqual(
             contractsArray[0].collToken.balanceOf(A),
@@ -596,7 +596,7 @@ contract ShutdownTest is DevTestSetup {
         uint256 expectedSPYield = _getSPYield(accruedAggInterest);
         assertGt(expectedSPYield, 0);
 
-        uint256 spBal1 = boldToken.balanceOf(address(contractsArray[0].stabilityPool));
+        uint256 spBal1 = ebusdToken.balanceOf(address(contractsArray[0].stabilityPool));
 
         // Price halves and first branch is shut down
         uint256 price = 1000e18;
@@ -606,7 +606,7 @@ contract ShutdownTest is DevTestSetup {
         assertTrue(borrowerOperations.hasBeenShutDown());
 
         // Check shutdown has increased SP balance correctly
-        uint256 spBal2 = boldToken.balanceOf(address(contractsArray[0].stabilityPool));
+        uint256 spBal2 = ebusdToken.balanceOf(address(contractsArray[0].stabilityPool));
         assertEq(spBal2 - spBal1, expectedSPYield);
     }
 
@@ -898,17 +898,17 @@ contract ShutdownTest is DevTestSetup {
         contractsArray[0].borrowerOperations.shutdown();
         assertTrue(borrowerOperations.hasBeenShutDown());
 
-        uint256 spBoldBal_t0 = boldToken.balanceOf(address(contractsArray[0].stabilityPool));
+        uint256 spEbusdBal_t0 = ebusdToken.balanceOf(address(contractsArray[0].stabilityPool));
 
         uint256 redemptionAmount = 100e18;
         vm.startPrank(A);
         troveManager.urgentRedemption(redemptionAmount, uintToArray(troveId3), 0);
         vm.stopPrank();
 
-        uint256 spBoldBal_t1 = boldToken.balanceOf(address(contractsArray[0].stabilityPool));
+        uint256 spEbusdBal_t1 = ebusdToken.balanceOf(address(contractsArray[0].stabilityPool));
 
-        // Check SP bold bal didnt change from urgent redemption
-        assertEq(spBoldBal_t1, spBoldBal_t0);
+        // Check SP ebusd bal didnt change from urgent redemption
+        assertEq(spEbusdBal_t1, spEbusdBal_t0);
     }
 
     function testUrgentRedemptionReducesAggWeightedDebtSumByNetWeightedAmountRemoved() public {

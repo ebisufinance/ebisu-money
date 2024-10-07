@@ -37,10 +37,10 @@ const RequestSchema = v.object({
 
 export type Request = v.InferOutput<typeof RequestSchema>;
 
-type Step = "closeLoanPosition" | "approveBold";
+type Step = "closeLoanPosition" | "approveEbusd";
 
 const stepNames: Record<Step, string> = {
-  approveBold: "Approve BOLD",
+  approveEbusd: "Approve EBUSD",
   closeLoanPosition: "Close Position",
 };
 
@@ -52,7 +52,8 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
         textAlign: "center",
       }}
     >
-      You are repaying your debt and closing this position.<br />
+      You are repaying your debt and closing this position.
+      <br />
       The deposit will be returned to your wallet
     </div>
   ),
@@ -84,25 +85,26 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
     const collateral = useCollateral(request.collIndex);
     const loan = useLoanById(request.prefixedTroveId);
 
-    return loan.data && collateral && (
-      <>
-        <TransactionDetailsRow
-          label="You repay with"
-          value={[
-            <div>
-              {fmtnum(loan.data.borrowed, 4)} BOLD
-            </div>,
-          ]}
-        />
-        <TransactionDetailsRow
-          label="You reclaim"
-          value={[
-            <div title={`${fmtnum(loan.data.deposit, "full")} ${collateral.symbol}`}>
-              {fmtnum(loan.data.deposit, "2z")} {collateral.symbol}
-            </div>,
-          ]}
-        />
-      </>
+    return (
+      loan.data
+      && collateral && (
+        <>
+          <TransactionDetailsRow
+            label="You repay with"
+            value={[<div>{fmtnum(loan.data.borrowed, 4)} EBUSD</div>]}
+          />
+          <TransactionDetailsRow
+            label="You reclaim"
+            value={[
+              <div
+                title={`${fmtnum(loan.data.deposit, "full")} ${collateral.symbol}`}
+              >
+                {fmtnum(loan.data.deposit, "2z")} {collateral.symbol}
+              </div>,
+            ]}
+          />
+        </>
+      )
     );
   },
 
@@ -130,17 +132,17 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
       args: [BigInt(troveId)],
     });
 
-    const isBoldApproved = !dn.gt(debt, [
-      await readContract(wagmiConfig, {
-        ...contracts.BoldToken,
+    const isEbusdApproved = !dn.gt(debt, [
+      (await readContract(wagmiConfig, {
+        ...contracts.EbusdToken,
         functionName: "allowance",
         args: [account.address, Controller.address],
-      }) ?? 0n,
+      })) ?? 0n,
       18,
     ]);
 
     return [
-      isBoldApproved ? null : "approveBold" as const,
+      isEbusdApproved ? null : ("approveEbusd" as const),
       "closeLoanPosition" as const,
     ].filter((step) => step !== null);
   },
@@ -153,7 +155,7 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
     const coll = contracts.collaterals[request.collIndex];
     const { troveId } = parsePrefixedTroveId(request.prefixedTroveId);
 
-    if (stepId === "approveBold") {
+    if (stepId === "approveEbusd") {
       const [debt] = await readContract(wagmiConfig, {
         ...coll.contracts.TroveManager,
         functionName: "Troves",
@@ -165,7 +167,7 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
         : coll.contracts.BorrowerOperations;
 
       return {
-        ...contracts.BoldToken,
+        ...contracts.EbusdToken,
         functionName: "approve",
         args: [Controller.address, dn.mul([debt, 18], 1.1)[0]], // TODO: calculate the amount to approve in a more precise way
       };

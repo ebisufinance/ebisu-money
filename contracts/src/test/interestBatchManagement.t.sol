@@ -82,7 +82,7 @@ contract InterestBatchManagementTest is DevTestSetup {
         openTroveNoHints100pct(B, 100e18, 5000e18, 5e16);
 
         // Close trove
-        deal(address(boldToken), A, 6000e18); // Needs more Bold for interest and upfront fee
+        deal(address(ebusdToken), A, 6000e18); // Needs more Ebusd for interest and upfront fee
         closeTrove(A, troveId);
 
         // Try to set interest batch manager
@@ -335,7 +335,7 @@ contract InterestBatchManagementTest is DevTestSetup {
 
         // Check A has redistribution gains
         LatestTroveData memory troveData = troveManager.getLatestTroveData(ATroveId);
-        assertGt(troveData.redistBoldDebtGain, 0, "A should have redist gains");
+        assertGt(troveData.redistEbusdDebtGain, 0, "A should have redist gains");
 
         uint256 troveRecordedDebtBefore = troveData.recordedDebt;
 
@@ -344,7 +344,7 @@ contract InterestBatchManagementTest is DevTestSetup {
         vm.stopPrank();
 
         troveData = troveManager.getLatestTroveData(ATroveId);
-        assertGt(troveData.redistBoldDebtGain, 0, "A should have redist gains");
+        assertGt(troveData.redistEbusdDebtGain, 0, "A should have redist gains");
         assertEq(troveData.recordedDebt, troveRecordedDebtBefore, "Recorded debt should stay the same");
     }
 
@@ -428,7 +428,7 @@ contract InterestBatchManagementTest is DevTestSetup {
 
         // Check A has redistribution gains
         LatestTroveData memory troveData = troveManager.getLatestTroveData(ATroveId);
-        assertGt(troveData.redistBoldDebtGain, 0, "A should have redist gains");
+        assertGt(troveData.redistEbusdDebtGain, 0, "A should have redist gains");
 
         troveData = troveManager.getLatestTroveData(ATroveId);
 
@@ -445,7 +445,7 @@ contract InterestBatchManagementTest is DevTestSetup {
         troveData = troveManager.getLatestTroveData(ATroveId);
 
         troveData = troveManager.getLatestTroveData(ATroveId);
-        assertGt(troveData.redistBoldDebtGain, 0, "A should have redist gains");
+        assertGt(troveData.redistEbusdDebtGain, 0, "A should have redist gains");
         assertEq(
             troveData.recordedDebt,
             troveRecordedDebtBefore + troveAccruedInterest + batchAccruedManagementFee,
@@ -469,7 +469,7 @@ contract InterestBatchManagementTest is DevTestSetup {
             owner: D,
             ownerIndex: 0,
             collAmount: 100e18,
-            boldAmount: 5000e18,
+            ebusdAmount: 5000e18,
             upperHint: 0,
             lowerHint: 0,
             interestBatchManager: C,
@@ -488,7 +488,7 @@ contract InterestBatchManagementTest is DevTestSetup {
             owner: E,
             ownerIndex: 0,
             collAmount: 100e18,
-            boldAmount: 5000e18,
+            ebusdAmount: 5000e18,
             upperHint: 0,
             lowerHint: 0,
             interestBatchManager: B,
@@ -627,7 +627,7 @@ contract InterestBatchManagementTest is DevTestSetup {
 
         // Check A has redistribution gains
         troveData = troveManager.getLatestTroveData(ATroveId);
-        assertGt(troveData.redistBoldDebtGain, 0, "A should have redist gains");
+        assertGt(troveData.redistEbusdDebtGain, 0, "A should have redist gains");
 
         // Fast-forward time
         vm.warp(block.timestamp + 91 days);

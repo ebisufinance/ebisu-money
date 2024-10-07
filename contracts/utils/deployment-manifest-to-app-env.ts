@@ -33,7 +33,7 @@ const argv = minimist(process.argv.slice(2), {
 const ZAddress = z.string().regex(/^0x[0-9a-fA-F]{40}$/);
 const ZDeploymentManifest = z.object({
   collateralRegistry: ZAddress,
-  boldToken: ZAddress,
+  ebusdToken: ZAddress,
   hintHelpers: ZAddress,
   multiTroveGetter: ZAddress,
 
@@ -155,8 +155,8 @@ function contractNameToAppEnvVariable(contractName: string, prefix: string = "")
   prefix = `NEXT_PUBLIC_${prefix}`;
   switch (contractName) {
     // protocol contracts
-    case "boldToken":
-      return `${prefix}_BOLD_TOKEN`;
+    case "ebusdToken":
+      return `${prefix}_EBUSD_TOKEN`;
     case "collateralRegistry":
       return `${prefix}_COLLATERAL_REGISTRY`;
     case "hintHelpers":

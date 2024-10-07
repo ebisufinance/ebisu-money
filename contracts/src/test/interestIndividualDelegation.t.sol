@@ -125,7 +125,7 @@ contract InterestIndividualDelegationTest is DevTestSetup {
 
         // Open trove
         uint256 troveId = openTroveNoHints100pct(A, 100e18, 5000e18, 5e16);
-        // Open a second one, so it’s not the last one and to have BOLD for interest
+        // Open a second one, so it’s not the last one and to have EBUSD for interest
         openTroveNoHints100pctWithIndex(A, 1, 100e18, 5000e18, 5e16);
         // Close trove
         closeTrove(A, troveId);

@@ -7,10 +7,10 @@ interface IDefaultPool {
     function activePoolAddress() external view returns (address);
     // --- Functions ---
     function getCollBalance() external view returns (uint256);
-    function getBoldDebt() external view returns (uint256);
+    function getEbusdDebt() external view returns (uint256);
     function sendCollToActivePool(uint256 _amount) external;
     function receiveColl(uint256 _amount) external;
 
-    function increaseBoldDebt(uint256 _amount) external;
-    function decreaseBoldDebt(uint256 _amount) external;
+    function increaseEbusdDebt(uint256 _amount) external;
+    function decreaseEbusdDebt(uint256 _amount) external;
 }

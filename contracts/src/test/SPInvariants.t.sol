@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.18;
 
-import {IBoldToken} from "../Interfaces/IBoldToken.sol";
+import {IEbusdToken} from "../Interfaces/IEbusdToken.sol";
 import {IStabilityPool} from "../Interfaces/IStabilityPool.sol";
 import {HintHelpers} from "../HintHelpers.sol";
 import {TestDeployer} from "./TestContracts/Deployment.t.sol";
@@ -16,13 +16,13 @@ contract SPInvariantsTest is BaseInvariantTest {
         super.setUp();
 
         TestDeployer deployer = new TestDeployer();
-        (TestDeployer.LiquityContractsDev memory contracts,, IBoldToken boldToken, HintHelpers hintHelpers,,,) =
+        (TestDeployer.LiquityContractsDev memory contracts,, IEbusdToken ebusdToken, HintHelpers hintHelpers,,,) =
             deployer.deployAndConnectContracts();
         stabilityPool = contracts.stabilityPool;
 
         handler = new SPInvariantsTestHandler(
             SPInvariantsTestHandler.Contracts({
-                boldToken: boldToken,
+                ebusdToken: ebusdToken,
                 borrowerOperations: contracts.borrowerOperations,
                 collateralToken: contracts.collToken,
                 priceFeed: contracts.priceFeed,
@@ -39,24 +39,24 @@ contract SPInvariantsTest is BaseInvariantTest {
 
     function invariant_allFundsClaimable() external view {
         uint256 stabilityPoolColl = stabilityPool.getCollBalance();
-        uint256 stabilityPoolBold = stabilityPool.getTotalBoldDeposits();
+        uint256 stabilityPoolEbusd = stabilityPool.getTotalEbusdDeposits();
         uint256 yieldGainsOwed = stabilityPool.getYieldGainsOwed();
 
         uint256 claimableColl = 0;
-        uint256 claimableBold = 0;
+        uint256 claimableEbusd = 0;
         uint256 sumYieldGains = 0;
 
         for (uint256 i = 0; i < actors.length; ++i) {
             claimableColl += stabilityPool.getDepositorCollGain(actors[i].account);
-            claimableBold += stabilityPool.getCompoundedBoldDeposit(actors[i].account);
+            claimableEbusd += stabilityPool.getCompoundedEbusdDeposit(actors[i].account);
             sumYieldGains += stabilityPool.getDepositorYieldGain(actors[i].account);
         }
 
         assertApproxEqAbsDecimal(stabilityPoolColl, claimableColl, 0.0001 ether, 18, "SP Coll !~ claimable Coll");
-        assertApproxEqAbsDecimal(stabilityPoolBold, claimableBold, 0.001 ether, 18, "SP BOLD !~ claimable BOLD");
+        assertApproxEqAbsDecimal(stabilityPoolEbusd, claimableEbusd, 0.001 ether, 18, "SP EBUSD !~ claimable EBUSD");
         assertApproxEqAbsDecimal(yieldGainsOwed, sumYieldGains, 0.001 ether, 18, "SP yieldGainsOwed !~= sum(yieldGain)");
 
-        assertGe(stabilityPoolBold, claimableBold, "Not enough deposits for all depositors");
+        assertGe(stabilityPoolEbusd, claimableEbusd, "Not enough deposits for all depositors");
         assertGe(stabilityPoolColl, claimableColl, "Not enough collateral for all depositors");
         assertGe(yieldGainsOwed, sumYieldGains, "Not enough yield gains for all depositors");
     }
@@ -102,6 +102,6 @@ contract SPInvariantsTest is BaseInvariantTest {
         this.invariant_allFundsClaimable();
 
         // Adam still has non-zero deposit
-        assertGt(stabilityPool.getCompoundedBoldDeposit(adam), 0, "Adam deposit 0");
+        assertGt(stabilityPool.getCompoundedEbusdDeposit(adam), 0, "Adam deposit 0");
     }
 }

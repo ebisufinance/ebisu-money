@@ -1,7 +1,7 @@
 {
   "name": "@liquity2/contracts",
   "version": "1.0.0",
-  "description": "Bold decentralized stablecoin",
+  "description": "Ebusd decentralized stablecoin",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -17,11 +17,11 @@
     "fuzz-monit": "pm2 monit",
     "fuzz-logs": "pm2 logs"
   },
-  "repository": "github:liquity/bold",
+  "repository": "github:liquity/ebusd",
   "author": "Liquity AG",
   "license": "GPL-3.0",
-  "bugs": "https://github.com/liquity/bold/issues",
-  "homepage": "https://github.com/liquity/bold#readme",
+  "bugs": "https://github.com/liquity/ebusd/issues",
+  "homepage": "https://github.com/liquity/ebusd#readme",
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^1.0.0",
     "@nomicfoundation/hardhat-foundry": "^1.0.1",

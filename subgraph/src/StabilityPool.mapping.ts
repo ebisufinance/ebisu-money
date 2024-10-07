@@ -19,7 +19,7 @@ function loadOrCreateStabilityPoolDeposit(depositor: Address, collId: string): S
 
   if (!spDeposit) {
     spDeposit = new StabilityPoolDeposit(spId);
-    spDeposit.boldGain = BigInt.fromI32(0);
+    spDeposit.ebusdGain = BigInt.fromI32(0);
     spDeposit.collGain = BigInt.fromI32(0);
     spDeposit.collateral = collId;
     spDeposit.deposit = BigInt.fromI32(0);
