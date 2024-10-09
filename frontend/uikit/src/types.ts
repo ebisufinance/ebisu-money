@@ -9,7 +9,8 @@ export type TokenSymbol =
   | "RETH"
   | "LUSD"
   | "STETH"
-  | "WEETH";
+  | "WEETH"
+  | "EZETH";
 
 export type Token = {
   icon: string;

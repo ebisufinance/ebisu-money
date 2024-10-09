@@ -9,6 +9,7 @@ const options = [
 	"RETH" as const,
 	"STETH" as const,
 	"WEETH" as const,
+	"EZETH" as const,
 ];
 
 const emptyOption = "−";

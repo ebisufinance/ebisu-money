@@ -82,6 +82,7 @@ export function InputFieldFixture({
 					itemRow("RETH", "rETH", "30.00"),
 					itemRow("STETH", "stETH", "40.00"),
 					itemRow("WEETH", "weETH", "50.00"),
+					itemRow("EZETH", "ezETH", "60.00"),
 				]}
 			/>
 		))

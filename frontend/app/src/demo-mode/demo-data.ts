@@ -16,6 +16,7 @@ export const ETH_PRICE = dn.from(2_580.293872, 18);
 export const RETH_PRICE = dn.from(2_884.72294, 18);
 export const STETH_PRICE = dn.from(2_579.931, 18);
 export const WEETH_PRICE = dn.from(2_579.931, 18);
+export const EZETH_PRICE = dn.from(2_579.931, 18);
 export const BOLD_PRICE = dn.from(1.0031, 18);
 
 export const STAKED_LQTY_TOTAL = [43_920_716_739_092_664_364_409_174n, 18] as const;
@@ -33,6 +34,7 @@ export const ACCOUNT_BALANCES = {
   RETH: dn.from(1.3732, 18),
   STETH: dn.from(17.912, 18),
   WEETH: dn.from(17.912, 18),
+  EZETH: dn.from(17.912, 18),
   LUSD: dn.from(1_200, 18),
 } as const;
 
@@ -115,6 +117,10 @@ export const EARN_POOLS: Record<
     boldQty: [25_700_000n, 0],
   },
   WEETH: {
+    apr: dn.from(0.054, 18),
+    boldQty: [25_700_000n, 0],
+  },
+  EZETH: {
     apr: dn.from(0.054, 18),
     boldQty: [25_700_000n, 0],
   },

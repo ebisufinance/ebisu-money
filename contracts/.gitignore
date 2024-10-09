@@ -35,6 +35,5 @@ testMatrix.json
 
 # Invariant test counterexamples
 /counterexamples
-
-# run scripts bash file
-run_script.sh
+/counterexamples-fixed
+/counterexamples-assume
