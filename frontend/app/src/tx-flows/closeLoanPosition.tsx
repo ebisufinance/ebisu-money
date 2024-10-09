@@ -12,6 +12,7 @@ import * as dn from "dnum";
 import { match, P } from "ts-pattern";
 import * as v from "valibot";
 import { readContract } from "wagmi/actions";
+import content from "../content";
 
 const FlowIdSchema = v.literal("closeLoanPosition");
 
@@ -40,7 +41,7 @@ export type Request = v.InferOutput<typeof RequestSchema>;
 type Step = "closeLoanPosition" | "approveBold";
 
 const stepNames: Record<Step, string> = {
-  approveBold: "Approve BOLD",
+  approveBold: `Approve ${content.stablecoinName}`,
   closeLoanPosition: "Close Position",
 };
 
@@ -90,7 +91,7 @@ export const closeLoanPosition: FlowDeclaration<Request, Step> = {
           label="You repay with"
           value={[
             <div>
-              {fmtnum(loan.data.borrowed, 4)} BOLD
+              {fmtnum(loan.data.borrowed, 4)} {content.stablecoinName}
             </div>,
           ]}
         />

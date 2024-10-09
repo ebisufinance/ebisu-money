@@ -4,7 +4,7 @@ import content from "@/src/content";
 import { BORROW_STATS } from "@/src/demo-mode";
 import { usePrice } from "@/src/services/Prices";
 import { css } from "@/styled-system/css";
-import { HFlex, TokenIcon } from "@liquity2/uikit";
+import { HFlex, TokenIcon, TOKENS_BY_SYMBOL } from "@liquity2/uikit";
 import * as dn from "dnum";
 
 export function ProtocolStats() {
@@ -40,7 +40,7 @@ export function ProtocolStats() {
             <HFlex key={symbol} gap={16}>
               <TokenIcon size={16} symbol={symbol} />
               <HFlex gap={8}>
-                <span>{symbol}</span>
+                <span>{TOKENS_BY_SYMBOL[symbol].name}</span>
                 <span>
                   $
                   {price

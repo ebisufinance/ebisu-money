@@ -14,6 +14,7 @@ import { AnchorTextButton, IconBorrow, IconEarn, TokenIcon } from "@liquity2/uik
 import * as dn from "dnum";
 import Link from "next/link";
 import { HomeTable } from "./HomeTable";
+import content from "@/src/content";
 
 export function HomeScreen() {
   const collSymbols = useCollateralContracts().map((coll) => coll.symbol);
@@ -37,15 +38,15 @@ export function HomeScreen() {
         })}
       >
         <HomeTable
-          title="Borrow BOLD against ETH and staked ETH"
+          title={`Borrow ${content.stablecoinName} against ETH and staked ETH`}
           subtitle="You can adjust your loans, including your interest rate, at any time"
           icon={<IconBorrow />}
           columns={["Collateral", "Avg rate, p.a.", "Max LTV", null] as const}
           rows={collSymbols.map((symbol) => <BorrowingRow symbol={symbol} />)}
         />
         <HomeTable
-          title="Earn Rewards with BOLD"
-          subtitle="Earn BOLD & (staked) ETH rewards by putting your BOLD in a stability pool"
+          title={`Earn Rewards with ${content.stablecoinName}`}
+          subtitle={`Earn ${content.stablecoinName} & (staked) ETH rewards by putting your ${content.stablecoinName} in a stability pool`}
           icon={<IconEarn />}
           columns={["Pool", "Current APR", "Pool size", null] as const}
           rows={collSymbols.map((symbol) => <EarnRewardsRow symbol={symbol} />)}
@@ -202,7 +203,7 @@ function EarnRewardsRow({
                 </TokenIcon.Group>
               </div>
             }
-            title={`Earn BOLD with ${collateral?.name}`}
+            title={`Earn ${content.stablecoinName} with ${collateral?.name}`}
           />
         </Link>
       </td>

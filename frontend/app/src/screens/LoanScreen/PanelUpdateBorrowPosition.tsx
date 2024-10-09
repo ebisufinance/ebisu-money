@@ -36,6 +36,7 @@ import { maxUint256 } from "viem";
 import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import content from "@/src/content";
 
 type ValueUpdateMode = "add" | "remove";
 
@@ -196,7 +197,7 @@ export function PanelUpdateBorrowPosition({
                 <InputTokenBadge
                   background={false}
                   icon={<TokenIcon symbol="BOLD" />}
-                  label="BOLD"
+                  label={content.stablecoinName}
                 />
               }
               label={{
@@ -231,7 +232,7 @@ export function PanelUpdateBorrowPosition({
                 end: (
                   boldMax && (
                     <TextButton
-                      label={`Max ${fmtnum(boldMax)} BOLD`}
+                      label={`Max ${fmtnum(boldMax)} ${content.stablecoinName}`}
                       onClick={() => {
                         debtChange.setValue(dn.toString(boldMax));
                       }}
@@ -254,7 +255,7 @@ export function PanelUpdateBorrowPosition({
                   }
                   value={
                     <HFlex alignItems="center" gap={8}>
-                      <div>{fmtnum(newLoanDetails.debt)} BOLD</div>
+                      <div>{fmtnum(newLoanDetails.debt)} {content.stablecoinName}</div>
                       <InfoTooltip heading="Debt update" />
                     </HFlex>
                   }

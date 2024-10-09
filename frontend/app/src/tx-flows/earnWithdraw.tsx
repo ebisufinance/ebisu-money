@@ -6,6 +6,7 @@ import { usePrice } from "@/src/services/Prices";
 import { vAddress, vCollIndex, vDnum } from "@/src/valibot-utils";
 import * as dn from "dnum";
 import * as v from "valibot";
+import content from "../content";
 
 const FlowIdSchema = v.literal("earnWithdraw");
 
@@ -57,7 +58,7 @@ export const earnWithdraw: FlowDeclaration<Request, Step> = {
         <TransactionDetailsRow
           label="You withdraw"
           value={[
-            <Amount value={request.boldAmount} suffix=" BOLD" />,
+            <Amount value={request.boldAmount} suffix={` ${content.stablecoinName}`} />,
             <Amount value={boldPrice && dn.mul(request.boldAmount, boldPrice)} prefix="$" />,
           ]}
         />

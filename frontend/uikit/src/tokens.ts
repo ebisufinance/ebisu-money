@@ -26,7 +26,7 @@ export const LUSD: Token = {
 
 export const BOLD: Token = {
   icon: tokenBold,
-  name: "BOLD",
+  name: "ebUSD",
   symbol: "BOLD" as const,
 } as const;
 

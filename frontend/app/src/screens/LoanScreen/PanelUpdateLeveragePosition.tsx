@@ -34,6 +34,7 @@ import {
 import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import content from "@/src/content";
 
 export function PanelUpdateLeveragePosition({ loan }: { loan: PositionLoan }) {
   const router = useRouter();
@@ -292,11 +293,11 @@ export function PanelUpdateLeveragePosition({ loan }: { loan: PositionLoan }) {
               <ValueUpdate
                 fontSize={14}
                 before={initialLoanDetails.debt && (
-                  `${fmtnum(initialLoanDetails.debt)} BOLD`
+                  `${fmtnum(initialLoanDetails.debt)} ${content.stablecoinName}`
                 )}
                 after={newLoanDetails.debt && dn.gt(newLoanDetails.debt, 0)
                   ? (
-                    `${fmtnum(newLoanDetails.debt)} BOLD`
+                    `${fmtnum(newLoanDetails.debt)} ${content.stablecoinName}`
                   )
                   : (
                     `N/A`

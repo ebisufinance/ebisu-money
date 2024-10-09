@@ -13,6 +13,7 @@ import * as dn from "dnum";
 import { match, P } from "ts-pattern";
 import * as v from "valibot";
 import { readContract } from "wagmi/actions";
+import content from "../content";
 
 const FlowIdSchema = v.literal("updateLoanPosition");
 
@@ -54,7 +55,7 @@ type Step =
   | "approveColl";
 
 const stepNames: Record<Step, string> = {
-  approveBold: "Approve BOLD",
+  approveBold: `Approve ${content.stablecoinName}`,
   approveColl: "Approve {collSymbol}",
   adjustTrove: "Update Position",
   depositBold: "Update Position",
@@ -172,14 +173,14 @@ export const updateLoanPosition: FlowDeclaration<Request, Step> = {
           label={dn.gt(request.debtChange, 0n) ? "You borrow" : "You repay"}
           value={[
             <div
-              title={`${fmtnum(debtChangeUnsigned, "full")} BOLD`}
+              title={`${fmtnum(debtChangeUnsigned, "full")} ${content.stablecoinName}`}
               style={{
                 color: dn.eq(debtChangeUnsigned, 0n)
                   ? "var(--colors-content-alt2)"
                   : undefined,
               }}
             >
-              {fmtnum(debtChangeUnsigned)} BOLD
+              {fmtnum(debtChangeUnsigned)} {content.stablecoinName}
             </div>,
             boldPrice && (
               <div title={fmtnum(dn.mul(debtChangeUnsigned, boldPrice))}>

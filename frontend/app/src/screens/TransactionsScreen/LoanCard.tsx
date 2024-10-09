@@ -17,6 +17,7 @@ import { Button, HFlex, IconBorrow, IconLeverage, StatusDot, TokenIcon, TOKENS_B
 import { a, useSpring } from "@react-spring/web";
 import * as dn from "dnum";
 import { match, P } from "ts-pattern";
+import content from "@/src/content";
 
 const LOAN_CARD_HEIGHT = 246 - 16;
 const LOAN_CARD_HEIGHT_REDUCED = 176;
@@ -374,7 +375,7 @@ function TotalDebt({
         })}
       >
         <div
-          title={`${fmtnum(loan.borrowed, "full")} BOLD`}
+          title={`${fmtnum(loan.borrowed, "full")} ${content.stablecoinName}`}
           className={css({
             display: "flex",
             alignItems: "center",
@@ -391,7 +392,7 @@ function TotalDebt({
           <TokenIcon symbol="BOLD" size={32} />
           {prevLoan && !dn.eq(prevLoan.borrowed, loan.borrowed) && (
             <div
-              title={`${fmtnum(prevLoan.borrowed, "full")} BOLD`}
+              title={`${fmtnum(prevLoan.borrowed, "full")} ${content.stablecoinName}`}
               className={css({
                 color: "contentAlt",
                 textDecoration: "line-through",
@@ -485,7 +486,7 @@ function LoadingCard({
   loadingState: LoadingState;
   onRetry: () => void;
 }) {
-  const title = leverage ? "Leverage loan" : "BOLD loan";
+  const title = leverage ? "Leverage loan" : `${content.stablecoinName} loan`;
 
   const spring = useSpring({
     to: match(loadingState)

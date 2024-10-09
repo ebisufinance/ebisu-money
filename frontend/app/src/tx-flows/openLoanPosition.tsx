@@ -12,6 +12,7 @@ import { vAddress, vCollIndex, vDnum } from "@/src/valibot-utils";
 import * as dn from "dnum";
 import * as v from "valibot";
 import { readContract } from "wagmi/actions";
+import content from "../content";
 
 const FlowIdSchema = v.literal("openLoanPosition");
 
@@ -95,7 +96,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
           <TransactionDetailsRow
             label="You borrow"
             value={[
-              `${fmtnum(request.boldAmount)} BOLD`,
+              `${fmtnum(request.boldAmount)} ${content.stablecoinName}`,
               boldPrice && `$${fmtnum(dn.mul(request.boldAmount, boldPrice))}`,
             ]}
           />
@@ -103,7 +104,7 @@ export const openLoanPosition: FlowDeclaration<Request, Step> = {
             label="Interest rate"
             value={[
               `${fmtnum(request.annualInterestRate, 2, 100)}%`,
-              `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} BOLD per year`,
+              `${fmtnum(dn.mul(request.boldAmount, request.annualInterestRate))} ${content.stablecoinName} per year`,
             ]}
           />
         </>

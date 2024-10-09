@@ -18,6 +18,7 @@ import { Button, HFlex, IconBorrow, IconLeverage, StatusDot, TokenIcon, TOKENS_B
 import { a, useSpring } from "@react-spring/web";
 import * as dn from "dnum";
 import { match, P } from "ts-pattern";
+import content from "@/src/content";
 
 const LOAN_CARD_HEIGHT = 246;
 
@@ -134,7 +135,7 @@ export function LoanCard({
                   )
                   : (
                     <div
-                      title={`${fmtnum(loan.borrowed)} BOLD`}
+                      title={`${fmtnum(loan.borrowed)} ${content.stablecoinName}`}
                       className={css({
                         display: "flex",
                         alignItems: "center",
@@ -251,7 +252,7 @@ function LoadingCard({
   onRetry: () => void;
   troveId: TroveId;
 }) {
-  const title = leverage ? "Leverage loan" : "BOLD loan";
+  const title = leverage ? "Leverage loan" : `${content.stablecoinName} loan`;
   const titleFull = loan && `${title}: ${troveId}`;
 
   const spring = useSpring({

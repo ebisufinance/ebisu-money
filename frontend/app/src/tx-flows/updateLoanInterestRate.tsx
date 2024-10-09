@@ -10,6 +10,7 @@ import { vAddress, vCollIndex, vDnum, vPrefixedTroveId } from "@/src/valibot-uti
 import * as dn from "dnum";
 import { match, P } from "ts-pattern";
 import * as v from "valibot";
+import content from "../content";
 
 const FlowIdSchema = v.literal("updateLoanInterestRate");
 
@@ -86,8 +87,8 @@ export const updateLoanInterestRate: FlowDeclaration<Request, Step> = {
           <div>
             {fmtnum(request.interestRate, "full", 100)}%
           </div>,
-          <div title={`${fmtnum(boldPerYear, "full")} BOLD per year`}>
-            ~{fmtnum(boldPerYear, 4)} BOLD per year
+          <div title={`${fmtnum(boldPerYear, "full")} ${content.stablecoinName} per year`}>
+            ~{fmtnum(boldPerYear, 4)} {content.stablecoinName} per year
           </div>,
         ]}
       />

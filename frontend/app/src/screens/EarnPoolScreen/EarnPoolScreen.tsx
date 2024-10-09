@@ -73,7 +73,7 @@ export function EarnPoolScreen() {
           items={[
             {
               label: content.earnScreen.accountPosition.depositLabel,
-              value: <Amount value={earnPosition.data.deposit} suffix=" BOLD" />,
+              value: <Amount value={earnPosition.data.deposit} suffix={` ${content.stablecoinName}`} />,
             },
             {
               label: content.earnScreen.accountPosition.shareLabel,
@@ -91,7 +91,7 @@ export function EarnPoolScreen() {
                     whiteSpace: "nowrap",
                   })}
                 >
-                  <Amount value={earnPosition.data.rewards.bold} suffix=" BOLD" />
+                  <Amount value={earnPosition.data.rewards.bold} suffix={` ${content.stablecoinName}`} />
                   <div
                     className={css({
                       display: "flex",
@@ -220,7 +220,7 @@ function PoolSummary({
               {content.earnScreen.headerTvl(
                 <Amount
                   format="compact"
-                  suffix=" BOLD"
+                  suffix={` ${content.stablecoinName}`}
                   value={boldQty}
                 />,
               )}

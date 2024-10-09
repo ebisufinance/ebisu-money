@@ -20,6 +20,7 @@ import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { maxUint256 } from "viem";
+import content from "@/src/content";
 
 export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
   const router = useRouter();
@@ -32,7 +33,7 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
   const deposit = useInputFieldValue((value) => `${dn.format(value)} ${collateral.symbol}`, {
     defaultValue: dn.toString(loan.deposit),
   });
-  const debt = useInputFieldValue((value) => `${dn.format(value)} BOLD`, {
+  const debt = useInputFieldValue((value) => `${dn.format(value)} ${content.stablecoinName}`, {
     defaultValue: dn.toString(loan.borrowed),
   });
 
@@ -114,7 +115,7 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
                   fontVariantNumeric: "tabular-nums",
                 })}
               >
-                ~{fmtnum(dn.div(boldInterestPerYear, 365))} BOLD
+                ~{fmtnum(dn.div(boldInterestPerYear, 365))} {content.stablecoinName}
               </HFlex>
             )}
           </HFlex>
