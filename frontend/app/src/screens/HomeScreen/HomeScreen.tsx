@@ -4,6 +4,7 @@ import type { CollateralSymbol } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { Positions } from "@/src/comps/Positions/Positions";
+import content from "@/src/content";
 import { useCollateralContracts } from "@/src/contracts";
 import { DNUM_1 } from "@/src/dnum-utils";
 import { useCollateral, useCollIndexFromSymbol } from "@/src/liquity-utils";
@@ -14,7 +15,6 @@ import { AnchorTextButton, IconBorrow, IconEarn, TokenIcon } from "@liquity2/uik
 import * as dn from "dnum";
 import Link from "next/link";
 import { HomeTable } from "./HomeTable";
-import content from "@/src/content";
 
 export function HomeScreen() {
   const collSymbols = useCollateralContracts().map((coll) => coll.symbol);

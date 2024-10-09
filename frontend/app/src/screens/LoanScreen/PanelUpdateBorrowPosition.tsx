@@ -33,10 +33,10 @@ import {
 } from "@liquity2/uikit";
 import { maxUint256 } from "viem";
 
+import content from "@/src/content";
 import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import content from "@/src/content";
 
 type ValueUpdateMode = "add" | "remove";
 

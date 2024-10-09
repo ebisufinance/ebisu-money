@@ -5,6 +5,7 @@ import type { LoanLoadingState } from "./LoanScreen";
 import { INFINITY } from "@/src/characters";
 import { Spinner } from "@/src/comps/Spinner/Spinner";
 import { Value } from "@/src/comps/Value/Value";
+import content from "@/src/content";
 import { formatRisk } from "@/src/formatting";
 import { fmtnum } from "@/src/formatting";
 import { getLoanDetails } from "@/src/liquity-math";
@@ -18,7 +19,6 @@ import { Button, HFlex, IconBorrow, IconLeverage, StatusDot, TokenIcon, TOKENS_B
 import { a, useSpring } from "@react-spring/web";
 import * as dn from "dnum";
 import { match, P } from "ts-pattern";
-import content from "@/src/content";
 
 const LOAN_CARD_HEIGHT = 246;
 

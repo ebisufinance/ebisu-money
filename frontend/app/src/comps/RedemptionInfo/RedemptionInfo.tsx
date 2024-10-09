@@ -1,9 +1,9 @@
 import type { ComponentType, SVGProps } from "react";
 
+import content from "@/src/content";
 import { css } from "@/styled-system/css";
 import { AnchorTextButton, IconExternal } from "@liquity2/uikit";
 import { a, useInView, useTransition } from "@react-spring/web";
-import content from "@/src/content";
 
 const INFO_ITEMS: Array<[
   ComponentType<SVGProps<SVGSVGElement>>,

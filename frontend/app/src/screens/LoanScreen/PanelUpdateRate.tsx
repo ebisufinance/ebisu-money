@@ -5,6 +5,7 @@ import { Field } from "@/src/comps/Field/Field";
 import { InfoBox } from "@/src/comps/InfoBox/InfoBox";
 import { InterestRateField } from "@/src/comps/InterestRateField/InterestRateField";
 import { ValueUpdate } from "@/src/comps/ValueUpdate/ValueUpdate";
+import content from "@/src/content";
 import { dnum18 } from "@/src/dnum-utils";
 import { useInputFieldValue } from "@/src/form-utils";
 import { fmtnum, formatRisk } from "@/src/formatting";
@@ -20,7 +21,6 @@ import * as dn from "dnum";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { maxUint256 } from "viem";
-import content from "@/src/content";
 
 export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
   const router = useRouter();
