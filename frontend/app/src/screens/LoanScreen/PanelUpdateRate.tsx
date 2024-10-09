@@ -5,6 +5,7 @@ import { Field } from "@/src/comps/Field/Field";
 import { InfoBox } from "@/src/comps/InfoBox/InfoBox";
 import { InterestRateField } from "@/src/comps/InterestRateField/InterestRateField";
 import { ValueUpdate } from "@/src/comps/ValueUpdate/ValueUpdate";
+import content from "@/src/content";
 import { dnum18 } from "@/src/dnum-utils";
 import { useInputFieldValue } from "@/src/form-utils";
 import { fmtnum, formatRisk } from "@/src/formatting";
@@ -32,7 +33,7 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
   const deposit = useInputFieldValue((value) => `${dn.format(value)} ${collateral.symbol}`, {
     defaultValue: dn.toString(loan.deposit),
   });
-  const debt = useInputFieldValue((value) => `${dn.format(value)} BOLD`, {
+  const debt = useInputFieldValue((value) => `${dn.format(value)} ${content.stablecoinName}`, {
     defaultValue: dn.toString(loan.borrowed),
   });
 
@@ -114,7 +115,7 @@ export function PanelUpdateRate({ loan }: { loan: PositionLoan }) {
                   fontVariantNumeric: "tabular-nums",
                 })}
               >
-                ~{fmtnum(dn.div(boldInterestPerYear, 365))} BOLD
+                ~{fmtnum(dn.div(boldInterestPerYear, 365))} {content.stablecoinName}
               </HFlex>
             )}
           </HFlex>

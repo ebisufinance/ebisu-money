@@ -1,5 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 
+import content from "@/src/content";
 import { css } from "@/styled-system/css";
 import { AnchorTextButton, IconExternal } from "@liquity2/uikit";
 import { a, useInView, useTransition } from "@react-spring/web";
@@ -8,7 +9,7 @@ const INFO_ITEMS: Array<[
   ComponentType<SVGProps<SVGSVGElement>>,
   string,
 ]> = [
-  [BoldIcon, "BOLD is always redeemable for $1 worth of protocol collateral, minus a fee."],
+  [BoldIcon, `${content.stablecoinName} is always redeemable for $1 worth of protocol collateral, minus a fee.`],
   [RedemptionIcon, "Redemptions are processed against the lowest interest rate positions first."],
   [InterestIcon, "Reduce your chance of redemption by raising your position’s interest rate."],
 ];

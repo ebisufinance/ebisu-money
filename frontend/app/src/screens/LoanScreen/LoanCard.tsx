@@ -5,6 +5,7 @@ import type { LoanLoadingState } from "./LoanScreen";
 import { INFINITY } from "@/src/characters";
 import { Spinner } from "@/src/comps/Spinner/Spinner";
 import { Value } from "@/src/comps/Value/Value";
+import content from "@/src/content";
 import { formatRisk } from "@/src/formatting";
 import { fmtnum } from "@/src/formatting";
 import { getLoanDetails } from "@/src/liquity-math";
@@ -134,7 +135,7 @@ export function LoanCard({
                   )
                   : (
                     <div
-                      title={`${fmtnum(loan.borrowed)} BOLD`}
+                      title={`${fmtnum(loan.borrowed)} ${content.stablecoinName}`}
                       className={css({
                         display: "flex",
                         alignItems: "center",
@@ -251,7 +252,7 @@ function LoadingCard({
   onRetry: () => void;
   troveId: TroveId;
 }) {
-  const title = leverage ? "Leverage loan" : "BOLD loan";
+  const title = leverage ? "Leverage loan" : `${content.stablecoinName} loan`;
   const titleFull = loan && `${title}: ${troveId}`;
 
   const spring = useSpring({

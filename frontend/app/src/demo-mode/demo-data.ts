@@ -4,6 +4,7 @@ import type { Dnum } from "dnum";
 
 import { INTEREST_RATE_INCREMENT, INTEREST_RATE_MAX, INTEREST_RATE_MIN } from "@/src/constants";
 import * as dn from "dnum";
+import content from "../content";
 
 export const LOAN_SCREEN_MANUAL_LOADING_STATE = false;
 
@@ -361,7 +362,7 @@ export const DELEGATES: Delegate[] = [
   },
   {
     id: "0x10",
-    name: "Bold Strategist",
+    name: `${content.stablecoinName} Strategist`,
     interestRate: dn.from(0.082, 18),
     followers: 970,
     boldAmount: dn.from(23_000_000, 18),

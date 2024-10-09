@@ -37,7 +37,7 @@ export function WithdrawPanel({
 
   const parsedValue = parseInputFloat(value);
 
-  const value_ = focused || !parsedValue ? value : `${fmtnum(parsedValue, "full")} BOLD`;
+  const value_ = focused || !parsedValue ? value : `${fmtnum(parsedValue, "full")} ${content.stablecoinName}`;
 
   const depositDifference = dn.mul(parsedValue ?? DNUM_0, -1);
 
@@ -90,7 +90,7 @@ export function WithdrawPanel({
                     fontWeight: 500,
                   }}
                 >
-                  BOLD
+                  {content.stablecoinName}
                 </div>
               </div>
             }
@@ -116,7 +116,7 @@ export function WithdrawPanel({
               ),
               end: position?.deposit && dn.gt(position.deposit, 0) && (
                 <TextButton
-                  label={`Max ${fmtnum(position.deposit, 2)} BOLD`}
+                  label={`Max ${fmtnum(position.deposit, 2)} ${content.stablecoinName}`}
                   onClick={() => {
                     setValue(dn.toString(position.deposit));
                   }}
@@ -167,7 +167,7 @@ export function WithdrawPanel({
                     color: "contentAlt",
                   })}
                 >
-                  BOLD
+                  {content.stablecoinName}
                 </span>
               </div>
               <div>

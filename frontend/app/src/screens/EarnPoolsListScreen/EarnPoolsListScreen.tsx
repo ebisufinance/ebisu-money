@@ -129,7 +129,7 @@ function Pool({
                 flexDirection: "column",
               })}
             >
-              <div>{title ?? `BOLD • ${collateral.name} stability pool`}</div>
+              <div>{title ?? `${content.stablecoinName} • ${collateral.name} stability pool`}</div>
               <div
                 className={css({
                   display: "flex",
@@ -149,7 +149,7 @@ function Pool({
                   />
                 </div>
                 <InfoTooltip heading="Total Value Locked">
-                  Total amount of BOLD deposited in the stability pool.
+                  Total amount of {content.stablecoinName} deposited in the stability pool.
                 </InfoTooltip>
               </div>
             </div>

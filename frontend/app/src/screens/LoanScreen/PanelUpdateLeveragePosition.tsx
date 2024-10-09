@@ -10,6 +10,7 @@ import { Value } from "@/src/comps/Value/Value";
 import { ValueUpdate } from "@/src/comps/ValueUpdate/ValueUpdate";
 import { WarningBox } from "@/src/comps/WarningBox/WarningBox";
 import { ETH_MAX_RESERVE } from "@/src/constants";
+import content from "@/src/content";
 import { ACCOUNT_BALANCES } from "@/src/demo-mode";
 import { useInputFieldValue } from "@/src/form-utils";
 import { fmtnum, formatRisk } from "@/src/formatting";
@@ -292,11 +293,11 @@ export function PanelUpdateLeveragePosition({ loan }: { loan: PositionLoan }) {
               <ValueUpdate
                 fontSize={14}
                 before={initialLoanDetails.debt && (
-                  `${fmtnum(initialLoanDetails.debt)} BOLD`
+                  `${fmtnum(initialLoanDetails.debt)} ${content.stablecoinName}`
                 )}
                 after={newLoanDetails.debt && dn.gt(newLoanDetails.debt, 0)
                   ? (
-                    `${fmtnum(newLoanDetails.debt)} BOLD`
+                    `${fmtnum(newLoanDetails.debt)} ${content.stablecoinName}`
                   )
                   : (
                     `N/A`

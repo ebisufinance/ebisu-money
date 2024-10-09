@@ -69,7 +69,7 @@ export function BorrowScreen() {
   const collateral = collaterals[collIndex];
 
   const deposit = useInputFieldValue((value) => `${fmtnum(value)} ${collateral.name}`);
-  const debt = useInputFieldValue((value) => `${fmtnum(value)} BOLD`);
+  const debt = useInputFieldValue((value) => `${fmtnum(value)} ${content.stablecoinName}`);
   const [interestRate, setInterestRate] = useState(dn.div(dn.from(INTEREST_RATE_DEFAULT, 18), 100));
 
   const collPrice = usePrice(collateral.symbol);
@@ -208,7 +208,7 @@ export function BorrowScreen() {
               contextual={
                 <InputField.Badge
                   icon={<TokenIcon symbol="BOLD" />}
-                  label="BOLD"
+                  label={content.stablecoinName}
                 />
               }
               label={content.borrowScreen.borrowField.label}
