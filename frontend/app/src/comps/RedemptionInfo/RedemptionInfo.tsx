@@ -53,8 +53,8 @@ export function RedemptionInfo() {
         gap: 32,
         padding: 16,
         color: "content",
-        background: "fieldSurface",
-        border: "1px solid token(colors.border)",
+        background: "surface",
+        border: "2px solid token(colors.border)",
         borderRadius: 8,
       })}
     >
