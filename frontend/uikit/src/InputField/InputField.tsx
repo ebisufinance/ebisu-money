@@ -131,7 +131,7 @@ const InputField = forwardRef<HTMLInputElement, {
         flexDirection: "column",
         width: "100%",
         background: "fieldSurface",
-        border: "1px solid token(colors.fieldBorder)",
+        border: "2px solid token(colors.fieldBorder)",
         borderRadius: 8,
         padding: 16,
       })}
