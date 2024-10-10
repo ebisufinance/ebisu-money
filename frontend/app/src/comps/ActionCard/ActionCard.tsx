@@ -32,9 +32,9 @@ export function ActionCard({
   const { description, path, title, colors } = match(type)
     .with("borrow", () => ({
       colors: {
-        background: token("colors.brandPink"),
-        foreground: token("colors.brandPinkContent"),
-        foregroundAlt: token("colors.brandPinkContentAlt"),
+        background: token("colors.brandLightPink"),
+        foreground: token("colors.brandLightPinkContent"),
+        foregroundAlt: token("colors.brandLightPinkContentAlt"),
       },
       description: ac.borrow.description,
       path: "/borrow",
@@ -52,9 +52,9 @@ export function ActionCard({
     }))
     .with("earn", () => ({
       colors: {
-        background: token("colors.brandPink"),
-        foreground: token("colors.brandPinkContent"),
-        foregroundAlt: token("colors.brandPinkContentAlt"),
+        background: token("colors.brandLightPink"),
+        foreground: token("colors.brandLightPinkContent"),
+        foregroundAlt: token("colors.brandLightPinkContentAlt"),
       },
       description: ac.earn.description,
       path: "/earn",
@@ -100,6 +100,7 @@ export function ActionCard({
           width: "100%",
           padding: "20px 24px",
           border: "2px solid token(colors.border)",
+          borderRadius: 8,
           _groupFocusVisible: {
             outline: "2px solid token(colors.focused)",
             outlineOffset: 2,
