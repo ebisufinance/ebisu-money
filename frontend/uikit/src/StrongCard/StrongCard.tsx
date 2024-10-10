@@ -77,8 +77,8 @@ export const StrongCard = forwardRef<
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          padding: "16px 16px 12px",
-          borderRadius: 8,
+          padding: "20px 24px",
+          border: "2px solid token(colors.fieldBorder)",
           outline: "none",
           "--background": "token(colors.strongSurface)",
           _focusVisible: {
