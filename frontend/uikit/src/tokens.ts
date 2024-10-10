@@ -27,7 +27,13 @@ export const LUSD: Token = {
 export const BOLD: Token = {
   icon: tokenBold,
   name: "ebUSD",
-  symbol: "BOLD" as const,
+  symbol: "ebUSD" as const,
+} as const;
+
+export const ebUSD: Token = {
+  icon: tokenBold,
+  name: "ebUSD",
+  symbol: "ebUSD" as const,
 } as const;
 
 export const LQTY: Token = {
@@ -80,6 +86,7 @@ export const COLLATERALS: CollateralToken[] = [
 ];
 
 export const TOKENS_BY_SYMBOL = {
+  ebUSD,
   BOLD,
   ETH,
   LQTY,
