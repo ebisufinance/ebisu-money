@@ -26,7 +26,6 @@ export function HomeTable<Cols extends readonly ReactNode[]>({
         padding: 16,
         background: "white",
         border: "2px solid token(colors.tableBorder)",
-        borderRadius: 8,
       })}
     >
       <header

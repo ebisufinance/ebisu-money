@@ -100,7 +100,6 @@ export function ActionCard({
           width: "100%",
           padding: "20px 24px",
           border: "2px solid token(colors.border)",
-          borderRadius: 8,
           _groupFocusVisible: {
             outline: "2px solid token(colors.focused)",
             outlineOffset: 2,
