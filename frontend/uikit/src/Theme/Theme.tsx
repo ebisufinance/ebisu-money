@@ -88,7 +88,7 @@ export const colors = {
 
 	// Brand colors
 	"brand:pink": "#ed3899",
-	"brand:lightpink": "#f24c9e1a",
+	"brand:lightpink": "#F1EDE9",
 	"brand:blue": "#405AE5",
 	"brand:green": "#63D77D",
 	"brand:darkBlue": "#121B44",
@@ -131,7 +131,7 @@ export const lightTheme = {
 		dimmed: "gray:400",
 		fieldBorder: "gray:100",
 		fieldBorderFocused: "gray:300",
-		fieldSurface: "gray:50",
+		fieldSurface: "brand:lightpink",
 		focused: "pink",
 		focusedSurface: "blue:50",
 		focusedSurfaceActive: "blue:100",
@@ -155,8 +155,8 @@ export const lightTheme = {
 		secondaryContent: "pink",
 		secondaryHint: "blue:100",
 		selected: "pink",
-		surface: "white",
-		tableBorder: "gray:100",
+		surface: "brand:lightpink",
+		tableBorder: "black",
 		warning: "yellow:400",
 		disabledBorder: "gray:200",
 		disabledContent: "gray:500",

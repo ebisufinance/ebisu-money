@@ -36,7 +36,7 @@ export function ActionIcon({
 
   return (
     <Icon
-      background={colors.background}
+      background="white"
       foreground={colors.foreground}
       state={state}
     />

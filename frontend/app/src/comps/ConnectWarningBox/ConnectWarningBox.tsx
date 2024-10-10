@@ -15,7 +15,7 @@ export function ConnectWarningBox() {
         className={css({
           padding: "20px 24px",
           textAlign: "center",
-          background: "secondary",
+          background: "surface",
           borderRadius: 8,
         })}
       >
