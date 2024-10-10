@@ -32,9 +32,9 @@ export function ActionCard({
   const { description, path, title, colors } = match(type)
     .with("borrow", () => ({
       colors: {
-        background: token("colors.brandLightPink"),
-        foreground: token("colors.brandLightPinkContent"),
-        foregroundAlt: token("colors.brandLightPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.borrow.description,
       path: "/borrow",
@@ -42,9 +42,9 @@ export function ActionCard({
     }))
     .with("leverage", () => ({
       colors: {
-        background: token("colors.brandLightPink"),
-        foreground: token("colors.brandLightPinkContent"),
-        foregroundAlt: token("colors.brandLightPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.leverage.description,
       path: "/leverage",
@@ -52,9 +52,9 @@ export function ActionCard({
     }))
     .with("earn", () => ({
       colors: {
-        background: token("colors.brandLightPink"),
-        foreground: token("colors.brandLightPinkContent"),
-        foregroundAlt: token("colors.brandLightPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.earn.description,
       path: "/earn",
@@ -62,9 +62,9 @@ export function ActionCard({
     }))
     .with("stake", () => ({
       colors: {
-        background: token("colors.brandLightPink"),
-        foreground: token("colors.brandLightPinkContent"),
-        foregroundAlt: token("colors.brandLightPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.stake.description,
       path: "/stake",
