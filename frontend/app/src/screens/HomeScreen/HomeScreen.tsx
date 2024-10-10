@@ -4,7 +4,6 @@ import type { CollateralSymbol } from "@/src/types";
 
 import { Amount } from "@/src/comps/Amount/Amount";
 import { Positions } from "@/src/comps/Positions/Positions";
-import content from "@/src/content";
 import { useCollateralContracts } from "@/src/contracts";
 import { DNUM_1 } from "@/src/dnum-utils";
 import { useCollateral, useCollIndexFromSymbol } from "@/src/liquity-utils";
@@ -38,15 +37,15 @@ export function HomeScreen() {
         })}
       >
         <HomeTable
-          title={`Borrow ${content.stablecoinName} against ETH and staked ETH`}
+          title="Borrow ebUSD against ETH and staked ETH"
           subtitle="You can adjust your loans, including your interest rate, at any time"
           icon={<IconBorrow />}
           columns={["Collateral", "Avg rate, p.a.", "Max LTV", null] as const}
           rows={collSymbols.map((symbol) => <BorrowingRow symbol={symbol} />)}
         />
         <HomeTable
-          title={`Earn Rewards with ${content.stablecoinName}`}
-          subtitle={`Earn ${content.stablecoinName} & (staked) ETH rewards by putting your ${content.stablecoinName} in a stability pool`}
+          title="Earn Rewards with ebUSD"
+          subtitle="Earn ebUSD & (staked) ETH rewards by putting your ebUSD in a stability pool"
           icon={<IconEarn />}
           columns={["Pool", "Current APR", "Pool size", null] as const}
           rows={collSymbols.map((symbol) => <EarnRewardsRow symbol={symbol} />)}
@@ -113,7 +112,7 @@ function BorrowingRow({
                   })}
                 >
                   Borrow
-                  <TokenIcon symbol="BOLD" size="mini" />
+                  <TokenIcon symbol="ebUSD" size="mini" />
                 </div>
               }
               title={`Borrow ${collateral?.name} from ${symbol}`}
@@ -198,12 +197,12 @@ function EarnRewardsRow({
               >
                 Earn
                 <TokenIcon.Group size="mini">
-                  <TokenIcon symbol="BOLD" />
+                  <TokenIcon symbol="ebUSD" />
                   <TokenIcon symbol={symbol} />
                 </TokenIcon.Group>
               </div>
             }
-            title={`Earn ${content.stablecoinName} with ${collateral?.name}`}
+            title={`Earn ebUSD with ${collateral?.name}`}
           />
         </Link>
       </td>

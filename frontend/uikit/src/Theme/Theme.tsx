@@ -165,8 +165,8 @@ export const lightTheme = {
 		brandBlueContent: "white",
 		brandBlueContentAlt: "blue:50",
 		brandPink: "brand:pink",
-		brandPinkContent: "white",
-		brandPinkContentAlt: "gray:50",
+		brandPinkContent: "black",
+		brandPinkContentAlt: "black",
 		brandLightPink: "brand:lightpink",
 		brandLightPinkContent: "black",
 		brandLightPinkContentAlt: "black",
@@ -179,6 +179,7 @@ export const lightTheme = {
 		brandGreen: "brand:green",
 		brandGreenContent: "green:950",
 		brandGreenContentAlt: "green:800",
+    brandGray: "#F1EDE9",
 
 		riskGradient1: "green:400",
 		riskGradient2: "#B8E549",
