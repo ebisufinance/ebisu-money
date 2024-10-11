@@ -256,8 +256,9 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vars.addressesRegistries[vars.i] = addressesRegistry;
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
-
-        r.collateralRegistry = new CollateralRegistry(r.boldToken, vars.collaterals, vars.troveManagers);
+        console.log("I think its fails here");
+        r.collateralRegistry = new CollateralRegistry(r.boldToken, IGovernance(address(0)), vars.collaterals, vars.troveManagers);
+        console.log("I think its fails here");
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
 
@@ -349,6 +350,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             SALT, keccak256(getBytecode(type(SortedTroves).creationCode, address(contracts.addressesRegistry)))
         );
 
+        console.log("I think its fails here");
         IAddressesRegistry.AddressVars memory addressVars = IAddressesRegistry.AddressVars({
             collToken: _collToken,
             borrowerOperations: IBorrowerOperations(addresses.borrowerOperations),
@@ -370,11 +372,15 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             WETH: _weth,
             governance: IGovernance(address(0))
         });
+        console.log("I think its fails here");
         contracts.addressesRegistry.setAddresses(addressVars);
 
         contracts.borrowerOperations = new BorrowerOperations{salt: SALT}(contracts.addressesRegistry);
+        console.log("I think its fails here2");
         contracts.troveManager = new TroveManager{salt: SALT}(contracts.addressesRegistry);
+        console.log("I think its fails here2");
         contracts.troveNFT = new TroveNFT{salt: SALT}(contracts.addressesRegistry);
+        console.log("I think its fails here2");
         contracts.stabilityPool = new StabilityPool{salt: SALT}(contracts.addressesRegistry);
         contracts.activePool = new ActivePool{salt: SALT}(contracts.addressesRegistry);
         contracts.defaultPool = new DefaultPool{salt: SALT}(contracts.addressesRegistry);

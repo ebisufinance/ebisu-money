@@ -3,13 +3,13 @@
 pragma solidity 0.8.18;
 
 import "../../CollateralRegistry.sol";
-
+import "../../Interfaces/IGovernance.sol";
 /* Tester contract inherits from CollateralRegistry, and provides external functions
 for testing the parent's internal functions. */
 
 contract CollateralRegistryTester is CollateralRegistry {
-    constructor(IBoldToken _boldToken, IERC20Metadata[] memory _tokens, ITroveManager[] memory _troveManagers)
-        CollateralRegistry(_boldToken, _tokens, _troveManagers)
+    constructor(IBoldToken _boldToken, IGovernance _governance, IERC20Metadata[] memory _tokens, ITroveManager[] memory _troveManagers)
+        CollateralRegistry(_boldToken,_governance, _tokens, _troveManagers)
     {}
 
     function unprotectedDecayBaseRateFromBorrowing() external returns (uint256) {
