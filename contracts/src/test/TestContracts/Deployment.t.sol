@@ -41,6 +41,7 @@ import {ERC20Faucet} from "./ERC20Faucet.sol";
 import "../../PriceFeeds/WETHPriceFeed.sol";
 import "../../PriceFeeds/WSTETHPriceFeed.sol";
 import "../../PriceFeeds/RETHPriceFeed.sol";
+import "../../Interfaces/IGovernance.sol";
 
 import "forge-std/console2.sol";
 
@@ -419,7 +420,8 @@ contract TestDeployer is MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: IGovernance(address(0))
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -652,7 +654,8 @@ contract TestDeployer is MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: IGovernance(address(0))
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 

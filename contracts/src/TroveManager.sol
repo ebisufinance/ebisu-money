@@ -12,6 +12,7 @@ import "./Interfaces/ITroveEvents.sol";
 import "./Interfaces/ITroveNFT.sol";
 import "./Interfaces/ICollateralRegistry.sol";
 import "./Interfaces/IWETH.sol";
+import "./Interfaces/IGovernance.sol";
 import "./Dependencies/LiquityBase.sol";
 
 // import "forge-std/console2.sol";
@@ -30,20 +31,21 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     ICollateralRegistry internal collateralRegistry;
     // Wrapped ETH for liquidation reserve (gas compensation)
     IWETH internal immutable WETH;
-
+    // Governance that can change TroveManager params
+    IGovernance internal immutable governance;
     // Critical system collateral ratio. If the system's total collateral ratio (TCR) falls below the CCR, some borrowing operation restrictions are applied
     uint256 public immutable CCR;
 
     // Minimum collateral ratio for individual troves
-    uint256 internal immutable MCR;
+    uint256 public MCR;
     // Shutdown system collateral ratio. If the system's total collateral ratio (TCR) for a given collateral falls below the SCR,
     // the protocol triggers the shutdown of the borrow market and permanently disables all borrowing operations except for closing Troves.
     uint256 internal immutable SCR;
 
     // Liquidation penalty for troves offset to the SP
-    uint256 internal immutable LIQUIDATION_PENALTY_SP;
+    uint256 public LIQUIDATION_PENALTY_SP;
     // Liquidation penalty for troves redistributed
-    uint256 internal immutable LIQUIDATION_PENALTY_REDISTRIBUTION;
+    uint256 public LIQUIDATION_PENALTY_REDISTRIBUTION;
 
     // --- Data structures ---
 
@@ -166,6 +168,13 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     error NotShutDown();
     error NotEnoughBoldBalance();
     error MinCollNotReached(uint256 _coll);
+    error CallerNotGovernanceInitiative();
+    error InvalidCCR();
+    error InvalidMCR();
+    error InvalidSCR();
+    error SPPenaltyTooLow();
+    error SPPenaltyGtRedist();
+    error RedistPenaltyTooHigh();
 
     // --- Events ---
 
@@ -193,6 +202,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         boldToken = _addressesRegistry.boldToken();
         sortedTroves = _addressesRegistry.sortedTroves();
         WETH = _addressesRegistry.WETH();
+        governance = _addressesRegistry.governance();
         collateralRegistry = _addressesRegistry.collateralRegistry();
 
         emit TroveNFTAddressChanged(address(troveNFT));
@@ -204,7 +214,28 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         emit SortedTrovesAddressChanged(address(sortedTroves));
         emit CollateralRegistryAddressChanged(address(collateralRegistry));
     }
+    // --- Gonverance ---
 
+    function setMCR(uint256 _MCR) external {
+        _requireGovernanceInitiative();
+        if (_MCR <= 1e18 || _MCR >= 2e18) revert InvalidMCR();
+        MCR = _MCR;
+    }
+
+    function setLiquidationPenaltyParams(uint256 _liquidationPenaltySP, uint256 _liquidationPenaltyRedistribution) external {
+        _requireGovernanceInitiative();
+        if (_liquidationPenaltySP < 5e16) revert SPPenaltyTooLow();
+        if (_liquidationPenaltySP > _liquidationPenaltyRedistribution) revert SPPenaltyGtRedist();
+        if (_liquidationPenaltyRedistribution > 10e16) revert RedistPenaltyTooHigh();
+        LIQUIDATION_PENALTY_SP = _liquidationPenaltySP;
+        LIQUIDATION_PENALTY_REDISTRIBUTION = _liquidationPenaltyRedistribution;
+    }
+
+    function _requireGovernanceInitiative() internal view {
+        if (governance.registeredInitiatives(msg.sender) == 0) {
+            revert CallerNotGovernanceInitiative();
+        }
+    }
     // --- Getters ---
 
     function getTroveIdsCount() external view override returns (uint256) {
@@ -1917,4 +1948,6 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         Troves[_troveId].interestBatchManager = address(0);
         Troves[_troveId].batchDebtShares = 0;
     }
+
+
 }

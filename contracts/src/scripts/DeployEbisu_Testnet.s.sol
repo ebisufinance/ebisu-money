@@ -32,6 +32,7 @@ import "../Zappers/WETHZapper.sol";
 import "../Zappers/GasCompZapper.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "../Interfaces/IGovernance.sol";
 import "forge-std/console.sol";
 
 contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
@@ -366,7 +367,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: IGovernance(address(0))
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
