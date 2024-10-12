@@ -1,3 +1,4 @@
+pragma solidity ^0.8.18;
 
 interface IGovernance {
     /// @notice Returns when an initiative was registered

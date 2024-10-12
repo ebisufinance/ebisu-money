@@ -117,7 +117,7 @@ export async function main() {
 
   const forgeArgs: string[] = [
     "script",
-    "src/scripts/DeployLiquity2.s.sol",
+    "src/scripts/DeployEbisu_Testnet.s.sol",
     "--chain-id",
     String(options.chainId),
     "--rpc-url",
