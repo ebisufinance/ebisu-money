@@ -12,11 +12,7 @@ import { a, useTransition } from "@react-spring/web";
 import Link from "next/link";
 import { match, P } from "ts-pattern";
 
-export type LoadingState =
-  | "error"
-  | "loading"
-  | "not-found"
-  | "success";
+export type LoadingState = "error" | "loading" | "not-found" | "success";
 
 export function TransactionsScreen() {
   const {
@@ -33,11 +29,10 @@ export function TransactionsScreen() {
 
   const currentStep = flow.steps[currentStepIndex];
 
-  const showBackLink = currentStepIndex === 0 && (
-    currentStep.txStatus === "idle"
-    || currentStep.txStatus === "error"
-    || currentStep.txStatus === "awaiting-signature"
-  );
+  const showBackLink = currentStepIndex === 0
+    && (currentStep.txStatus === "idle"
+      || currentStep.txStatus === "error"
+      || currentStep.txStatus === "awaiting-signature");
 
   return (
     <Screen title={fd.title} subtitle={fd.subtitle}>
@@ -50,7 +45,40 @@ export function TransactionsScreen() {
       <VFlex gap={32}>
         {currentStep.error && (
           <div>
-            <pre>{currentStep.error}</pre>
+            <section
+              className={css({
+                display: "flex",
+                flexDirection: "column",
+                gap: 32,
+                padding: 16,
+                background: "token(colors.brandLightPink)",
+                border: "2px solid token(colors.tableBorder)",
+              })}
+            >
+              <header
+                className={css({
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 8,
+                })}
+              >
+                <h1
+                  className={css({
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "space-between",
+                    fontSize: 16,
+                  })}
+                >
+                  <span>
+                    {(currentStep.error.match(
+                      /ContractFunctionExecutionError[\s\S]*?(?=\n\n|\n[A-Z]|$)/,
+                    ) || [""])[0]}
+                  </span>
+                  {/* <span>{icon}</span> */}
+                </h1>
+              </header>
+            </section>
           </div>
         )}
 
@@ -74,11 +102,7 @@ export function TransactionsScreen() {
         >
           {currentStep.txStatus === "confirmed"
             ? (
-              <Link
-                href={flow.request.successLink[0]}
-                legacyBehavior
-                passHref
-              >
+              <Link href={flow.request.successLink[0]} legacyBehavior passHref>
                 <AnchorButton
                   label={flow.request.successLink[1]}
                   mode="primary"
@@ -89,9 +113,7 @@ export function TransactionsScreen() {
             )
             : (
               <Button
-                label={currentStep.txStatus === "error"
-                  ? "Retry"
-                  : "Confirm"}
+                label={currentStep.txStatus === "error" ? "Retry" : "Confirm"}
                 mode="primary"
                 onClick={signAndSend}
                 size="large"
@@ -129,14 +151,8 @@ export function TransactionsScreen() {
               width: "100%",
             }}
           >
-            <Link
-              href={flow.request.backLink[0]}
-              legacyBehavior
-              passHref
-            >
-              <AnchorTextButton
-                label={flow.request.backLink[1]}
-              />
+            <Link href={flow.request.backLink[0]} legacyBehavior passHref>
+              <AnchorTextButton label={flow.request.backLink[1]} />
             </Link>
           </div>
         )}
@@ -157,17 +173,10 @@ export function TransactionDetailsRow({
   secondarySize?: "normal" | "large";
 }) {
   return (
-    <HFlex
-      alignItems="flex-start"
-      gap={16}
-      justifyContent="space-between"
-    >
+    <HFlex alignItems="flex-start" gap={16} justifyContent="space-between">
       {Array.isArray(label)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,
@@ -193,10 +202,7 @@ export function TransactionDetailsRow({
         : <HFlex gap={8}>{label}</HFlex>}
       {Array.isArray(value)
         ? (
-          <VFlex
-            alignItems="flex-end"
-            gap={4}
-          >
+          <VFlex alignItems="flex-end" gap={4}>
             <HFlex
               style={{
                 fontSize: valueSize === "small" ? 16 : 24,
@@ -245,15 +251,9 @@ function NoTransactionsScreen() {
         width: "100%",
       })}
     >
+      <div>No ongoing transactions.</div>
       <div>
-        No ongoing transactions.
-      </div>
-      <div>
-        <Link
-          href="/"
-          legacyBehavior
-          passHref
-        >
+        <Link href="/" legacyBehavior passHref>
           <AnchorTextButton label="Back to dashboard" />
         </Link>
       </div>
@@ -369,11 +369,7 @@ function FlowStep({
 
 function Tick() {
   return (
-    <svg
-      width="12"
-      height="10"
-      fill="none"
-    >
+    <svg width="12" height="10" fill="none">
       <path
         fill="currentColor"
         d="M4 7.78 1.22 5l-.947.94L4 9.667l8-8-.94-.94L4 7.78Z"
