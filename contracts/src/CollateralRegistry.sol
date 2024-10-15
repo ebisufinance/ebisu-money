@@ -29,7 +29,6 @@ contract CollateralRegistry is ICollateralRegistry {
     mapping(address => ITroveManager) public troveManagers;
     address[] public tokens;
 
-
     // The timestamp of the latest fee operation (redemption or new Bold issuance)
     uint256 public lastFeeOperationTime = block.timestamp;
 
@@ -42,7 +41,12 @@ contract CollateralRegistry is ICollateralRegistry {
 
     error CallerNotGovernanceInitiative();
 
-    constructor(IBoldToken _boldToken, IGovernance _governance, IERC20Metadata[] memory _tokens, ITroveManager[] memory _troveManagers) {
+    constructor(
+        IBoldToken _boldToken,
+        IGovernance _governance,
+        IERC20Metadata[] memory _tokens,
+        ITroveManager[] memory _troveManagers
+    ) {
         uint256 numTokens = _tokens.length;
         require(numTokens > 0, "Collateral list cannot be empty");
         require(numTokens <= 10, "Collateral list too long");
@@ -58,8 +62,9 @@ contract CollateralRegistry is ICollateralRegistry {
         baseRate = INITIAL_BASE_RATE;
         emit BaseRateUpdated(INITIAL_BASE_RATE);
     }
+
     function addToken(address _token, ITroveManager _troveManager) external {
-//        _requireGovernanceInitiative();
+        //        _requireGovernanceInitiative();
         _addToken(_token, _troveManager);
     }
 
@@ -270,9 +275,10 @@ contract CollateralRegistry is ICollateralRegistry {
     // getters
 
     function getToken(uint256 _index) external view returns (IERC20Metadata) {
-//        require(_index < tokens.length, "Invalid index");
+        //        require(_index < tokens.length, "Invalid index");
         //if index is not valid return the zero address
-        if (_index >= tokens.length) { //todo: make a decision if we should return 0 or revert
+        if (_index >= tokens.length) {
+            //todo: make a decision if we should return 0 or revert
             return IERC20Metadata(address(0));
         }
         IERC20Metadata token = IERC20Metadata(tokens[_index]);
@@ -283,10 +289,12 @@ contract CollateralRegistry is ICollateralRegistry {
         return troveManagers[_token];
     }
     //function to get troveManager by index
+
     function getTroveManager(uint256 _index) public view returns (ITroveManager) {
-//        require(_index < tokens.length, "Invalid index");
+        //        require(_index < tokens.length, "Invalid index");
         //if index is not valid return the zero address
-        if (_index >= tokens.length) { //todo: make a decision if we should return 0 or revert
+        if (_index >= tokens.length) {
+            //todo: make a decision if we should return 0 or revert
             return ITroveManager(address(0));
         }
         return troveManagers[tokens[_index]];
