@@ -5,6 +5,8 @@ pragma solidity 0.8.18;
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "./Dependencies/Ownable.sol";
 import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/IGovernance.sol";
+import "forge-std/console2.sol";
 
 /*
  * --- Functionality added specific to the BoldToken ---
@@ -22,6 +24,7 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
 
     // --- Addresses ---
 
+    IGovernance internal governance;
     // TODO: optimize to make them immutable
     address public collateralRegistryAddress;
     mapping(address => bool) troveManagerAddresses;
@@ -30,20 +33,32 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
     mapping(address => bool) activePoolAddresses;
 
     // --- Events ---
+    event CollateralRegistryAndGovernanceAddressChanged(address _newCollateralRegistryAddress, address _newGovernance);
     event CollateralRegistryAddressChanged(address _newCollateralRegistryAddress);
     event TroveManagerAddressAdded(address _newTroveManagerAddress);
     event StabilityPoolAddressAdded(address _newStabilityPoolAddress);
     event BorrowerOperationsAddressAdded(address _newBorrowerOperationsAddress);
     event ActivePoolAddressAdded(address _newActivePoolAddress);
 
-    constructor(address _owner) Ownable(_owner) ERC20(_NAME, _SYMBOL) ERC20Permit(_NAME) {}
+    // --- Errors ---
+    error CallerNotGovernanceInitiative();
+
+    constructor(address _owner) Ownable(_owner) ERC20(_NAME, _SYMBOL) ERC20Permit(_NAME) {
+        console2.log("Owner in BoldToken: ", owner());
+    }
+
+//    function getOwner() public view override returns (address) {
+//        return owner();
+//    }
 
     function setBranchAddresses(
         address _troveManagerAddress,
         address _stabilityPoolAddress,
         address _borrowerOperationsAddress,
         address _activePoolAddress
-    ) external override onlyOwner {
+    ) external override {
+        _requireGovernanceInitiative();
+        console2.log("Owner in setBranchAddresses: ", owner());
         troveManagerAddresses[_troveManagerAddress] = true;
         emit TroveManagerAddressAdded(_troveManagerAddress);
 
@@ -57,9 +72,18 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
         emit ActivePoolAddressAdded(_activePoolAddress);
     }
 
-    function setCollateralRegistry(address _collateralRegistryAddress) external override onlyOwner {
+//    function setCollateralRegistry(address _collateralRegistryAddress) external override onlyOwner {
+//        collateralRegistryAddress = _collateralRegistryAddress;
+//        emit CollateralRegistryAddressChanged(_collateralRegistryAddress);
+//
+//        _renounceOwnership();
+//    }
+    function setCollateralRegistryAndGovernance(address _collateralRegistryAddress, address _governance) external override onlyOwner {
+        console2.log("innn setCollateralRegistryAndGovernance");
+
         collateralRegistryAddress = _collateralRegistryAddress;
-        emit CollateralRegistryAddressChanged(_collateralRegistryAddress);
+        governance = IGovernance(_governance);
+        emit CollateralRegistryAndGovernanceAddressChanged(_collateralRegistryAddress, _governance);
 
         _renounceOwnership();
     }
@@ -128,5 +152,16 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
 
     function _requireCallerIsStabilityPool() internal view {
         require(stabilityPoolAddresses[msg.sender], "Bold: Caller is not the StabilityPool");
+    }
+
+    //govetnance functions
+    function _requireGovernanceInitiative() internal view {
+        console2.log("here msg.sender: ", msg.sender);
+        console2.log("governance address in _requireGovernanceInitiative: ", address(governance));
+        if (governance.registeredInitiatives(msg.sender) == 0) {
+            console2.log("governance.registeredInitiatives(msg.sender): ", governance.registeredInitiatives(msg.sender));
+            revert CallerNotGovernanceInitiative();
+        }
+        console2.log("after: ", msg.sender);
     }
 }

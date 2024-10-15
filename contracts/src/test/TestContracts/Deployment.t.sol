@@ -37,6 +37,7 @@ import "../../Zappers/Modules/Exchanges/UniV3Exchange.sol";
 import "../../Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
 import {WETHTester} from "./WETHTester.sol";
 import {ERC20Faucet} from "./ERC20Faucet.sol";
+import {GovernanceTester} from "./GovernanceTester.t.sol";
 
 import "../../PriceFeeds/WETHPriceFeed.sol";
 import "../../PriceFeeds/WSTETHPriceFeed.sol";
@@ -89,6 +90,7 @@ contract TestDeployer is MetadataDeployment {
         GasPool gasPool;
         IInterestRouter interestRouter;
         IERC20Metadata collToken;
+        IGovernance governance;
     }
 
     struct Zappers {
@@ -251,6 +253,43 @@ contract TestDeployer is MetadataDeployment {
         return "LST";
     }
 
+    function deploySingleBranch(
+        TroveManagerParams memory troveManagerParams,
+        IWETH _weth,
+        IERC20Metadata _collToken,
+        ICollateralRegistry _collateralRegistry,
+        IHintHelpers _hintHelpers,
+        IMultiTroveGetter _multiTroveGetter
+    )
+        public
+        returns (
+            LiquityContractsDev memory contracts
+        )
+    {
+        IBoldToken boldToken = IBoldToken(_collateralRegistry.boldToken());
+        LiquityContractAddresses memory addresses;
+        (IAddressesRegistry addressesRegistry, address troveManagerAddress) = _deployAddressesRegistryDev(troveManagerParams);
+
+        Zappers memory zappers;
+        (contracts , zappers) = _deployAndConnectCollateralContractsDev(
+        _collToken,
+        boldToken,
+        _collateralRegistry,
+        _weth,
+        addressesRegistry,
+        troveManagerAddress,
+        _hintHelpers,
+        _multiTroveGetter
+        );
+
+        _collateralRegistry.addToken(
+            address(contracts.collToken),
+            ITroveManager(contracts.troveManager)
+        );
+
+        return contracts;
+    }
+
     function deployAndConnectContracts(TroveManagerParams[] memory troveManagerParamsArray, IWETH _WETH)
         public
         returns (
@@ -264,6 +303,8 @@ contract TestDeployer is MetadataDeployment {
     {
         DeploymentVarsDev memory vars;
         vars.numCollaterals = troveManagerParamsArray.length;
+        // declare governance
+        IGovernance governance;
         // Deploy Bold
         vars.bytecode = abi.encodePacked(type(BoldToken).creationCode, abi.encode(address(this)));
         vars.boldTokenAddress = getAddress(address(this), vars.bytecode, SALT);
@@ -295,10 +336,17 @@ contract TestDeployer is MetadataDeployment {
             vars.addressesRegistries[vars.i] = addressesRegistry;
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
-
-        collateralRegistry = new CollateralRegistry(boldToken, IGovernance(address(0)), vars.collaterals, vars.troveManagers);
+        governance = new GovernanceTester();
+        collateralRegistry = new CollateralRegistry(boldToken, governance, vars.collaterals, vars.troveManagers);
         hintHelpers = new HintHelpers(collateralRegistry);
         multiTroveGetter = new MultiTroveGetter(collateralRegistry);
+
+//        console.log("owner of boldToken is %s", boldToken.owner());
+        console.log("message sender is %s", msg.sender);
+        //set into boldtoken the collateralRegistry and governance
+        console.log("right before setting collateral registry and governance 2");
+        boldToken.setCollateralRegistryAndGovernance(address(collateralRegistry), address(governance));
+        console.log("right after setting collateral registry and governance 2");
 
         (contractsArray[0], zappersArray[0]) = _deployAndConnectCollateralContractsDev(
             _WETH,
@@ -324,8 +372,6 @@ contract TestDeployer is MetadataDeployment {
                 multiTroveGetter
             );
         }
-
-        boldToken.setCollateralRegistry(address(collateralRegistry));
     }
 
     function _deployAddressesRegistryDev(TroveManagerParams memory _troveManagerParams)
@@ -421,7 +467,7 @@ contract TestDeployer is MetadataDeployment {
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
             WETH: _weth,
-            governance: IGovernance(address(0))
+            governance: _collateralRegistry.governance()
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -452,7 +498,6 @@ contract TestDeployer is MetadataDeployment {
             address(contracts.borrowerOperations),
             address(contracts.activePool)
         );
-
         // deploy zappers
         (zappers.gasCompZapper, zappers.wethZapper, zappers.leverageZapperCurve, zappers.leverageZapperUniV3) =
         _deployZappers(contracts.addressesRegistry, contracts.collToken, _boldToken, _weth, contracts.priceFeed, false);
@@ -461,7 +506,7 @@ contract TestDeployer is MetadataDeployment {
     // Creates individual PriceFeed contracts based on oracle addresses.
     // Still uses mock collaterals rather than real mainnet WETH and LST addresses.
 
-    function deployAndConnectContractsMainnet(TroveManagerParams[] memory _troveManagerParamsArray)
+    function deployAndConnectContractsMainnet(TroveManagerParams[] memory _troveManagerParamsArray, IGovernance _governance)
         public
         returns (DeploymentResultMainnet memory result)
     {
@@ -540,10 +585,15 @@ contract TestDeployer is MetadataDeployment {
         vars.troveManagers[2] = ITroveManager(troveManagerAddress);
 
         // Deploy registry and register the TMs
-        result.collateralRegistry = new CollateralRegistry(result.boldToken, IGovernance(address(0)), vars.collaterals, vars.troveManagers);
+        result.collateralRegistry = new CollateralRegistry(result.boldToken, _governance, vars.collaterals, vars.troveManagers);
+
+        //connect collateralRegistry and Governance to Bold
+        console.log("right before setting collateral registry and governance");
+        result.boldToken.setCollateralRegistryAndGovernance(address(result.collateralRegistry), address(_governance));
 
         result.hintHelpers = new HintHelpers(result.collateralRegistry);
         result.multiTroveGetter = new MultiTroveGetter(result.collateralRegistry);
+
 
         // Deploy each set of core contracts
         for (vars.i = 0; vars.i < vars.numCollaterals; vars.i++) {
@@ -559,8 +609,6 @@ contract TestDeployer is MetadataDeployment {
                 result.multiTroveGetter
             );
         }
-
-        result.boldToken.setCollateralRegistry(address(result.collateralRegistry));
     }
 
     function _deployAddressesRegistryMainnet(TroveManagerParams memory _troveManagerParams)
@@ -592,6 +640,7 @@ contract TestDeployer is MetadataDeployment {
         IHintHelpers _hintHelpers,
         IMultiTroveGetter _multiTroveGetter
     ) internal returns (LiquityContracts memory contracts, Zappers memory zappers) {
+        console.log("inside _deployAndConnectCollateralContractsMainnet");
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
         contracts.priceFeed = _priceFeed;
@@ -655,7 +704,7 @@ contract TestDeployer is MetadataDeployment {
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
             WETH: _weth,
-            governance: IGovernance(address(0))
+            governance: _collateralRegistry.governance()
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -678,6 +727,8 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.gasPool) == addresses.gasPool);
         assert(address(contracts.collSurplusPool) == addresses.collSurplusPool);
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
+        console.log("setBranchAddresses");
+        vm.prank(0x2e234DAe75C793f67A35089C9d99245E1C58470b);
 
         // Connect contracts
         _boldToken.setBranchAddresses(
@@ -686,7 +737,8 @@ contract TestDeployer is MetadataDeployment {
             address(contracts.borrowerOperations),
             address(contracts.activePool)
         );
-
+        console.log("after setBranchAddresses");
+        vm.stopPrank();
         // TODO: remove this and set address in constructor as per the CREATE2 approach above
         _priceFeed.setAddresses(addresses.borrowerOperations);
 

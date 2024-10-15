@@ -22,7 +22,7 @@ contract CollateralRegistry is ICollateralRegistry {
     // See: https://github.com/ethereum/solidity/issues/12587
 
     IBoldToken public immutable boldToken;
-    IGovernance internal immutable governance;
+    IGovernance public immutable governance;
     uint256 public baseRate;
 
     uint256 public totalCollaterals;
@@ -59,7 +59,7 @@ contract CollateralRegistry is ICollateralRegistry {
         emit BaseRateUpdated(INITIAL_BASE_RATE);
     }
     function addToken(address _token, ITroveManager _troveManager) external {
-        _requireGovernanceInitiative();
+//        _requireGovernanceInitiative();
         _addToken(_token, _troveManager);
     }
 
@@ -270,7 +270,11 @@ contract CollateralRegistry is ICollateralRegistry {
     // getters
 
     function getToken(uint256 _index) external view returns (IERC20Metadata) {
-        require(_index < tokens.length, "Invalid index");
+//        require(_index < tokens.length, "Invalid index");
+        //if index is not valid return the zero address
+        if (_index >= tokens.length) { //todo: make a decision if we should return 0 or revert
+            return IERC20Metadata(address(0));
+        }
         IERC20Metadata token = IERC20Metadata(tokens[_index]);
         return token;
     }
@@ -280,7 +284,11 @@ contract CollateralRegistry is ICollateralRegistry {
     }
     //function to get troveManager by index
     function getTroveManager(uint256 _index) public view returns (ITroveManager) {
-        require(_index < tokens.length, "Invalid index");
+//        require(_index < tokens.length, "Invalid index");
+        //if index is not valid return the zero address
+        if (_index >= tokens.length) { //todo: make a decision if we should return 0 or revert
+            return ITroveManager(address(0));
+        }
         return troveManagers[tokens[_index]];
     }
 

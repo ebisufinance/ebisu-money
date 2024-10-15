@@ -31,6 +31,7 @@ import "../test/TestContracts/MetadataDeployment.sol";
 import "../Zappers/WETHZapper.sol";
 import "../Zappers/GasCompZapper.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
+import {GovernanceTester} from "../test/TestContracts/GovernanceTester.t.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "../Interfaces/IGovernance.sol";
 import "forge-std/console.sol";
@@ -115,6 +116,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         IBoldToken boldToken;
         HintHelpers hintHelpers;
         MultiTroveGetter multiTroveGetter;
+        IGovernance governance;
     }
 
     function _getBranchContractsJson(LiquityContractsTestnet memory c) internal pure returns (string memory) {
@@ -257,7 +259,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
         console.log("I think its fails here");
-        r.collateralRegistry = new CollateralRegistry(r.boldToken, IGovernance(address(0)), vars.collaterals, vars.troveManagers);
+        r.governance = new GovernanceTester();
+        r.collateralRegistry = new CollateralRegistry(r.boldToken, r.governance, vars.collaterals, vars.troveManagers);
         console.log("I think its fails here");
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
@@ -277,7 +280,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             r.contractsArray[vars.i] = vars.contracts;
         }
 
-        r.boldToken.setCollateralRegistry(address(r.collateralRegistry));
+        r.boldToken.setCollateralRegistryAndGovernance(address(r.collateralRegistry), address(r.governance));
     }
 
     function _deployAddressesRegistry(TroveManagerParams memory _troveManagerParams)
@@ -311,7 +314,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
     ) internal returns (LiquityContractsTestnet memory contracts) {
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
-
+        GovernanceTester governance = new GovernanceTester();
         // Deploy all contracts, using testers for TM and PriceFeed
         contracts.addressesRegistry = _addressesRegistry;
 
@@ -370,7 +373,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
             WETH: _weth,
-            governance: IGovernance(address(0))
+            governance: governance
         });
         console.log("I think its fails here");
         contracts.addressesRegistry.setAddresses(addressVars);

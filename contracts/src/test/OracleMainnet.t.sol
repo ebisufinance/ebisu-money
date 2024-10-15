@@ -7,6 +7,7 @@ import "./TestContracts/ChainlinkOracleMock.sol";
 import "./TestContracts/RETHTokenMock.sol";
 import "./TestContracts/WSTETHTokenMock.sol";
 import "./TestContracts/Deployment.t.sol";
+import {GovernanceTester} from "./TestContracts/GovernanceTester.t.sol";
 
 import "../Dependencies/AggregatorV3Interface.sol";
 import "../Interfaces/IRETHPriceFeed.sol";
@@ -64,8 +65,11 @@ contract OraclesMainnet is TestAccounts {
         }
 
         TestDeployer deployer = new TestDeployer();
+        GovernanceTester governanceTester = new GovernanceTester();
+        uint16 res = governanceTester.registeredInitiatives(msg.sender);
+        console.log("registeredInitiatives::: ", res);
         TestDeployer.DeploymentResultMainnet memory result =
-            deployer.deployAndConnectContractsMainnet(troveManagerParamsArray);
+            deployer.deployAndConnectContractsMainnet(troveManagerParamsArray, governanceTester);
         collateralRegistry = result.collateralRegistry;
         boldToken = result.boldToken;
 

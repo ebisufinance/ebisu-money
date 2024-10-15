@@ -14,7 +14,7 @@ interface IBoldToken is IERC20Metadata, IERC20Permit, IERC5267 {
         address _activePoolAddress
     ) external;
 
-    function setCollateralRegistry(address _collateralRegistryAddress) external;
+    function setCollateralRegistryAndGovernance(address _collateralRegistryAddress, address _governance) external;
 
     function mint(address _account, uint256 _amount) external;
 
@@ -23,4 +23,6 @@ interface IBoldToken is IERC20Metadata, IERC20Permit, IERC5267 {
     function sendToPool(address _sender, address poolAddress, uint256 _amount) external;
 
     function returnFromPool(address poolAddress, address user, uint256 _amount) external;
+
+//    function owner() external view override returns (address);
 }

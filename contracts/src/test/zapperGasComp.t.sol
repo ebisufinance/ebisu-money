@@ -5,6 +5,7 @@ pragma solidity ^0.8.18;
 import "./TestContracts/DevTestSetup.sol";
 import "./TestContracts/WETH.sol";
 import "../Zappers/GasCompZapper.sol";
+import {GovernanceTester} from "./TestContracts/GovernanceTester.t.sol";
 
 contract ZapperGasCompTest is DevTestSetup {
     function setUp() public override {
@@ -33,6 +34,7 @@ contract ZapperGasCompTest is DevTestSetup {
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev[] memory contractsArray;
         TestDeployer.Zappers[] memory zappersArray;
+        GovernanceTester governance = new GovernanceTester();
         (contractsArray, collateralRegistry, boldToken,,, zappersArray) =
             deployer.deployAndConnectContracts(troveManagerParams, WETH);
 
