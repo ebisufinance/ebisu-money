@@ -30,6 +30,8 @@ import "../test/TestContracts/PriceFeedTestnet.sol";
 import "../test/TestContracts/MetadataDeployment.sol";
 import "../Zappers/WETHZapper.sol";
 import "../Zappers/GasCompZapper.sol";
+import "../Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
+import "../Zappers/Modules/Exchanges/CurveExchange.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import "forge-std/console.sol";
@@ -183,7 +185,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         TroveManagerParams[] memory troveManagerParamsArray = new TroveManagerParams[](2);
 
-        troveManagerParamsArray[0] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
+        troveManagerParamsArray[0] = TroveManagerParams(150e16, 110e16, 110e16, 5e16, 10e16); // weETH
         troveManagerParamsArray[1] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
         console.log("after troveManagerParamsArray");
         // used for gas compensation and as collateral of the first branch
@@ -241,7 +243,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             1 days //         _tapPeriod
         );
 
-        vars.collaterals[1] = new ERC20Faucet(
+         vars.collaterals[1] = new ERC20Faucet(
             string.concat("Mock ezETH", string(abi.encode(vars.i))), // _name
             string.concat("ezETH", string(abi.encode(vars.i))), // _symbol
             100 ether, //     _tapAmount
@@ -400,21 +402,34 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         // deploy zappers
         (contracts.gasCompZapper, contracts.wethZapper) =
-            _deployZappers(contracts.addressesRegistry, contracts.collToken, _weth);
+            _deployZappers(contracts.addressesRegistry, contracts.collToken, _boldToken, _weth, contracts.priceFeed);
     }
 
-    function _deployZappers(IAddressesRegistry _addressesRegistry, IERC20 _collToken, IWETH _weth)
-        internal
-        returns (GasCompZapper gasCompZapper, WETHZapper wethZapper)
-    {
+    function _deployZappers(
+        IAddressesRegistry _addressesRegistry,
+        IERC20 _collToken,
+        IBoldToken _boldToken,
+        IWETH _weth,
+        IPriceFeed _priceFeed
+    ) internal returns (GasCompZapper gasCompZapper, WETHZapper wethZapper) {
+        IFlashLoanProvider flashLoanProvider = new BalancerFlashLoan();
+        IExchange curveExchange = _deployCurveExchange(_collToken, _boldToken, _priceFeed, false);
+
         bool lst = _collToken != _weth;
         if (lst) {
-            gasCompZapper = new GasCompZapper(_addressesRegistry);
+            gasCompZapper = new GasCompZapper(_addressesRegistry, flashLoanProvider, curveExchange);
         } else {
-            wethZapper = new WETHZapper(_addressesRegistry);
+            wethZapper = new WETHZapper(_addressesRegistry, flashLoanProvider, curveExchange);
         }
 
         return (gasCompZapper, wethZapper);
+    }
+
+    function _deployCurveExchange(IERC20 _collToken, IBoldToken _boldToken, IPriceFeed _priceFeed, bool _mainnet)
+        internal
+        returns (IExchange)
+    {
+        if (!_mainnet) return new CurveExchange(_collToken, _boldToken, ICurvePool(address(0)), 1, 0);
     }
 
     function formatAmount(uint256 amount, uint256 decimals, uint256 digits) internal pure returns (string memory) {
