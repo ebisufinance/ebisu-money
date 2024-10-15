@@ -167,11 +167,10 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
     error OnlyOneTroveLeft();
     error NotShutDown();
     error NotEnoughBoldBalance();
+    error BatchSharesRatioTooHigh();
     error MinCollNotReached(uint256 _coll);
     error CallerNotGovernanceInitiative();
-    error InvalidCCR();
     error InvalidMCR();
-    error InvalidSCR();
     error SPPenaltyTooLow();
     error SPPenaltyGtRedist();
     error RedistPenaltyTooHigh();
