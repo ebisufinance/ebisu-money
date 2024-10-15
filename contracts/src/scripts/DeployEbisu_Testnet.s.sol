@@ -190,14 +190,13 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         troveManagerParamsArray[0] = TroveManagerParams(150e16, 110e16, 110e16, 5e16, 10e16); // weETH
         troveManagerParamsArray[1] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
-        console.log("after troveManagerParamsArray");
+
         // used for gas compensation and as collateral of the first branch
         IWETH WETH = new WETHTester({_tapAmount: 100 ether, _tapPeriod: 1 days});
         DeploymentResult memory deployed = _deployAndConnectContracts(troveManagerParamsArray, WETH);
         vm.stopBroadcast();
 
         vm.writeFile("deployment-manifest.json", _getManifestJson(deployed));
-
     }
 
     function tapFaucet(uint256[] memory accounts, LiquityContractsTestnet memory contracts) internal {
@@ -246,7 +245,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             1 days //         _tapPeriod
         );
 
-         vars.collaterals[1] = new ERC20Faucet(
+        vars.collaterals[1] = new ERC20Faucet(
             string.concat("Mock ezETH", string(abi.encode(vars.i))), // _name
             string.concat("ezETH", string(abi.encode(vars.i))), // _symbol
             100 ether, //     _tapAmount
@@ -260,10 +259,9 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vars.addressesRegistries[vars.i] = addressesRegistry;
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
-        console.log("I think its fails here");
+
         r.governance = new GovernanceTester();
         r.collateralRegistry = new CollateralRegistry(r.boldToken, r.governance, vars.collaterals, vars.troveManagers);
-        console.log("I think its fails here");
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
 
@@ -316,6 +314,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
     ) internal returns (LiquityContractsTestnet memory contracts) {
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
+
+        // Deploy Governance contract
         GovernanceTester governance = new GovernanceTester();
         // Deploy all contracts, using testers for TM and PriceFeed
         contracts.addressesRegistry = _addressesRegistry;
@@ -355,7 +355,6 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             SALT, keccak256(getBytecode(type(SortedTroves).creationCode, address(contracts.addressesRegistry)))
         );
 
-        console.log("I think its fails here");
         IAddressesRegistry.AddressVars memory addressVars = IAddressesRegistry.AddressVars({
             collToken: _collToken,
             borrowerOperations: IBorrowerOperations(addresses.borrowerOperations),
@@ -377,15 +376,11 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             WETH: _weth,
             governance: governance
         });
-        console.log("I think its fails here");
-        contracts.addressesRegistry.setAddresses(addressVars);
 
+        contracts.addressesRegistry.setAddresses(addressVars);
         contracts.borrowerOperations = new BorrowerOperations{salt: SALT}(contracts.addressesRegistry);
-        console.log("I think its fails here2");
         contracts.troveManager = new TroveManager{salt: SALT}(contracts.addressesRegistry);
-        console.log("I think its fails here2");
         contracts.troveNFT = new TroveNFT{salt: SALT}(contracts.addressesRegistry);
-        console.log("I think its fails here2");
         contracts.stabilityPool = new StabilityPool{salt: SALT}(contracts.addressesRegistry);
         contracts.activePool = new ActivePool{salt: SALT}(contracts.addressesRegistry);
         contracts.defaultPool = new DefaultPool{salt: SALT}(contracts.addressesRegistry);
