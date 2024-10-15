@@ -178,7 +178,7 @@ export function InterestRateField({
               <div>
                 {boldInterestPerYear
                   ? fmtnum(boldInterestPerYear, 2)
-                  : "−"} BOLD / year
+                  : "−"} {content.stablecoinName} / year
               </div>
               <InfoTooltip {...infoTooltipProps(content.borrowScreen.infoTooltips.interestRateBoldPerYear)} />
             </HFlex>
@@ -198,7 +198,7 @@ export function InterestRateField({
                 >
                   {fmtnum(boldRedeemableInFront, "compact")}
                 </span>
-                <span>{" BOLD to redeem"}</span>
+                <span>{` ${content.stablecoinName} to redeem`}</span>
               </span>
             </span>
           ),
@@ -389,7 +389,7 @@ function DelegatesModalContent({
                       <div>{delegate.followers} followers</div>
                       <Bullet />
                       <div>
-                        {fmtnum(delegate.boldAmount, "compact")} BOLD
+                        {fmtnum(delegate.boldAmount, "compact")} {content.stablecoinName}
                       </div>
                     </div>
                     <div
@@ -433,8 +433,8 @@ function DelegatesModalContent({
                     })}
                   >
                     <div>Redemptions</div>
-                    <div title={`${fmtnum(delegate.redemptions, "full")} BOLD`}>
-                      {fmtnum(delegate.redemptions, "compact")} BOLD
+                    <div title={`${fmtnum(delegate.redemptions, "full")} ${content.stablecoinName}`}>
+                      {fmtnum(delegate.redemptions, "compact")} {content.stablecoinName}
                     </div>
                   </div>
                   <div

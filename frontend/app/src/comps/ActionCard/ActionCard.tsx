@@ -32,9 +32,9 @@ export function ActionCard({
   const { description, path, title, colors } = match(type)
     .with("borrow", () => ({
       colors: {
-        background: token("colors.brandPink"),
-        foreground: token("colors.brandPinkContent"),
-        foregroundAlt: token("colors.brandPinkContentAlt"),
+        background: token("colors.brandLightPink"),
+        foreground: token("colors.brandLightPinkContent"),
+        foregroundAlt: token("colors.brandLightPinkContentAlt"),
       },
       description: ac.borrow.description,
       path: "/borrow",
@@ -52,9 +52,9 @@ export function ActionCard({
     }))
     .with("earn", () => ({
       colors: {
-        background: token("colors.brandPink"),
-        foreground: token("colors.brandPinkContent"),
-        foregroundAlt: token("colors.brandPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.earn.description,
       path: "/earn",
@@ -62,9 +62,9 @@ export function ActionCard({
     }))
     .with("stake", () => ({
       colors: {
-        background: token("colors.brandLightPink"),
-        foreground: token("colors.brandLightPinkContent"),
-        foregroundAlt: token("colors.brandLightPinkContentAlt"),
+        background: token("colors.brandGray"),
+        foreground: token("colors.brandGrayContent"),
+        foregroundAlt: token("colors.brandGrayContentAlt"),
       },
       description: ac.stake.description,
       path: "/stake",

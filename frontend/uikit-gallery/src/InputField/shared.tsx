@@ -82,6 +82,7 @@ export function InputFieldFixture({
 					itemRow("RETH", "rETH", "30.00"),
 					itemRow("STETH", "stETH", "40.00"),
 					itemRow("WEETH", "weETH", "50.00"),
+					itemRow("EZETH", "ezETH", "60.00"),
 				]}
 			/>
 		))
@@ -117,7 +118,7 @@ export function InputFieldFixture({
 			"borrow",
 			() => `${parsedValue ? dn.format(parsedValue, 2) : "−"}  USD`,
 		)
-		.with("slider", () => "Total debt 0 BOLD")
+		.with("slider", () => "Total debt 0 ebUSD")
 		.otherwise(() => undefined);
 
 	const secondaryEnd = match(fixture)
@@ -139,7 +140,7 @@ export function InputFieldFixture({
 					Max LTV 80%:
 				</div>
 				<TextButton
-					label="24,405.69 BOLD"
+					label="24,405.69 ebUSD"
 					onClick={() => setValue("24405.69")}
 				/>
 			</div>
@@ -175,7 +176,7 @@ export function InputFieldFixture({
 			focused || !parsedValue ? value : `${dn.format(parsedValue)} ETH`,
 		)
 		.with("borrow", () =>
-			focused || !parsedValue ? value : `${dn.format(parsedValue)} BOLD`,
+			focused || !parsedValue ? value : `${dn.format(parsedValue)} ebUSD`,
 		)
 		.with("slider", () =>
 			focused || !parsedValue ? value : `$${dn.format(parsedValue)}`,

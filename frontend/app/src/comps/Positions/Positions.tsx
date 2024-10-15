@@ -234,7 +234,7 @@ function PositionBorrow({
 
   const title = [
     `Loan ID: ${troveId}`,
-    `Borrowed: ${fmtnum(borrowed, "full")} BOLD`,
+    `Borrowed: ${fmtnum(borrowed, "full")} ${content.stablecoinName}`,
     `Collateral: ${fmtnum(deposit, "full")} ${token.name}`,
     `Interest rate: ${fmtnum(interestRate, "full", 100)}%`,
   ];
@@ -264,7 +264,7 @@ function PositionBorrow({
             >
               <IconBorrow size={16} />
             </div>
-            BOLD loan
+            {content.stablecoinName} loan
           </div>
         }
         contextual={<EditSquare />}
@@ -704,7 +704,7 @@ function PositionEarn({
                       color: "strongSurfaceContent",
                     })}
                   >
-                    {dn.format(deposit, 4)} BOLD
+                    {dn.format(deposit, 4)} {content.stablecoinName}
                   </div>
                 </div>
               }
@@ -749,7 +749,7 @@ function PositionStake({
             >
               <IconStake size={16} />
             </div>
-            LQTY stake
+            {content.stakingcoinName} stake
           </div>,
         ]}
         contextual={<EditSquare />}
@@ -822,7 +822,7 @@ function PositionStake({
                       color: "strongSurfaceContent",
                     })}
                   >
-                    {dn.format(deposit, 2)} LQTY
+                    {dn.format(deposit, 2)} {content.stakingcoinName}
                   </div>
                 </div>
               }

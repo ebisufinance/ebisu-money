@@ -19,8 +19,8 @@ import "./Interfaces/IGovernance.sol";
  */
 
 contract BoldToken is Ownable, IBoldToken, ERC20Permit {
-    string internal constant _NAME = "Bold Stablecoin";
-    string internal constant _SYMBOL = "Bold";
+    string internal constant _NAME = "ebUSD";
+    string internal constant _SYMBOL = "ebUSD";
 
     // --- Addresses ---
     IGovernance internal governance;

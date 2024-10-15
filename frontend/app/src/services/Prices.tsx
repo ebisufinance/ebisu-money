@@ -1,6 +1,6 @@
 "use client";
 
-import { CollateralSymbol } from "@/src/types";
+import type { CollateralSymbol } from "@/src/types";
 import type { Dnum } from "dnum";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 
@@ -8,6 +8,7 @@ import { useCollateralContract } from "@/src/contracts";
 import {
   BOLD_PRICE as DEMO_BOLD_PRICE,
   ETH_PRICE as DEMO_ETH_PRICE,
+  EZETH_PRICE as DEMO_EZETH_PRICE,
   LQTY_PRICE as DEMO_LQTY_PRICE,
   PRICE_UPDATE_INTERVAL as DEMO_PRICE_UPDATE_INTERVAL,
   PRICE_UPDATE_MANUAL as DEMO_PRICE_UPDATE_MANUAL,
@@ -36,6 +37,7 @@ const initialPrices: Prices = {
   RETH: null,
   STETH: null,
   WEETH: null,
+  EZETH: null,
 };
 
 function useWatchCollateralPrice(collateral: CollateralSymbol) {
@@ -57,6 +59,7 @@ let useWatchPrices = function useWatchPrices(
   const rethPrice = useWatchCollateralPrice("RETH");
   const stethPrice = useWatchCollateralPrice("STETH");
   const weethPrice = useWatchCollateralPrice("WEETH");
+  const ezethPrice = useWatchCollateralPrice("EZETH");
 
   const prevPrices = useRef<Prices>({
     BOLD: null,
@@ -65,6 +68,7 @@ let useWatchPrices = function useWatchPrices(
     RETH: null,
     STETH: null,
     WEETH: null,
+    EZETH: null,
   });
 
   useEffect(() => {
@@ -77,6 +81,7 @@ let useWatchPrices = function useWatchPrices(
       RETH: rethPrice.data ? dnum18(rethPrice.data) : null,
       STETH: stethPrice.data ? dnum18(stethPrice.data) : null,
       WEETH: weethPrice.data ? dnum18(weethPrice.data) : null,
+      EZETH: ezethPrice.data ? dnum18(ezethPrice.data) : null,
     };
 
     const hasChanged = jsonStringifyWithDnum(newPrices)
@@ -86,7 +91,7 @@ let useWatchPrices = function useWatchPrices(
       callback(newPrices);
       prevPrices.current = newPrices;
     }
-  }, [callback, ethPrice, rethPrice, stethPrice, weethPrice]);
+  }, [callback, ethPrice, rethPrice, stethPrice, weethPrice, ezethPrice]);
 };
 
 // in demo mode, simulate a variation of the prices
@@ -109,6 +114,10 @@ if (DEMO_MODE) {
           WEETH: dn.add(
             DEMO_WEETH_PRICE,
             dn.mul(DEMO_WEETH_PRICE, variation()),
+          ),
+          EZETH: dn.add(
+            DEMO_EZETH_PRICE,
+            dn.mul(DEMO_EZETH_PRICE, variation()),
           ),
         });
       };

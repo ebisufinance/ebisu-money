@@ -9,6 +9,7 @@ const ETH_RANGE = [200, 5000];
 const RETH_RANGE = [220, 5500];
 const STETH_RANGE = [200, 5000];
 const WEETH_RANGE = [200, 5000];
+const EZETH_RANGE = [200, 5000];
 
 export function UpdatePrices() {
   const updatePrice = useUpdatePrice();
@@ -17,6 +18,7 @@ export function UpdatePrices() {
   const rethPrice = usePrice("RETH");
   const stethPrice = usePrice("STETH");
   const weethPrice = usePrice("WEETH");
+  const ezethPrice = usePrice("EZETH");
 
   return (
     PRICE_UPDATE_MANUAL && (
@@ -61,6 +63,7 @@ export function UpdatePrices() {
                 ["RETH", rethPrice, RETH_RANGE],
                 ["STETH", stethPrice, STETH_RANGE],
                 ["WEETH", weethPrice, WEETH_RANGE],
+                ["EZETH", ezethPrice, EZETH_RANGE],
               ] as const
             ).map(([token, price, range]) => (
               <div

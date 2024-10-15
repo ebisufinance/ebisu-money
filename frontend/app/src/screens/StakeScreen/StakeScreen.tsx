@@ -30,8 +30,8 @@ export function StakeScreen() {
 
   const tab = TABS.findIndex(({ id }) => id === action);
 
-  const deposit = useInputFieldValue((value) => `${dn.format(value)} LQTY`);
-  const withdraw = useInputFieldValue((value) => `${dn.format(value)} LQTY`);
+  const deposit = useInputFieldValue((value) => `${dn.format(value)} ${content.stakingcoinName}`);
+  const withdraw = useInputFieldValue((value) => `${dn.format(value)} ${content.stakingcoinName}`);
 
   if (!lqtyPrice) {
     return null;
@@ -43,7 +43,7 @@ export function StakeScreen() {
         <HFlex>
           <span>Stake</span>
           <TokenIcon size={24} symbol="LQTY" />
-          <span>LQTY & get</span>
+          <span>{content.stakingcoinName} & get</span>
           <TokenIcon.Group>
             <TokenIcon symbol="LUSD" />
             <TokenIcon symbol="ETH" />
@@ -57,7 +57,7 @@ export function StakeScreen() {
           items={[
             {
               label: content.stakeScreen.accountDetails.myDeposit,
-              value: `${dn.format(ACCOUNT_STAKED_LQTY.deposit)} LQTY`,
+              value: `${dn.format(ACCOUNT_STAKED_LQTY.deposit)} ${content.stakingcoinName}`,
             },
             {
               label: content.stakeScreen.accountDetails.votingPower,
@@ -118,7 +118,7 @@ export function StakeScreen() {
                     contextual={
                       <InputField.Badge
                         icon={<TokenIcon symbol="LQTY" />}
-                        label="LQTY"
+                        label={content.stakingcoinName}
                       />
                     }
                     label="You deposit"
@@ -127,7 +127,7 @@ export function StakeScreen() {
                       start: deposit.parsed && `$${dn.format(dn.mul(deposit.parsed, lqtyPrice), 2)}`,
                       end: (
                         <TextButton
-                          label={`Max. ${dn.format(ACCOUNT_BALANCES.LQTY, 2)} LQTY`}
+                          label={`Max. ${dn.format(ACCOUNT_BALANCES.LQTY, 2)} ${content.stakingcoinName}`}
                           onClick={() => {
                             deposit.setValue(
                               dn.toString(ACCOUNT_BALANCES.LQTY),
@@ -148,7 +148,7 @@ export function StakeScreen() {
                           {depositShare(deposit.parsed && dn.add(ACCOUNT_STAKED_LQTY.deposit, deposit.parsed), 4)}
                         </div>
                         <InfoTooltip>
-                          Voting power is the percentage of the total staked LQTY that you own.
+                          Voting power is the percentage of the total staked {content.stakingcoinName} that you own.
                         </InfoTooltip>
                       </HFlex>
                     }
@@ -168,7 +168,8 @@ export function StakeScreen() {
                     borderRadius: 8,
                   })}
                 >
-                  LQTY will be staked into Liquity V1 and you will receive any rewards attributable there.
+                  {content.stakingcoinName}{" "}
+                  will be staked into Liquity V1 and you will receive any rewards attributable there.
                 </div>
               </div>
               <div
@@ -197,7 +198,7 @@ export function StakeScreen() {
                     contextual={
                       <InputField.Badge
                         icon={<TokenIcon symbol="LQTY" />}
-                        label="LQTY"
+                        label={content.stakingcoinName}
                       />
                     }
                     label="You withdraw"
@@ -206,7 +207,7 @@ export function StakeScreen() {
                       start: withdraw.parsed && `$${dn.format(dn.mul(withdraw.parsed, lqtyPrice), 2)}`,
                       end: (
                         <TextButton
-                          label={`Max. ${dn.format(ACCOUNT_STAKED_LQTY.deposit, 2)} LQTY`}
+                          label={`Max. ${dn.format(ACCOUNT_STAKED_LQTY.deposit, 2)} ${content.stakingcoinName}`}
                           onClick={() => {
                             withdraw.setValue(
                               dn.toString(ACCOUNT_STAKED_LQTY.deposit),
@@ -227,7 +228,7 @@ export function StakeScreen() {
                           {depositShare(withdraw.parsed && dn.sub(ACCOUNT_STAKED_LQTY.deposit, withdraw.parsed), 4)}
                         </div>
                         <InfoTooltip>
-                          Voting power is the percentage of the total staked LQTY that you own.
+                          Voting power is the percentage of the total staked {content.stakingcoinName} that you own.
                         </InfoTooltip>
                       </HFlex>
                     }

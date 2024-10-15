@@ -39,7 +39,7 @@ export function DepositPanel({
 
   const parsedValue = parseInputFloat(value);
 
-  const value_ = (focused || !parsedValue) ? value : `${fmtnum(parsedValue, "full")} BOLD`;
+  const value_ = (focused || !parsedValue) ? value : `${fmtnum(parsedValue, "full")} ${content.stablecoinName}`;
 
   const depositDifference = parsedValue ?? dn.from(0, 18);
 
@@ -92,7 +92,7 @@ export function DepositPanel({
                     fontWeight: 500,
                   }}
                 >
-                  BOLD
+                  {content.stablecoinName}
                 </div>
               </div>
             }
@@ -120,7 +120,7 @@ export function DepositPanel({
               ),
               end: accountBoldBalance && (
                 <TextButton
-                  label={`Max ${fmtnum(accountBoldBalance, 2)} BOLD`}
+                  label={`Max ${fmtnum(accountBoldBalance, 2)} ${content.stablecoinName}`}
                   onClick={() => setValue(dn.toString(accountBoldBalance))}
                 />
               ),
@@ -172,7 +172,7 @@ export function DepositPanel({
                     color: "contentAlt",
                   })}
                 >
-                  BOLD
+                  {content.stablecoinName}
                 </span>
               </div>
               {collateral && (

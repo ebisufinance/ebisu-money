@@ -5,6 +5,7 @@ import type { LoadingState } from "./TransactionsScreen";
 import { INFINITY } from "@/src/characters";
 import { Spinner } from "@/src/comps/Spinner/Spinner";
 import { Value } from "@/src/comps/Value/Value";
+import content from "@/src/content";
 import { formatRisk } from "@/src/formatting";
 import { fmtnum } from "@/src/formatting";
 import { getLoanDetails } from "@/src/liquity-math";
@@ -374,7 +375,7 @@ function TotalDebt({
         })}
       >
         <div
-          title={`${fmtnum(loan.borrowed, "full")} BOLD`}
+          title={`${fmtnum(loan.borrowed, "full")} ${content.stablecoinName}`}
           className={css({
             display: "flex",
             alignItems: "center",
@@ -391,7 +392,7 @@ function TotalDebt({
           <TokenIcon symbol="BOLD" size={32} />
           {prevLoan && !dn.eq(prevLoan.borrowed, loan.borrowed) && (
             <div
-              title={`${fmtnum(prevLoan.borrowed, "full")} BOLD`}
+              title={`${fmtnum(prevLoan.borrowed, "full")} ${content.stablecoinName}`}
               className={css({
                 color: "contentAlt",
                 textDecoration: "line-through",
@@ -485,7 +486,7 @@ function LoadingCard({
   loadingState: LoadingState;
   onRetry: () => void;
 }) {
-  const title = leverage ? "Leverage loan" : "BOLD loan";
+  const title = leverage ? "Leverage loan" : `${content.stablecoinName} loan`;
 
   const spring = useSpring({
     to: match(loadingState)
