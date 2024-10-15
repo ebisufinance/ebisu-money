@@ -33,7 +33,7 @@ export const BOLD: Token = {
 
 export const LQTY: Token = {
   icon: tokenLqty,
-  name: "LQTY",
+  name: "EBISU",
   symbol: "LQTY" as const,
 } as const;
 

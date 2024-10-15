@@ -749,7 +749,7 @@ function PositionStake({
             >
               <IconStake size={16} />
             </div>
-            LQTY stake
+            {content.stakingcoinName} stake
           </div>,
         ]}
         contextual={<EditSquare />}
@@ -822,7 +822,7 @@ function PositionStake({
                       color: "strongSurfaceContent",
                     })}
                   >
-                    {dn.format(deposit, 2)} LQTY
+                    {dn.format(deposit, 2)} {content.stakingcoinName}
                   </div>
                 </div>
               }

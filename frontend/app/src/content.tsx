@@ -5,6 +5,7 @@ export default {
   // Used in the top bar and other places
   appName: "Ebisu",
   stablecoinName: "ebUSD",
+  stakingcoinName: "EBISU",
   // Menu bar
   menu: {
     dashboard: "Dashboard",
@@ -75,8 +76,8 @@ export default {
         description: "Cover liquidations to earn ebUSD and collateral assets.",
       },
       stake: {
-        title: "Stake LQTY",
-        description: "Accrue voting power by staking your LQTY without a minimum lockup period.",
+        title: "Stake EBISU",
+        description: "Accrue voting power by staking your EBISU without a minimum lockup period.",
       },
     },
     statsBar: {
@@ -257,7 +258,7 @@ export default {
     header: (lqtyIcon: N, lusdEthIcons: N) => (
       <>
         <span>Stake</span>
-        {lqtyIcon} <span>LQTY & get</span>
+        {lqtyIcon} <span>EBISU & get</span>
         {lusdEthIcons} <span>LUSD + ETH</span>
       </>
     ),
@@ -266,7 +267,7 @@ export default {
       votingPower: "Voting power",
       votingPowerHelp: (
         <>
-          Voting power is the percentage of the total staked LQTY that you own.
+          Voting power is the percentage of the total staked EBISU that you own.
         </>
       ),
       unclaimed: "Unclaimed rewards",
