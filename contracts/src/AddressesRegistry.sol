@@ -66,7 +66,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
     event CollateralRegistryAddressChanged(address _collateralRegistryAddress);
     event BoldTokenAddressChanged(address _boldTokenAddress);
     event WETHAddressChanged(address _wethAddress);
-    event GovernanceAddresssChanged(address _governanceAddress);
+    event GovernanceAddressChanged(address _governanceAddress);
 
     constructor(
         address _owner,
@@ -129,7 +129,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
         emit CollateralRegistryAddressChanged(address(_vars.collateralRegistry));
         emit BoldTokenAddressChanged(address(_vars.boldToken));
         emit WETHAddressChanged(address(_vars.WETH));
-        emit GovernanceAddresssChanged(address(_vars.governance));
+        emit GovernanceAddressChanged(address(_vars.governance));
 
         _renounceOwnership();
     }

@@ -7,12 +7,12 @@ import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.s
 import "./Interfaces/ITroveManager.sol";
 import "./Interfaces/IBoldToken.sol";
 import "./Interfaces/IGovernance.sol";
+import "./Interfaces/ICollateralRegistry.sol";
 import "./Dependencies/Constants.sol";
 import "./Dependencies/LiquityMath.sol";
 
-import "./Interfaces/ICollateralRegistry.sol";
 
-import {IERC20Metadata} from "../lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+
 
 // import "forge-std/console2.sol";
 
@@ -43,6 +43,7 @@ contract CollateralRegistry is ICollateralRegistry {
     event TroveManagerAdded(address token, ITroveManager troveManager);
     event TroveManagerRemoved(address token, ITroveManager troveManager);
     event BranchAddressesSet(address troveManagerAddress, address stabilityPoolAddress, address borrowerOperationsAddress, address activePoolAddress);
+    event GovernanceAddresssChanged(address newGovernance);
 
     error CallerNotGovernanceInitiative();
 
@@ -54,7 +55,6 @@ contract CollateralRegistry is ICollateralRegistry {
     ) {
         uint256 numTokens = _tokens.length;
         require(numTokens > 0, "Collateral list cannot be empty");
-        require(numTokens <= 10, "Collateral list too long");
 
         boldToken = _boldToken;
         governance = _governance;
@@ -370,5 +370,6 @@ contract CollateralRegistry is ICollateralRegistry {
         _requireGovernanceInitiative();
         require(address(_newGovernance) != address(0), "New governance address cannot be zero");
         governance = _newGovernance;
+        emit GovernanceAddresssChanged(address(_newGovernance));
     }
 }

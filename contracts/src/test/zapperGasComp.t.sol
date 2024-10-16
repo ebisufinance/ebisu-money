@@ -34,7 +34,6 @@ contract ZapperGasCompTest is DevTestSetup {
         TestDeployer deployer = new TestDeployer();
         TestDeployer.LiquityContractsDev[] memory contractsArray;
         TestDeployer.Zappers[] memory zappersArray;
-        GovernanceTester governance = new GovernanceTester();
         (contractsArray, collateralRegistry, boldToken,,, zappersArray) =
             deployer.deployAndConnectContracts(troveManagerParams, WETH);
 
