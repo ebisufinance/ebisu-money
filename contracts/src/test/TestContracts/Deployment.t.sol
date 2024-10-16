@@ -277,8 +277,15 @@ contract TestDeployer is MetadataDeployment {
             _hintHelpers,
             _multiTroveGetter
         );
+        ITroveManager troveManager = ITroveManager(contracts.troveManager);
 
-        _collateralRegistry.addToken(address(contracts.collToken), ITroveManager(contracts.troveManager));
+        _collateralRegistry.addNewBranch(
+            address(contracts.collToken),
+            troveManager,
+            address(troveManager.stabilityPool()),
+            address(troveManager.borrowerOperations()),
+            address(troveManager.activePool())
+        );
 
         return contracts;
     }
@@ -334,7 +341,7 @@ contract TestDeployer is MetadataDeployment {
         hintHelpers = new HintHelpers(collateralRegistry);
         multiTroveGetter = new MultiTroveGetter(collateralRegistry);
         //connect collateralRegistry and Governance to Bold
-        boldToken.setCollateralRegistryAndGovernance(address(collateralRegistry), address(governance));
+        boldToken.setCollateralRegistry(address(collateralRegistry));
 
         (contractsArray[0], zappersArray[0]) = _deployAndConnectCollateralContractsDev(
             _WETH,
@@ -480,7 +487,7 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),
@@ -577,7 +584,7 @@ contract TestDeployer is MetadataDeployment {
             new CollateralRegistry(result.boldToken, _governance, vars.collaterals, vars.troveManagers);
 
         //connect collateralRegistry and Governance to Bold
-        result.boldToken.setCollateralRegistryAndGovernance(address(result.collateralRegistry), address(_governance));
+        result.boldToken.setCollateralRegistry(address(result.collateralRegistry));
 
         result.hintHelpers = new HintHelpers(result.collateralRegistry);
         result.multiTroveGetter = new MultiTroveGetter(result.collateralRegistry);
@@ -715,7 +722,7 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),

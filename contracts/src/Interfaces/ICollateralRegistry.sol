@@ -18,6 +18,10 @@ interface ICollateralRegistry {
     function getTroveManager(uint256 _index) external view returns (ITroveManager);
     function boldToken() external view returns (IBoldToken);
     function governance() external view returns (IGovernance);
+    function troveManagerAddresses(address _address) external view returns (bool);
+    function stabilityPoolAddresses(address _address) external view returns (bool);
+    function borrowerOperationsAddresses(address _address) external view returns (bool);
+    function activePoolAddresses(address _address) external view returns (bool);
 
     function getRedemptionRate() external view returns (uint256);
     function getRedemptionRateWithDecay() external view returns (uint256);
@@ -27,6 +31,7 @@ interface ICollateralRegistry {
     function getEffectiveRedemptionFeeInBold(uint256 _redeemAmount) external view returns (uint256);
 
     // add branches
-    function addToken(address _token, ITroveManager _troveManager) external;
-    function removeToken(address _token) external;
+    function addNewBranch(address _token, ITroveManager _troveManager, address _stabilityPoolAddress, address _borrowerOperationsAddress, address _activePoolAddress) external;
+    function removeBranch(address _token) external;
+    function setBranchAddresses(address _troveManagerAddress, address _stabilityPoolAddress, address _borrowerOperationsAddress, address _activePoolAddress) external;
 }

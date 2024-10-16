@@ -26,7 +26,11 @@ contract CollateralRegistry is ICollateralRegistry {
     uint256 public baseRate;
 
     uint256 public totalCollaterals;
-    mapping(address => ITroveManager) public troveManagers;
+    mapping(address => ITroveManager) public collTokenToTroveManager;
+    mapping(address => bool) public troveManagerAddresses;
+    mapping(address => bool) public stabilityPoolAddresses;
+    mapping(address => bool) public borrowerOperationsAddresses;
+    mapping(address => bool) public activePoolAddresses;
     address[] public tokens;
 
     // The timestamp of the latest fee operation (redemption or new Bold issuance)
@@ -38,6 +42,7 @@ contract CollateralRegistry is ICollateralRegistry {
     event TokenRemoved(address token);
     event TroveManagerAdded(address token, ITroveManager troveManager);
     event TroveManagerRemoved(address token, ITroveManager troveManager);
+    event BranchAddressesSet(address troveManagerAddress, address stabilityPoolAddress, address borrowerOperationsAddress, address activePoolAddress);
 
     error CallerNotGovernanceInitiative();
 
@@ -63,24 +68,46 @@ contract CollateralRegistry is ICollateralRegistry {
         emit BaseRateUpdated(INITIAL_BASE_RATE);
     }
 
-    function addToken(address _token, ITroveManager _troveManager) external {
+    function addNewBranch(
+        address _token,
+        ITroveManager _troveManager,
+        address _stabilityPoolAddress,
+        address _borrowerOperationsAddress,
+        address _activePoolAddress) external {
         //        _requireGovernanceInitiative();
         _addToken(_token, _troveManager);
+        setBranchAddresses(address(_troveManager), _stabilityPoolAddress, _borrowerOperationsAddress, _activePoolAddress);
     }
 
     function _addToken(address _token, ITroveManager _troveManager) internal {
-        require(troveManagers[_token] == ITroveManager(address(0)), "Token already exists");
+        require(collTokenToTroveManager[_token] == ITroveManager(address(0)), "Token already exists");
         tokens.push(_token);
-        troveManagers[_token] = _troveManager;
+        collTokenToTroveManager[_token] = _troveManager;
         totalCollaterals++;
         emit TokenAdded(_token);
         emit TroveManagerAdded(_token, _troveManager);
     }
 
-    function removeToken(address _token) external {
+    function setBranchAddresses(
+        address _troveManagerAddress,
+        address _stabilityPoolAddress,
+        address _borrowerOperationsAddress,
+        address _activePoolAddress
+    ) public override {
         _requireGovernanceInitiative();
-        require(troveManagers[_token] != ITroveManager(address(0)), "Token does not exist");
-        delete troveManagers[_token];
+        troveManagerAddresses[_troveManagerAddress] = true;
+        stabilityPoolAddresses[_stabilityPoolAddress] = true;
+        borrowerOperationsAddresses[_borrowerOperationsAddress] = true;
+        activePoolAddresses[_activePoolAddress] = true;
+
+        emit BranchAddressesSet(_troveManagerAddress, _stabilityPoolAddress, _borrowerOperationsAddress, _activePoolAddress);
+    }
+
+    function removeBranch(address _token) external {
+        _requireGovernanceInitiative();
+        ITroveManager troveManager = collTokenToTroveManager[_token];
+        require(troveManager != ITroveManager(address(0)), "Token does not exist");
+        delete collTokenToTroveManager[_token];
         for (uint256 i = 0; i < tokens.length; i++) {
             if (tokens[i] == _token) {
                 tokens[i] = tokens[tokens.length - 1];
@@ -89,8 +116,14 @@ contract CollateralRegistry is ICollateralRegistry {
                 break;
             }
         }
+        // remove branch addresses
+        troveManagerAddresses[address(troveManager)] = false;
+        stabilityPoolAddresses[address(troveManager.stabilityPool())] = false;
+        borrowerOperationsAddresses[address(troveManager.borrowerOperations())] = false;
+        activePoolAddresses[address(troveManager.activePool())] = false;
+
         emit TokenRemoved(_token);
-        emit TroveManagerRemoved(_token, troveManagers[_token]);
+        emit TroveManagerRemoved(_token, collTokenToTroveManager[_token]);
     }
 
     struct RedemptionTotals {
@@ -286,7 +319,7 @@ contract CollateralRegistry is ICollateralRegistry {
     }
 
     function getTroveManager(address _token) public view returns (ITroveManager) {
-        return troveManagers[_token];
+        return collTokenToTroveManager[_token];
     }
     //function to get troveManager by index
 
@@ -297,7 +330,7 @@ contract CollateralRegistry is ICollateralRegistry {
             //todo: make a decision if we should return 0 or revert
             return ITroveManager(address(0));
         }
-        return troveManagers[tokens[_index]];
+        return collTokenToTroveManager[tokens[_index]];
     }
 
     // require functions

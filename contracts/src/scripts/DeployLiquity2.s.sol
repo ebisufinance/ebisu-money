@@ -359,7 +359,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             r.contractsArray[vars.i] = vars.contracts;
         }
 
-        r.boldToken.setCollateralRegistryAndGovernance(address(r.collateralRegistry), address(r.governance));
+        r.boldToken.setCollateralRegistry(address(r.collateralRegistry));
     }
 
     function _deployAddressesRegistry(TroveManagerParams memory _troveManagerParams)
@@ -478,7 +478,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),
