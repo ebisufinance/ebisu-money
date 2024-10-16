@@ -22,7 +22,7 @@ contract CollateralRegistry is ICollateralRegistry {
     // See: https://github.com/ethereum/solidity/issues/12587
 
     IBoldToken public immutable boldToken;
-    IGovernance public immutable governance;
+    IGovernance public governance;
     uint256 public baseRate;
 
     uint256 public totalCollaterals;
@@ -364,5 +364,11 @@ contract CollateralRegistry is ICollateralRegistry {
         if (governance.registeredInitiatives(msg.sender) == 0) {
             revert CallerNotGovernanceInitiative();
         }
+    }
+
+    function setGovernance(IGovernance _newGovernance) external {
+        _requireGovernanceInitiative();
+        require(address(_newGovernance) != address(0), "New governance address cannot be zero");
+        governance = _newGovernance;
     }
 }
