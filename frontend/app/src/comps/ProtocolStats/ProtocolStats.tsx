@@ -1,11 +1,14 @@
 "use client";
 
 import content from "@/src/content";
-import { BORROW_STATS } from "@/src/demo-mode";
+import { useCollateralContracts } from "@/src/contracts";
+import { useCollIndexFromSymbol } from "@/src/liquity-utils";
 import { usePrice } from "@/src/services/Prices";
+import { useStabilityPool } from "@/src/subgraph-hooks";
 import { css } from "@/styled-system/css";
 import { HFlex, TokenIcon, TOKENS_BY_SYMBOL } from "@liquity2/uikit";
 import * as dn from "dnum";
+import { Amount } from "../Amount/Amount";
 
 export function ProtocolStats() {
   const prices = [
@@ -14,10 +17,13 @@ export function ProtocolStats() {
     ["WEETH", usePrice("WEETH")],
   ] as const;
 
-  const totalTvl = Object.values(BORROW_STATS).reduce(
-    (acc, { tvl }) => dn.add(acc, tvl),
-    dn.from(0, 18),
-  );
+  const collSymbols = useCollateralContracts().map((coll) => coll.symbol);
+  let totalTVL: dn.Dnum = dn.from(0, 18);
+  collSymbols.map((symbol) => {
+    const collIndex = useCollIndexFromSymbol(symbol);
+    const earnPool = useStabilityPool(collIndex ?? undefined);
+    totalTVL = dn.add(earnPool.data?.totalDeposited || 0, totalTVL);
+  });
 
   return (
     <div
@@ -33,7 +39,14 @@ export function ProtocolStats() {
       <div>{content.home.statsBar.label}</div>
       <HFlex gap={32}>
         <HFlex gap={8}>
-          <span>TVL</span> <span>${dn.format(totalTvl, { compact: true })}</span>
+          <span>TVL</span>{" "}
+          <span>
+            <Amount
+              format="compact"
+              prefix="$"
+              value={totalTVL}
+            />
+          </span>
         </HFlex>
         {prices.map(([symbol, price]) => {
           return (

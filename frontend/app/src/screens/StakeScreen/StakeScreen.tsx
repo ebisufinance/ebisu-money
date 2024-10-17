@@ -45,10 +45,10 @@ export function StakeScreen() {
           <TokenIcon size={24} symbol="LQTY" />
           <span>{content.stakingcoinName} & get</span>
           <TokenIcon.Group>
-            <TokenIcon symbol="LUSD" />
+            <TokenIcon symbol="BOLD" />
             <TokenIcon symbol="ETH" />
           </TokenIcon.Group>
-          <span>LUSD + ETH</span>
+          <span>EBUSD + ETH</span>
         </HFlex>
       }
     >
@@ -82,7 +82,7 @@ export function StakeScreen() {
                     whiteSpace: "nowrap",
                   })}
                 >
-                  {dn.format(ACCOUNT_STAKED_LQTY.rewardLusd)} LUSD
+                  {dn.format(ACCOUNT_STAKED_LQTY.rewardLusd)} EBUSD
                   <div
                     className={css({
                       display: "flex",
@@ -155,7 +155,8 @@ export function StakeScreen() {
                   />
                 }
               />
-              <div
+              {
+                /* <div
                 className={css({
                   paddingTop: 16,
                 })}
@@ -171,7 +172,8 @@ export function StakeScreen() {
                   {content.stakingcoinName}{" "}
                   will be staked into Liquity V1 and you will receive any rewards attributable there.
                 </div>
-              </div>
+              </div> */
+              }
               <div
                 style={{
                   display: "flex",

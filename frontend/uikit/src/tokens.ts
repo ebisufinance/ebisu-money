@@ -7,6 +7,7 @@ import tokenLusd from "./token-icons/lusd.svg";
 import tokenReth from "./token-icons/reth.svg";
 import tokenSteth from "./token-icons/wsteth.svg";
 import tokenWeeth from "./token-icons/weeth.svg";
+import tokenEzeth from "./token-icons/ezeth.svg";
 
 export type CollateralSymbol = "ETH" | "RETH" | "STETH"| "WEETH" | "EZETH";
 
@@ -67,7 +68,7 @@ export const WEETH: CollateralToken = {
 
 export const EZETH: CollateralToken = {
   collateralRatio: 1.2,
-  icon: tokenEth,
+  icon: tokenEzeth,
   name: "ezETH",
   symbol: "EZETH" as const,
 } as const;

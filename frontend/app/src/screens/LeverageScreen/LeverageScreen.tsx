@@ -8,11 +8,13 @@ import { RedemptionInfo } from "@/src/comps/RedemptionInfo/RedemptionInfo";
 import { Screen } from "@/src/comps/Screen/Screen";
 import { INTEREST_RATE_DEFAULT } from "@/src/constants";
 import content from "@/src/content";
+import { useCollateralContracts } from "@/src/contracts";
 import { ACCOUNT_BALANCES } from "@/src/demo-mode";
 import { useInputFieldValue } from "@/src/form-utils";
 import { getRedemptionRisk } from "@/src/liquity-math";
 import { useAccount } from "@/src/services/Ethereum";
 import { usePrice } from "@/src/services/Prices";
+import { isCollIndex } from "@/src/types";
 import { infoTooltipProps } from "@/src/uikit-utils";
 import { css } from "@/styled-system/css";
 import {
@@ -32,20 +34,33 @@ import * as dn from "dnum";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const collateralSymbols = COLLATERALS.map(({ symbol }) => symbol);
-
 export function LeverageScreen() {
   const account = useAccount();
   const router = useRouter();
 
-  // useParams() can return an array, but not with the current
-  // routing setup so we can safely assume it’s a string
-  const collSymbol = String(useParams().collateral ?? "eth").toUpperCase();
+  const allCollContracts = useCollateralContracts();
+
+  // useParams() can return an array but not with the current
+  // routing setup, so we can safely cast it to a string
+  const collSymbol = String(useParams().collateral ?? allCollContracts[0].symbol).toUpperCase();
   if (!isCollateralSymbol(collSymbol)) {
     throw new Error(`Invalid collateral symbol: ${collSymbol}`);
   }
-  const collateralIndex = collateralSymbols.indexOf(collSymbol);
-  const collateral = COLLATERALS[collateralIndex];
+
+  const collIndex = allCollContracts.findIndex(({ symbol }) => symbol === collSymbol);
+  if (!isCollIndex(collIndex)) {
+    throw new Error(`Unknown collateral symbol: ${collSymbol}`);
+  }
+
+  const collaterals = allCollContracts.map(({ symbol }) => {
+    const collateral = COLLATERALS.find((c) => c.symbol === symbol);
+    if (!collateral) {
+      throw new Error(`Unknown collateral symbol: ${symbol}`);
+    }
+    return collateral;
+  });
+
+  const collateral = collaterals[collIndex];
 
   const collPrice = usePrice(collateral.symbol) ?? dn.from(0, 18);
   const depositPreLeverage = useInputFieldValue((value) => `${dn.format(value)} ${collateral.name}`);
@@ -54,7 +69,7 @@ export function LeverageScreen() {
   const leverageField = useLeverageField({
     depositPreLeverage: depositPreLeverage.parsed,
     collPrice,
-    collToken: COLLATERALS[collateralIndex],
+    collToken: COLLATERALS[collIndex],
   });
   useEffect(() => {
     // reset leverage when collateral changes
@@ -77,7 +92,7 @@ export function LeverageScreen() {
         <HFlex>
           {content.leverageScreen.headline(
             <TokenIcon.Group>
-              {COLLATERALS.map(({ symbol }) => (
+              {allCollContracts.map(({ symbol }) => (
                 <TokenIcon
                   key={symbol}
                   symbol={symbol}
@@ -102,7 +117,7 @@ export function LeverageScreen() {
             <InputField
               contextual={
                 <Dropdown
-                  items={COLLATERALS.map(({ symbol, name }) => ({
+                  items={collaterals.map(({ symbol, name }) => ({
                     icon: <TokenIcon symbol={symbol} />,
                     label: name,
                     value: account.isConnected ? dn.format(ACCOUNT_BALANCES[symbol]) : "−",
@@ -115,11 +130,11 @@ export function LeverageScreen() {
                       depositPreLeverage.focus();
                     }, 0);
                     router.push(
-                      `/leverage/${COLLATERALS[index].symbol.toLowerCase()}`,
+                      `/leverage/${allCollContracts[index].symbol.toLowerCase()}`,
                       { scroll: false },
                     );
                   }}
-                  selected={collateralIndex}
+                  selected={collIndex}
                 />
               }
               label={content.leverageScreen.depositField.label}

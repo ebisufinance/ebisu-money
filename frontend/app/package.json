@@ -7,7 +7,7 @@
     "build": "pnpm build-uikit && pnpm panda-codegen && next build",
     "build-uikit": "cd ../uikit && pnpm build && pnpm panda-codegen",
     "coverage": "vitest run --coverage ./src",
-    "dev": "rm -rf ./.next && next dev",
+    "dev": "rm -rf ./.next && next dev --port 3005",
     "fmt": "dprint fmt **/*.{ts,tsx,js,json,html,md}",
     "lint": "pnpm oxlint ./src --import-plugin --nextjs-plugin --react-perf-plugin --jsx-a11y-plugin --allow pedantic",
     "panda-codegen": "panda codegen --silent",
