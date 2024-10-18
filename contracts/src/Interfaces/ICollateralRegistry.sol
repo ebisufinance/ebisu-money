@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import "./IBoldToken.sol";
 import "./ITroveManager.sol";
+import "./IGovernance.sol";
 
 interface ICollateralRegistry {
     function baseRate() external view returns (uint256);
@@ -16,6 +17,11 @@ interface ICollateralRegistry {
     function getToken(uint256 _index) external view returns (IERC20Metadata);
     function getTroveManager(uint256 _index) external view returns (ITroveManager);
     function boldToken() external view returns (IBoldToken);
+    function governance() external view returns (IGovernance);
+    function troveManagerAddresses(address _address) external view returns (bool);
+    function stabilityPoolAddresses(address _address) external view returns (bool);
+    function borrowerOperationsAddresses(address _address) external view returns (bool);
+    function activePoolAddresses(address _address) external view returns (bool);
 
     function getRedemptionRate() external view returns (uint256);
     function getRedemptionRateWithDecay() external view returns (uint256);
@@ -23,4 +29,9 @@ interface ICollateralRegistry {
 
     function getRedemptionFeeWithDecay(uint256 _ETHDrawn) external view returns (uint256);
     function getEffectiveRedemptionFeeInBold(uint256 _redeemAmount) external view returns (uint256);
+
+    // add branches
+    function addNewBranch(address _token, ITroveManager _troveManager, address _stabilityPoolAddress, address _borrowerOperationsAddress, address _activePoolAddress) external;
+    function removeBranch(address _token) external;
+    function setBranchAddresses(address _troveManagerAddress, address _stabilityPoolAddress, address _borrowerOperationsAddress, address _activePoolAddress) external;
 }

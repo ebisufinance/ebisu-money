@@ -17,6 +17,7 @@ import {IMetadataNFT} from "../NFTMetadata/MetadataNFT.sol";
 import "./ICollateralRegistry.sol";
 import "./IInterestRouter.sol";
 import "./IPriceFeed.sol";
+import "./IGovernance.sol";
 
 interface IAddressesRegistry {
     struct AddressVars {
@@ -38,6 +39,7 @@ interface IAddressesRegistry {
         ICollateralRegistry collateralRegistry;
         IBoldToken boldToken;
         IWETH WETH;
+        IGovernance governance;
     }
 
     function CCR() external returns (uint256);
@@ -64,6 +66,7 @@ interface IAddressesRegistry {
     function collateralRegistry() external view returns (ICollateralRegistry);
     function boldToken() external view returns (IBoldToken);
     function WETH() external returns (IWETH);
+    function governance() external returns (IGovernance);
 
     function setAddresses(AddressVars memory _vars) external;
 }

@@ -37,12 +37,14 @@ import "../../Zappers/Modules/Exchanges/UniV3Exchange.sol";
 import "../../Zappers/Modules/Exchanges/UniswapV3/INonfungiblePositionManager.sol";
 import {WETHTester} from "./WETHTester.sol";
 import {ERC20Faucet} from "./ERC20Faucet.sol";
+import {GovernanceTester} from "./GovernanceTester.t.sol";
 
 import "../../PriceFeeds/WETHPriceFeed.sol";
 import "../../PriceFeeds/WSTETHPriceFeed.sol";
 import "../../PriceFeeds/RETHPriceFeed.sol";
+import "../../Interfaces/IGovernance.sol";
 
-import "forge-std/console2.sol";
+//import "forge-std/console2.sol";
 
 uint256 constant _24_HOURS = 86400;
 uint256 constant _48_HOURS = 172800;
@@ -88,6 +90,7 @@ contract TestDeployer is MetadataDeployment {
         GasPool gasPool;
         IInterestRouter interestRouter;
         IERC20Metadata collToken;
+        IGovernance governance;
     }
 
     struct Zappers {
@@ -250,6 +253,43 @@ contract TestDeployer is MetadataDeployment {
         return "LST";
     }
 
+    function deploySingleBranch(
+        TroveManagerParams memory troveManagerParams,
+        IWETH _weth,
+        IERC20Metadata _collToken,
+        ICollateralRegistry _collateralRegistry,
+        IHintHelpers _hintHelpers,
+        IMultiTroveGetter _multiTroveGetter
+    ) public returns (LiquityContractsDev memory contracts) {
+        IBoldToken boldToken = IBoldToken(_collateralRegistry.boldToken());
+        LiquityContractAddresses memory addresses;
+        (IAddressesRegistry addressesRegistry, address troveManagerAddress) =
+            _deployAddressesRegistryDev(troveManagerParams);
+
+        Zappers memory zappers;
+        (contracts, zappers) = _deployAndConnectCollateralContractsDev(
+            _collToken,
+            boldToken,
+            _collateralRegistry,
+            _weth,
+            addressesRegistry,
+            troveManagerAddress,
+            _hintHelpers,
+            _multiTroveGetter
+        );
+        ITroveManager troveManager = ITroveManager(contracts.troveManager);
+
+        _collateralRegistry.addNewBranch(
+            address(contracts.collToken),
+            troveManager,
+            address(troveManager.stabilityPool()),
+            address(troveManager.borrowerOperations()),
+            address(troveManager.activePool())
+        );
+
+        return contracts;
+    }
+
     function deployAndConnectContracts(TroveManagerParams[] memory troveManagerParamsArray, IWETH _WETH)
         public
         returns (
@@ -263,6 +303,8 @@ contract TestDeployer is MetadataDeployment {
     {
         DeploymentVarsDev memory vars;
         vars.numCollaterals = troveManagerParamsArray.length;
+        // declare governance
+        IGovernance governance;
         // Deploy Bold
         vars.bytecode = abi.encodePacked(type(BoldToken).creationCode, abi.encode(address(this)));
         vars.boldTokenAddress = getAddress(address(this), vars.bytecode, SALT);
@@ -294,10 +336,12 @@ contract TestDeployer is MetadataDeployment {
             vars.addressesRegistries[vars.i] = addressesRegistry;
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
-
-        collateralRegistry = new CollateralRegistry(boldToken, vars.collaterals, vars.troveManagers);
+        governance = new GovernanceTester();
+        collateralRegistry = new CollateralRegistry(boldToken, governance, vars.collaterals, vars.troveManagers);
         hintHelpers = new HintHelpers(collateralRegistry);
         multiTroveGetter = new MultiTroveGetter(collateralRegistry);
+        //connect collateralRegistry and Governance to Bold
+        boldToken.setCollateralRegistry(address(collateralRegistry));
 
         (contractsArray[0], zappersArray[0]) = _deployAndConnectCollateralContractsDev(
             _WETH,
@@ -323,8 +367,6 @@ contract TestDeployer is MetadataDeployment {
                 multiTroveGetter
             );
         }
-
-        boldToken.setCollateralRegistry(address(collateralRegistry));
     }
 
     function _deployAddressesRegistryDev(TroveManagerParams memory _troveManagerParams)
@@ -419,7 +461,8 @@ contract TestDeployer is MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: _collateralRegistry.governance()
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -444,13 +487,12 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),
             address(contracts.activePool)
         );
-
         // deploy zappers
         (zappers.gasCompZapper, zappers.wethZapper, zappers.leverageZapperCurve, zappers.leverageZapperUniV3) =
         _deployZappers(contracts.addressesRegistry, contracts.collToken, _boldToken, _weth, contracts.priceFeed, false);
@@ -459,10 +501,10 @@ contract TestDeployer is MetadataDeployment {
     // Creates individual PriceFeed contracts based on oracle addresses.
     // Still uses mock collaterals rather than real mainnet WETH and LST addresses.
 
-    function deployAndConnectContractsMainnet(TroveManagerParams[] memory _troveManagerParamsArray)
-        public
-        returns (DeploymentResultMainnet memory result)
-    {
+    function deployAndConnectContractsMainnet(
+        TroveManagerParams[] memory _troveManagerParamsArray,
+        IGovernance _governance
+    ) public returns (DeploymentResultMainnet memory result) {
         DeploymentVarsMainnet memory vars;
 
         result.externalAddresses.ETHOracle = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
@@ -538,7 +580,11 @@ contract TestDeployer is MetadataDeployment {
         vars.troveManagers[2] = ITroveManager(troveManagerAddress);
 
         // Deploy registry and register the TMs
-        result.collateralRegistry = new CollateralRegistry(result.boldToken, vars.collaterals, vars.troveManagers);
+        result.collateralRegistry =
+            new CollateralRegistry(result.boldToken, _governance, vars.collaterals, vars.troveManagers);
+
+        //connect collateralRegistry and Governance to Bold
+        result.boldToken.setCollateralRegistry(address(result.collateralRegistry));
 
         result.hintHelpers = new HintHelpers(result.collateralRegistry);
         result.multiTroveGetter = new MultiTroveGetter(result.collateralRegistry);
@@ -557,8 +603,6 @@ contract TestDeployer is MetadataDeployment {
                 result.multiTroveGetter
             );
         }
-
-        result.boldToken.setCollateralRegistry(address(result.collateralRegistry));
     }
 
     function _deployAddressesRegistryMainnet(TroveManagerParams memory _troveManagerParams)
@@ -652,7 +696,8 @@ contract TestDeployer is MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: _collateralRegistry.governance()
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -677,7 +722,7 @@ contract TestDeployer is MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),

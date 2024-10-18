@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 
 import "./Dependencies/Ownable.sol";
 import "./Interfaces/IAddressesRegistry.sol";
+import "./Interfaces/IGovernance.sol";
 
 contract AddressesRegistry is Ownable, IAddressesRegistry {
     IERC20Metadata public collToken;
@@ -24,6 +25,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
     ICollateralRegistry public collateralRegistry;
     IBoldToken public boldToken;
     IWETH public WETH;
+    IGovernance public governance;
 
     // Critical system collateral ratio. If the system's total collateral ratio (TCR) falls below the CCR, some borrowing operation restrictions are applied
     uint256 public immutable CCR;
@@ -64,6 +66,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
     event CollateralRegistryAddressChanged(address _collateralRegistryAddress);
     event BoldTokenAddressChanged(address _boldTokenAddress);
     event WETHAddressChanged(address _wethAddress);
+    event GovernanceAddressChanged(address _governanceAddress);
 
     constructor(
         address _owner,
@@ -106,6 +109,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
         collateralRegistry = _vars.collateralRegistry;
         boldToken = _vars.boldToken;
         WETH = _vars.WETH;
+        governance = _vars.governance;
 
         emit CollTokenAddressChanged(address(_vars.collToken));
         emit BorrowerOperationsAddressChanged(address(_vars.borrowerOperations));
@@ -125,6 +129,7 @@ contract AddressesRegistry is Ownable, IAddressesRegistry {
         emit CollateralRegistryAddressChanged(address(_vars.collateralRegistry));
         emit BoldTokenAddressChanged(address(_vars.boldToken));
         emit WETHAddressChanged(address(_vars.WETH));
+        emit GovernanceAddressChanged(address(_vars.governance));
 
         _renounceOwnership();
     }

@@ -13,6 +13,7 @@ import "../Zappers/Modules/Exchanges/UniswapV3/IUniswapV3Factory.sol";
 import "../Zappers/Interfaces/IFlashLoanProvider.sol";
 import "../Zappers/Modules/FlashLoans/Balancer/vault/IVault.sol";
 import "./Utils/UniPriceConverter.sol";
+import {GovernanceTester} from "./TestContracts/GovernanceTester.t.sol";
 
 contract ZapperLeverageMainnet is DevTestSetup {
     using StringFormatting for uint256;
@@ -100,8 +101,9 @@ contract ZapperLeverageMainnet is DevTestSetup {
         }
 
         TestDeployer deployer = new TestDeployer();
+        GovernanceTester governanceTester = new GovernanceTester();
         TestDeployer.DeploymentResultMainnet memory result =
-            deployer.deployAndConnectContractsMainnet(troveManagerParamsArray);
+            deployer.deployAndConnectContractsMainnet(troveManagerParamsArray, governanceTester);
         //collateralRegistry = result.collateralRegistry;
         boldToken = result.boldToken;
         // Record contracts

@@ -5,6 +5,8 @@ pragma solidity 0.8.18;
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import "./Dependencies/Ownable.sol";
 import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/ICollateralRegistry.sol";
+//import "forge-std/console2.sol";
 
 /*
  * --- Functionality added specific to the BoldToken ---
@@ -21,43 +23,25 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
     string internal constant _SYMBOL = "ebUSD";
 
     // --- Addresses ---
-
+    ICollateralRegistry internal collateralRegistry;
     // TODO: optimize to make them immutable
     address public collateralRegistryAddress;
-    mapping(address => bool) troveManagerAddresses;
-    mapping(address => bool) stabilityPoolAddresses;
-    mapping(address => bool) borrowerOperationsAddresses;
-    mapping(address => bool) activePoolAddresses;
+
 
     // --- Events ---
     event CollateralRegistryAddressChanged(address _newCollateralRegistryAddress);
-    event TroveManagerAddressAdded(address _newTroveManagerAddress);
-    event StabilityPoolAddressAdded(address _newStabilityPoolAddress);
-    event BorrowerOperationsAddressAdded(address _newBorrowerOperationsAddress);
-    event ActivePoolAddressAdded(address _newActivePoolAddress);
+
+    // --- Errors ---
+    error CallerNotGovernanceInitiative();
 
     constructor(address _owner) Ownable(_owner) ERC20(_NAME, _SYMBOL) ERC20Permit(_NAME) {}
 
-    function setBranchAddresses(
-        address _troveManagerAddress,
-        address _stabilityPoolAddress,
-        address _borrowerOperationsAddress,
-        address _activePoolAddress
-    ) external override onlyOwner {
-        troveManagerAddresses[_troveManagerAddress] = true;
-        emit TroveManagerAddressAdded(_troveManagerAddress);
-
-        stabilityPoolAddresses[_stabilityPoolAddress] = true;
-        emit StabilityPoolAddressAdded(_stabilityPoolAddress);
-
-        borrowerOperationsAddresses[_borrowerOperationsAddress] = true;
-        emit BorrowerOperationsAddressAdded(_borrowerOperationsAddress);
-
-        activePoolAddresses[_activePoolAddress] = true;
-        emit ActivePoolAddressAdded(_activePoolAddress);
-    }
-
-    function setCollateralRegistry(address _collateralRegistryAddress) external override onlyOwner {
+    function setCollateralRegistry(address _collateralRegistryAddress)
+        external
+        override
+        onlyOwner
+    {
+        collateralRegistry = ICollateralRegistry(_collateralRegistryAddress);
         collateralRegistryAddress = _collateralRegistryAddress;
         emit CollateralRegistryAddressChanged(_collateralRegistryAddress);
 
@@ -113,20 +97,22 @@ contract BoldToken is Ownable, IBoldToken, ERC20Permit {
 
     function _requireCallerIsBOorAP() internal view {
         require(
-            borrowerOperationsAddresses[msg.sender] || activePoolAddresses[msg.sender],
+        collateralRegistry.borrowerOperationsAddresses(msg.sender) || collateralRegistry.activePoolAddresses(msg.sender),
             "BoldToken: Caller is not BO or AP"
         );
     }
 
     function _requireCallerIsCRorBOorTMorSP() internal view {
         require(
-            msg.sender == collateralRegistryAddress || borrowerOperationsAddresses[msg.sender]
-                || troveManagerAddresses[msg.sender] || stabilityPoolAddresses[msg.sender],
+            msg.sender == collateralRegistryAddress || collateralRegistry.borrowerOperationsAddresses(msg.sender)
+                || collateralRegistry.troveManagerAddresses(msg.sender) || collateralRegistry.stabilityPoolAddresses(msg.sender),
             "Bold: Caller is neither CR nor BorrowerOperations nor TroveManager nor StabilityPool"
         );
+
     }
 
     function _requireCallerIsStabilityPool() internal view {
-        require(stabilityPoolAddresses[msg.sender], "Bold: Caller is not the StabilityPool");
+        require(collateralRegistry.stabilityPoolAddresses(msg.sender), "Bold: Caller is not the StabilityPool");
     }
+
 }

@@ -6,10 +6,13 @@ import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.s
 
 import "./Interfaces/ITroveManager.sol";
 import "./Interfaces/IBoldToken.sol";
+import "./Interfaces/IGovernance.sol";
+import "./Interfaces/ICollateralRegistry.sol";
 import "./Dependencies/Constants.sol";
 import "./Dependencies/LiquityMath.sol";
 
-import "./Interfaces/ICollateralRegistry.sol";
+
+
 
 // import "forge-std/console2.sol";
 
@@ -17,73 +20,110 @@ contract CollateralRegistry is ICollateralRegistry {
     // mapping from Collateral token address to the corresponding TroveManagers
     //mapping(address => address) troveManagers;
     // See: https://github.com/ethereum/solidity/issues/12587
-    uint256 public immutable totalCollaterals;
-
-    IERC20Metadata internal immutable token0;
-    IERC20Metadata internal immutable token1;
-    IERC20Metadata internal immutable token2;
-    IERC20Metadata internal immutable token3;
-    IERC20Metadata internal immutable token4;
-    IERC20Metadata internal immutable token5;
-    IERC20Metadata internal immutable token6;
-    IERC20Metadata internal immutable token7;
-    IERC20Metadata internal immutable token8;
-    IERC20Metadata internal immutable token9;
-
-    ITroveManager internal immutable troveManager0;
-    ITroveManager internal immutable troveManager1;
-    ITroveManager internal immutable troveManager2;
-    ITroveManager internal immutable troveManager3;
-    ITroveManager internal immutable troveManager4;
-    ITroveManager internal immutable troveManager5;
-    ITroveManager internal immutable troveManager6;
-    ITroveManager internal immutable troveManager7;
-    ITroveManager internal immutable troveManager8;
-    ITroveManager internal immutable troveManager9;
 
     IBoldToken public immutable boldToken;
-
+    IGovernance public governance;
     uint256 public baseRate;
+
+    uint256 public totalCollaterals;
+    mapping(address => ITroveManager) public collTokenToTroveManager;
+    mapping(address => bool) public troveManagerAddresses;
+    mapping(address => bool) public stabilityPoolAddresses;
+    mapping(address => bool) public borrowerOperationsAddresses;
+    mapping(address => bool) public activePoolAddresses;
+    address[] public tokens;
 
     // The timestamp of the latest fee operation (redemption or new Bold issuance)
     uint256 public lastFeeOperationTime = block.timestamp;
 
     event BaseRateUpdated(uint256 _baseRate);
     event LastFeeOpTimeUpdated(uint256 _lastFeeOpTime);
+    event TokenAdded(address token);
+    event TokenRemoved(address token);
+    event TroveManagerAdded(address token, ITroveManager troveManager);
+    event TroveManagerRemoved(address token, ITroveManager troveManager);
+    event BranchAddressesSet(address troveManagerAddress, address stabilityPoolAddress, address borrowerOperationsAddress, address activePoolAddress);
+    event GovernanceAddresssChanged(address newGovernance);
 
-    constructor(IBoldToken _boldToken, IERC20Metadata[] memory _tokens, ITroveManager[] memory _troveManagers) {
+    error CallerNotGovernanceInitiative();
+
+    constructor(
+        IBoldToken _boldToken,
+        IGovernance _governance,
+        IERC20Metadata[] memory _tokens,
+        ITroveManager[] memory _troveManagers
+    ) {
         uint256 numTokens = _tokens.length;
         require(numTokens > 0, "Collateral list cannot be empty");
-        require(numTokens <= 10, "Collateral list too long");
-        totalCollaterals = numTokens;
 
         boldToken = _boldToken;
+        governance = _governance;
 
-        token0 = _tokens[0];
-        token1 = numTokens > 1 ? _tokens[1] : IERC20Metadata(address(0));
-        token2 = numTokens > 2 ? _tokens[2] : IERC20Metadata(address(0));
-        token3 = numTokens > 3 ? _tokens[3] : IERC20Metadata(address(0));
-        token4 = numTokens > 4 ? _tokens[4] : IERC20Metadata(address(0));
-        token5 = numTokens > 5 ? _tokens[5] : IERC20Metadata(address(0));
-        token6 = numTokens > 6 ? _tokens[6] : IERC20Metadata(address(0));
-        token7 = numTokens > 7 ? _tokens[7] : IERC20Metadata(address(0));
-        token8 = numTokens > 8 ? _tokens[8] : IERC20Metadata(address(0));
-        token9 = numTokens > 9 ? _tokens[9] : IERC20Metadata(address(0));
-
-        troveManager0 = _troveManagers[0];
-        troveManager1 = numTokens > 1 ? _troveManagers[1] : ITroveManager(address(0));
-        troveManager2 = numTokens > 2 ? _troveManagers[2] : ITroveManager(address(0));
-        troveManager3 = numTokens > 3 ? _troveManagers[3] : ITroveManager(address(0));
-        troveManager4 = numTokens > 4 ? _troveManagers[4] : ITroveManager(address(0));
-        troveManager5 = numTokens > 5 ? _troveManagers[5] : ITroveManager(address(0));
-        troveManager6 = numTokens > 6 ? _troveManagers[6] : ITroveManager(address(0));
-        troveManager7 = numTokens > 7 ? _troveManagers[7] : ITroveManager(address(0));
-        troveManager8 = numTokens > 8 ? _troveManagers[8] : ITroveManager(address(0));
-        troveManager9 = numTokens > 9 ? _troveManagers[9] : ITroveManager(address(0));
+        for (uint256 i = 0; i < _tokens.length; i++) {
+            _addToken(address(_tokens[i]), _troveManagers[i]);
+        }
 
         // Initialize the baseRate state variable
         baseRate = INITIAL_BASE_RATE;
         emit BaseRateUpdated(INITIAL_BASE_RATE);
+    }
+
+    function addNewBranch(
+        address _token,
+        ITroveManager _troveManager,
+        address _stabilityPoolAddress,
+        address _borrowerOperationsAddress,
+        address _activePoolAddress) external {
+        //        _requireGovernanceInitiative();
+        _addToken(_token, _troveManager);
+        setBranchAddresses(address(_troveManager), _stabilityPoolAddress, _borrowerOperationsAddress, _activePoolAddress);
+    }
+
+    function _addToken(address _token, ITroveManager _troveManager) internal {
+        require(collTokenToTroveManager[_token] == ITroveManager(address(0)), "Token already exists");
+        tokens.push(_token);
+        collTokenToTroveManager[_token] = _troveManager;
+        totalCollaterals++;
+        emit TokenAdded(_token);
+        emit TroveManagerAdded(_token, _troveManager);
+    }
+
+    function setBranchAddresses(
+        address _troveManagerAddress,
+        address _stabilityPoolAddress,
+        address _borrowerOperationsAddress,
+        address _activePoolAddress
+    ) public override {
+        _requireGovernanceInitiative();
+        troveManagerAddresses[_troveManagerAddress] = true;
+        stabilityPoolAddresses[_stabilityPoolAddress] = true;
+        borrowerOperationsAddresses[_borrowerOperationsAddress] = true;
+        activePoolAddresses[_activePoolAddress] = true;
+
+        emit BranchAddressesSet(_troveManagerAddress, _stabilityPoolAddress, _borrowerOperationsAddress, _activePoolAddress);
+    }
+
+    function removeBranch(address _token) external {
+        _requireGovernanceInitiative();
+        ITroveManager troveManager = collTokenToTroveManager[_token];
+        require(troveManager != ITroveManager(address(0)), "Token does not exist");
+        delete collTokenToTroveManager[_token];
+        for (uint256 i = 0; i < tokens.length; i++) {
+            if (tokens[i] == _token) {
+                tokens[i] = tokens[tokens.length - 1];
+                tokens.pop();
+                totalCollaterals--;
+                break;
+            }
+        }
+        // remove branch addresses
+        troveManagerAddresses[address(troveManager)] = false;
+        stabilityPoolAddresses[address(troveManager.stabilityPool())] = false;
+        borrowerOperationsAddresses[address(troveManager.borrowerOperations())] = false;
+        activePoolAddresses[address(troveManager.activePool())] = false;
+
+        emit TokenRemoved(_token);
+        emit TroveManagerRemoved(_token, collTokenToTroveManager[_token]);
     }
 
     struct RedemptionTotals {
@@ -268,31 +308,29 @@ contract CollateralRegistry is ICollateralRegistry {
     // getters
 
     function getToken(uint256 _index) external view returns (IERC20Metadata) {
-        if (_index == 0) return token0;
-        else if (_index == 1) return token1;
-        else if (_index == 2) return token2;
-        else if (_index == 3) return token3;
-        else if (_index == 4) return token4;
-        else if (_index == 5) return token5;
-        else if (_index == 6) return token6;
-        else if (_index == 7) return token7;
-        else if (_index == 8) return token8;
-        else if (_index == 9) return token9;
-        else revert("Invalid index");
+        //        require(_index < tokens.length, "Invalid index");
+        //if index is not valid return the zero address
+        if (_index >= tokens.length) {
+            //todo: make a decision if we should return 0 or revert
+            return IERC20Metadata(address(0));
+        }
+        IERC20Metadata token = IERC20Metadata(tokens[_index]);
+        return token;
     }
 
+    function getTroveManager(address _token) public view returns (ITroveManager) {
+        return collTokenToTroveManager[_token];
+    }
+    //function to get troveManager by index
+
     function getTroveManager(uint256 _index) public view returns (ITroveManager) {
-        if (_index == 0) return troveManager0;
-        else if (_index == 1) return troveManager1;
-        else if (_index == 2) return troveManager2;
-        else if (_index == 3) return troveManager3;
-        else if (_index == 4) return troveManager4;
-        else if (_index == 5) return troveManager5;
-        else if (_index == 6) return troveManager6;
-        else if (_index == 7) return troveManager7;
-        else if (_index == 8) return troveManager8;
-        else if (_index == 9) return troveManager9;
-        else revert("Invalid index");
+        //        require(_index < tokens.length, "Invalid index");
+        //if index is not valid return the zero address
+        if (_index >= tokens.length) {
+            //todo: make a decision if we should return 0 or revert
+            return ITroveManager(address(0));
+        }
+        return collTokenToTroveManager[tokens[_index]];
     }
 
     // require functions
@@ -319,5 +357,19 @@ contract CollateralRegistry is ICollateralRegistry {
             boldBalance >= _amount,
             "CollateralRegistry: Requested redemption amount must be <= user's Bold token balance"
         );
+    }
+
+    //govetnance functions
+    function _requireGovernanceInitiative() internal view {
+        if (governance.registeredInitiatives(msg.sender) == 0) {
+            revert CallerNotGovernanceInitiative();
+        }
+    }
+
+    function setGovernance(IGovernance _newGovernance) external {
+        _requireGovernanceInitiative();
+        require(address(_newGovernance) != address(0), "New governance address cannot be zero");
+        governance = _newGovernance;
+        emit GovernanceAddresssChanged(address(_newGovernance));
     }
 }

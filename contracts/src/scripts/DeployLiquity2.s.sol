@@ -34,6 +34,8 @@ import "../Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
 import "../Zappers/Modules/Exchanges/CurveExchange.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "../Interfaces/IGovernance.sol";
+import {GovernanceTester} from "../test/TestContracts/GovernanceTester.t.sol";
 import "forge-std/console.sol";
 
 contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
@@ -116,6 +118,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         IBoldToken boldToken;
         HintHelpers hintHelpers;
         MultiTroveGetter multiTroveGetter;
+        IGovernance governance;
     }
 
     function _getBranchContractsJson(LiquityContractsTestnet memory c) internal pure returns (string memory) {
@@ -336,7 +339,8 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
 
-        r.collateralRegistry = new CollateralRegistry(r.boldToken, vars.collaterals, vars.troveManagers);
+        r.governance = new GovernanceTester();
+        r.collateralRegistry = new CollateralRegistry(r.boldToken, r.governance, vars.collaterals, vars.troveManagers);
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
 
@@ -390,6 +394,8 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
 
+        // Deploy Governance contract
+        GovernanceTester governance = new GovernanceTester();
         // Deploy all contracts, using testers for TM and PriceFeed
         contracts.addressesRegistry = _addressesRegistry;
 
@@ -446,7 +452,8 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: governance
         });
         contracts.addressesRegistry.setAddresses(addressVars);
 
@@ -471,7 +478,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),

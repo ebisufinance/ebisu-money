@@ -170,4 +170,17 @@ interface ITroveManager is ILiquityBase {
     ) external;
 
     // -- end of permissioned functions --
+
+    // params functionality
+
+    function MCR() external view returns(uint256);
+
+    function LIQUIDATION_PENALTY_SP() external view returns(uint256);
+
+    function LIQUIDATION_PENALTY_REDISTRIBUTION() external view returns(uint256);
+
+    function setMCR(uint256 _MCR) external;
+
+    function setLiquidationPenaltyParams(uint256 _LIQUIDATION_PENALTY_SP, uint256 _LIQUIDATION_PENALTY_REDISTRIBUTION) external;
+
 }

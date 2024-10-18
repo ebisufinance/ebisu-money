@@ -33,7 +33,9 @@ import "../Zappers/GasCompZapper.sol";
 import "../Zappers/Modules/FlashLoans/BalancerFlashLoan.sol";
 import "../Zappers/Modules/Exchanges/CurveExchange.sol";
 import {WETHTester} from "../test/TestContracts/WETHTester.sol";
+import {GovernanceTester} from "../test/TestContracts/GovernanceTester.t.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
+import "../Interfaces/IGovernance.sol";
 import "forge-std/console.sol";
 
 contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
@@ -116,6 +118,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         IBoldToken boldToken;
         HintHelpers hintHelpers;
         MultiTroveGetter multiTroveGetter;
+        IGovernance governance;
     }
 
     function _getBranchContractsJson(LiquityContractsTestnet memory c) internal pure returns (string memory) {
@@ -187,14 +190,13 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
 
         troveManagerParamsArray[0] = TroveManagerParams(150e16, 110e16, 110e16, 5e16, 10e16); // weETH
         troveManagerParamsArray[1] = TroveManagerParams(150e16, 120e16, 110e16, 5e16, 10e16); // weETH
-        console.log("after troveManagerParamsArray");
+
         // used for gas compensation and as collateral of the first branch
         IWETH WETH = new WETHTester({_tapAmount: 100 ether, _tapPeriod: 1 days});
         DeploymentResult memory deployed = _deployAndConnectContracts(troveManagerParamsArray, WETH);
         vm.stopBroadcast();
 
         vm.writeFile("deployment-manifest.json", _getManifestJson(deployed));
-
     }
 
     function tapFaucet(uint256[] memory accounts, LiquityContractsTestnet memory contracts) internal {
@@ -243,7 +245,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             1 days //         _tapPeriod
         );
 
-         vars.collaterals[1] = new ERC20Faucet(
+        vars.collaterals[1] = new ERC20Faucet(
             string.concat("Mock ezETH", string(abi.encode(vars.i))), // _name
             string.concat("ezETH", string(abi.encode(vars.i))), // _symbol
             100 ether, //     _tapAmount
@@ -258,7 +260,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             vars.troveManagers[vars.i] = ITroveManager(troveManagerAddress);
         }
 
-        r.collateralRegistry = new CollateralRegistry(r.boldToken, vars.collaterals, vars.troveManagers);
+        r.governance = new GovernanceTester();
+        r.collateralRegistry = new CollateralRegistry(r.boldToken, r.governance, vars.collaterals, vars.troveManagers);
         r.hintHelpers = new HintHelpers(r.collateralRegistry);
         r.multiTroveGetter = new MultiTroveGetter(r.collateralRegistry);
 
@@ -312,6 +315,8 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         LiquityContractAddresses memory addresses;
         contracts.collToken = _collToken;
 
+        // Deploy Governance contract
+        GovernanceTester governance = new GovernanceTester();
         // Deploy all contracts, using testers for TM and PriceFeed
         contracts.addressesRegistry = _addressesRegistry;
 
@@ -368,10 +373,11 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
             multiTroveGetter: _multiTroveGetter,
             collateralRegistry: _collateralRegistry,
             boldToken: _boldToken,
-            WETH: _weth
+            WETH: _weth,
+            governance: governance
         });
-        contracts.addressesRegistry.setAddresses(addressVars);
 
+        contracts.addressesRegistry.setAddresses(addressVars);
         contracts.borrowerOperations = new BorrowerOperations{salt: SALT}(contracts.addressesRegistry);
         contracts.troveManager = new TroveManager{salt: SALT}(contracts.addressesRegistry);
         contracts.troveNFT = new TroveNFT{salt: SALT}(contracts.addressesRegistry);
@@ -393,7 +399,7 @@ contract DeployEbisuTestnet is Script, StdCheats, MetadataDeployment {
         assert(address(contracts.sortedTroves) == addresses.sortedTroves);
 
         // Connect contracts
-        _boldToken.setBranchAddresses(
+        _collateralRegistry.setBranchAddresses(
             address(contracts.troveManager),
             address(contracts.stabilityPool),
             address(contracts.borrowerOperations),
