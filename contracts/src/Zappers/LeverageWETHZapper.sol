@@ -9,8 +9,6 @@ import "../Dependencies/AddRemoveManagers.sol";
 import "../Dependencies/Constants.sol";
 import "./Interfaces/ILeverageZapper.sol";
 
-// import "forge-std/console2.sol";
-
 // TODO: unwrap WETH in _returnLeftovers
 
 contract LeverageWETHZapper is WETHZapper, ILeverageZapper {
@@ -59,7 +57,7 @@ contract LeverageWETHZapper is WETHZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(WETH, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider
@@ -142,7 +140,7 @@ contract LeverageWETHZapper is WETHZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(WETH, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider
@@ -187,7 +185,7 @@ contract LeverageWETHZapper is WETHZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(WETH, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider

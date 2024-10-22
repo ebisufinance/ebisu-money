@@ -15,8 +15,6 @@ import "./Dependencies/AddRemoveManagers.sol";
 import "./Types/LatestTroveData.sol";
 import "./Types/LatestBatchData.sol";
 
-// import "forge-std/console2.sol";
-
 contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperations {
     using SafeERC20 for IERC20;
 
@@ -307,7 +305,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
         LocalVariables_openTrove memory vars;
 
-        // TODO: stack too deep not allowing to reuse troveManager from outer functions
+        // stack too deep not allowing to reuse troveManager from outer functions
         vars.troveManager = troveManager;
         vars.activePool = activePool;
         vars.boldToken = boldToken;
@@ -342,7 +340,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
                 (_batchEntireDebt + vars.entireDebt) * _batchManagementAnnualFee;
         }
 
-        // ICR is based on the composite debt, i.e. the requested Bold amount + Bold gas comp + upfront fee.
+        // ICR is based on the requested Bold amount + upfront fee.
         vars.ICR = LiquityMath._computeCR(_collAmount, vars.entireDebt, vars.price);
         _requireICRisAboveMCR(vars.ICR);
 
@@ -352,10 +350,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         // --- Effects & interactions ---
 
         // Set add/remove managers
-        // TODO: We can restore the condition for non-zero managers if we end up ipmlementing at least one of:
-        // - wipe them out on closing troves
-        // - do not reuse troveIds
-        // for now it is safer to make sure they are set
         _setAddManager(vars.troveId, _addManager);
         _setRemoveManagerAndReceiver(vars.troveId, _removeManager, _receiver);
 
@@ -485,10 +479,10 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         troveManagerCached.setTroveStatusToActive(_troveId);
 
         address batchManager = interestBatchManagerOf[_troveId];
-        uint256 batchAnnualInteresRate;
+        uint256 batchAnnualInterestRate;
         if (batchManager != address(0)) {
             LatestBatchData memory batch = troveManagerCached.getLatestBatchData(batchManager);
-            batchAnnualInteresRate = batch.annualInterestRate;
+            batchAnnualInterestRate = batch.annualInterestRate;
         }
         _reInsertIntoSortedTroves(
             _troveId,
@@ -496,7 +490,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
             _upperHint,
             _lowerHint,
             batchManager,
-            batchAnnualInteresRate
+            batchAnnualInterestRate
         );
     }
 
@@ -611,7 +605,6 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
             batchFutureDebt = batch.entireDebtWithoutRedistribution + vars.trove.redistBoldDebtGain
                 + _troveChange.debtIncrease - _troveChange.debtDecrease;
 
-            // TODO: comment
             _troveChange.appliedRedistBoldDebtGain = vars.trove.redistBoldDebtGain;
             _troveChange.appliedRedistCollGain = vars.trove.redistCollGain;
             _troveChange.batchAccruedManagementFee = batch.accruedManagementFee;
@@ -988,14 +981,10 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
         newBatchTroveChange.newWeightedRecordedDebt =
             (vars.newBatch.entireDebtWithoutRedistribution + vars.trove.entireDebt) * vars.newBatch.annualInterestRate;
 
-        // We may check the old rate to see if it’s different than the new one, but then we should check the
-        // last interest adjustment times to avoid gaming. So we decided to keep it simple and account it always
-        // as a change. It’s probably not so common to join a batch with the exact same interest rate.
-        // Apply upfront fee on premature adjustments
-        if (block.timestamp < vars.trove.lastInterestRateAdjTime + INTEREST_RATE_ADJ_COOLDOWN) {
-            vars.trove.entireDebt =
-                _applyUpfrontFee(vars.trove.entireColl, vars.trove.entireDebt, newBatchTroveChange, _maxUpfrontFee);
-        }
+        // An upfront fee is always charged upon joining a batch to ensure that borrowers can not game the fee logic
+        // and gain free interest rate updates (e.g. if they also manage the batch they joined)
+        vars.trove.entireDebt =
+            _applyUpfrontFee(vars.trove.entireColl, vars.trove.entireDebt, newBatchTroveChange, _maxUpfrontFee);
 
         // Recalculate newWeightedRecordedDebt, now taking into account the upfront fee
         newBatchTroveChange.newWeightedRecordedDebt =
@@ -1126,7 +1115,7 @@ contract BorrowerOperations is LiquityBase, AddRemoveManagers, IBorrowerOperatio
 
         _troveEntireDebt += _troveChange.upfrontFee;
 
-        // ICR is based on the composite debt, i.e. the requested Bold amount + Bold gas comp + upfront fee.
+        // ICR is based on the requested Bold amount + upfront fee.
         uint256 newICR = LiquityMath._computeCR(_troveEntireColl, _troveEntireDebt, price);
         _requireICRisAboveMCR(newICR);
 

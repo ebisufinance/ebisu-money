@@ -10,8 +10,6 @@ import "./GasCompZapper.sol";
 import "../Dependencies/AddRemoveManagers.sol";
 import "../Dependencies/Constants.sol";
 
-// import "forge-std/console2.sol";
-
 contract LeverageLSTZapper is GasCompZapper, ILeverageZapper {
     using SafeERC20 for IERC20;
 
@@ -64,7 +62,7 @@ contract LeverageLSTZapper is GasCompZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider
@@ -145,7 +143,7 @@ contract LeverageLSTZapper is GasCompZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider
@@ -190,7 +188,7 @@ contract LeverageLSTZapper is GasCompZapper, ILeverageZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     // Callback from the flash loan provider
