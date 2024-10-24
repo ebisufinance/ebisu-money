@@ -281,7 +281,7 @@ contract ShutdownTest is DevTestSetup {
 
         vm.startPrank(A);
         vm.expectRevert(BorrowerOperations.IsShutDown.selector);
-        borrowerOperations.setInterestIndividualDelegate(troveId, B, 5e15, 1e18, 0, 0, 0, 0);
+        borrowerOperations.setInterestIndividualDelegate(troveId, B, 5e15, 1e18, 0, 0, 0, 0, 0);
         vm.stopPrank();
     }
 
@@ -567,8 +567,6 @@ contract ShutdownTest is DevTestSetup {
         contractsArray[0].priceFeed.setPrice(price);
         contractsArray[0].borrowerOperations.shutdown();
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
-        uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = troveManager.getTroveEntireDebt(troveId);
 
         // Urgent redeem to bring Trove to 0 debt
@@ -603,8 +601,6 @@ contract ShutdownTest is DevTestSetup {
         contractsArray[0].priceFeed.setPrice(price);
         contractsArray[0].borrowerOperations.shutdown();
 
-        uint256 boldBalanceBefore = boldToken.balanceOf(A);
-        uint256 collBalanceBefore = contractsArray[0].collToken.balanceOf(A);
         uint256 redemptionAmount = troveManager.getTroveEntireDebt(troveId);
 
         // A closes Trove

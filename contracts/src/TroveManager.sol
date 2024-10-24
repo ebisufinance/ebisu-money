@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: BUSL-1.1
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "./Interfaces/ITroveManager.sol";
 import "./Interfaces/IAddressesRegistry.sol";
@@ -761,7 +761,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
                 nextUserToCheck = sortedTrovesCached.getPrev(singleRedemption.troveId);
             }
 
-            // Skip if ICR < 100%, to make sure that redemptions always improve the CR of hit Troves
+            // Skip if ICR < 100%, to make sure that redemptions don’t decrease the CR of hit Troves
             if (getCurrentICR(singleRedemption.troveId, _price) < _100pct) {
                 singleRedemption.troveId = nextUserToCheck;
                 singleRedemption.isZombieTrove = false;
@@ -849,6 +849,8 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
 
         uint256 remainingBold = _boldAmount;
         for (uint256 i = 0; i < _troveIds.length; i++) {
+            if (remainingBold == 0) break;
+
             SingleRedemptionValues memory singleRedemption;
             singleRedemption.troveId = _troveIds[i];
             _getLatestTroveData(singleRedemption.troveId, singleRedemption.trove);
@@ -876,7 +878,6 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
             totalsTroveChange.oldWeightedRecordedDebt += singleRedemption.oldWeightedRecordedDebt;
 
             remainingBold -= singleRedemption.boldLot;
-            if (remainingBold == 0) break;
         }
 
         if (totalsTroveChange.collDecrease < _minCollateral) {
@@ -949,9 +950,8 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         LatestBatchData memory _latestBatchData
     ) internal view {
         Trove memory trove = Troves[_troveId];
-        Batch memory batch = batches[_batchAddress];
         uint256 batchDebtShares = trove.batchDebtShares;
-        uint256 totalDebtShares = batch.totalDebtShares;
+        uint256 totalDebtShares = batches[_batchAddress].totalDebtShares;
 
         uint256 stake = trove.stake;
         _latestTroveData.redistBoldDebtGain =
@@ -1054,7 +1054,7 @@ contract TroveManager is LiquityBase, ITroveManager, ITroveEvents {
         uint256 _debtToRedistribute,
         uint256 _collToRedistribute
     ) internal {
-        if (_debtToRedistribute == 0) return;
+        if (_debtToRedistribute == 0) return; // Otherwise _collToRedistribute > 0 too
 
         /*
         * Add distributed coll and debt rewards-per-unit-staked to the running totals. Division uses a "feedback"

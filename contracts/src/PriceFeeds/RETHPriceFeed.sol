@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "./CompositePriceFeed.sol";
 import "../Interfaces/IRETHToken.sol";
 import "../Interfaces/IRETHPriceFeed.sol";
+import "../Dependencies/IRETHToken.sol";
 
 contract RETHPriceFeed is CompositePriceFeed {
     constructor(

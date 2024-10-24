@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
@@ -2727,12 +2727,17 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         r = _urgentRedemption;
 
         for (uint256 j = 0; j < r.batch.length; ++j) {
+            if (amount == 0) break;
+
             uint256 troveId = _troveIdOf(i, r.batch[j]);
+            if (!_troveIds[i].has(troveId)) continue; // skip non-existent Trove
 
             if (r.redeemedIds.has(troveId)) continue; // skip duplicate entry
             r.redeemedIds.add(troveId);
 
             LatestTroveData memory trove = branches[i].troveManager.getLatestTroveData(troveId);
+            if (trove.entireDebt == 0) continue; // nothing to redeem
+
             uint256 debtRedeemed = Math.min(amount, trove.entireDebt);
             uint256 collRedeemed = debtRedeemed * (DECIMAL_PRECISION + URGENT_REDEMPTION_BONUS) / _price[i];
 
@@ -2750,7 +2755,6 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             r.totalDebtRedeemed += debtRedeemed;
 
             amount -= debtRedeemed;
-            if (amount == 0) break; // XXX why at the end?
         }
     }
 
@@ -2924,10 +2928,6 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
             if (selector == BorrowerOperations.IsShutDown.selector) {
                 return (selector, "BorrowerOperations.IsShutDown()");
-            }
-
-            if (selector == BorrowerOperations.NotShutDown.selector) {
-                return (selector, "BorrowerOperations.NotShutDown()");
             }
 
             if (selector == BorrowerOperations.TCRNotBelowSCR.selector) {
