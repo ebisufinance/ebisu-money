@@ -1,40 +1,20 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity 0.8.24;
 
-import "../Interfaces/IAddressesRegistry.sol";
-import "../Interfaces/IBorrowerOperations.sol";
-import "../Interfaces/ITroveManager.sol";
-import "../Interfaces/ITroveNFT.sol";
-import "../Interfaces/IWETH.sol";
-import "./LeftoversSweep.sol";
 import "./BaseZapper.sol";
 import "../Dependencies/Constants.sol";
-import "./Interfaces/IFlashLoanProvider.sol";
-import "./Interfaces/IFlashLoanReceiver.sol";
-import "./Interfaces/IExchange.sol";
-import "./Interfaces/IZapper.sol";
 
-contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
-    IFlashLoanProvider public immutable flashLoanProvider;
-    IExchange public immutable exchange;
-
+contract WETHZapper is BaseZapper {
     constructor(IAddressesRegistry _addressesRegistry, IFlashLoanProvider _flashLoanProvider, IExchange _exchange)
-        BaseZapper(_addressesRegistry)
+        BaseZapper(_addressesRegistry, _flashLoanProvider, _exchange)
     {
         require(address(WETH) == address(_addressesRegistry.collToken()), "WZ: Wrong coll branch");
 
-        flashLoanProvider = _flashLoanProvider;
-        exchange = _exchange;
-
+        // Approve coll to BorrowerOperations
+        WETH.approve(address(borrowerOperations), type(uint256).max);
         // Approve Coll to exchange module (for closeTroveFromCollateral)
         WETH.approve(address(_exchange), type(uint256).max);
-    }
-
-    struct OpenTroveVars {
-        uint256 troveId;
-        IBorrowerOperations borrowerOperations;
-        IWETH WETH;
     }
 
     function openTroveWithRawETH(OpenTroveParams calldata _params) external payable returns (uint256) {
@@ -44,18 +24,12 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
             "WZ: Cannot choose interest if joining a batch"
         );
 
-        OpenTroveVars memory vars;
-        vars.borrowerOperations = borrowerOperations;
-        vars.WETH = WETH;
-
         // Convert ETH to WETH
-        vars.WETH.deposit{value: msg.value}();
+        WETH.deposit{value: msg.value}();
 
-        // Approve WETH to BorrowerOperations
-        vars.WETH.approve(address(vars.borrowerOperations), msg.value);
-
+        uint256 troveId;
         if (_params.batchManager == address(0)) {
-            vars.troveId = vars.borrowerOperations.openTrove(
+            troveId = borrowerOperations.openTrove(
                 _params.owner,
                 _params.ownerIndex,
                 msg.value - ETH_GAS_COMPENSATION,
@@ -88,17 +62,17 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
                     removeManager: address(this), // remove manager
                     receiver: address(this) // receiver for remove manager
                 });
-            vars.troveId =
-                vars.borrowerOperations.openTroveAndJoinInterestBatchManager(openTroveAndJoinInterestBatchManagerParams);
+            troveId =
+                borrowerOperations.openTroveAndJoinInterestBatchManager(openTroveAndJoinInterestBatchManagerParams);
         }
 
         boldToken.transfer(msg.sender, _params.boldAmount);
 
         // Set add/remove managers
-        _setAddManager(vars.troveId, _params.addManager);
-        _setRemoveManagerAndReceiver(vars.troveId, _params.removeManager, _params.receiver);
+        _setAddManager(troveId, _params.addManager);
+        _setRemoveManagerAndReceiver(troveId, _params.removeManager, _params.receiver);
 
-        return vars.troveId;
+        return troveId;
     }
 
     function addCollWithRawETH(uint256 _troveId) external payable {
@@ -107,11 +81,7 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
         // Convert ETH to WETH
         WETH.deposit{value: msg.value}();
 
-        // Approve WETH to BorrowerOperations
-        IBorrowerOperations borrowerOperationsCached = borrowerOperations;
-        WETH.approve(address(borrowerOperationsCached), msg.value);
-
-        borrowerOperationsCached.addColl(_troveId, msg.value);
+        borrowerOperations.addColl(_troveId, msg.value);
     }
 
     function withdrawCollToRawETH(uint256 _troveId, uint256 _amount) external {
@@ -150,7 +120,7 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
         borrowerOperations.repayBold(_troveId, _boldAmount);
 
         // return leftovers to user
-        _returnLeftovers(WETH, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     function adjustTroveWithRawETH(
@@ -212,10 +182,8 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
         // ETH -> WETH
         if (_isCollIncrease) {
             WETH.deposit{value: _collChange}();
-            WETH.approve(address(borrowerOperations), _collChange);
         }
 
-        // TODO: version with Permit
         // Pull Bold
         if (!_isDebtIncrease) {
             boldToken.transferFrom(msg.sender, address(this), _boldChange);
@@ -239,8 +207,8 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
 
         // return BOLD leftovers to user (trying to repay more than possible)
         uint256 currentBoldBalance = boldToken.balanceOf(address(this));
-        if (currentBoldBalance > _initialBalances.boldBalance) {
-            boldToken.transfer(_initialBalances.receiver, currentBoldBalance - _initialBalances.boldBalance);
+        if (currentBoldBalance > _initialBalances.balances[1]) {
+            boldToken.transfer(_initialBalances.receiver, currentBoldBalance - _initialBalances.balances[1]);
         }
         // There shouldn’t be Collateral leftovers, everything sent should end up in the trove
 
@@ -277,7 +245,9 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
 
         // Set initial balances to make sure there are not lefovers
         InitialBalances memory initialBalances;
-        _setInitialBalancesAndReceiver(WETH, boldToken, initialBalances, receiver);
+        initialBalances.tokens[0] = WETH;
+        initialBalances.tokens[1] = boldToken;
+        _setInitialBalancesAndReceiver(initialBalances, receiver);
 
         // Flash loan coll
         flashLoanProvider.makeFlashLoan(
@@ -285,7 +255,7 @@ contract WETHZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
         );
 
         // return leftovers to user
-        _returnLeftovers(WETH, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     function receiveFlashLoanOnCloseTroveFromCollateral(

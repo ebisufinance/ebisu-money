@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {IERC20} from "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
@@ -241,7 +241,6 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         Trove trove;
         bool wasOpen;
         bool wasActive;
-        bool premature;
         uint256 upfrontFee;
         string errorString;
     }
@@ -1980,11 +1979,9 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         v.trove = _troves[i][v.troveId];
         v.wasOpen = _isOpen(i, v.troveId);
         v.wasActive = _isActive(i, v.troveId);
-        v.premature = _timeSinceLastTroveInterestRateAdjustment[i][v.troveId] < INTEREST_RATE_ADJ_COOLDOWN;
 
         if (_batchManagerOf[i][v.troveId] == address(0)) {
             v.upfrontFee = hintHelpers.predictJoinBatchInterestRateUpfrontFee(i, v.troveId, v.newBatchManager);
-            if (v.upfrontFee > 0) assertTrue(v.premature, "Only premature adjustment should incur upfront fee");
         }
 
         info("batch manager: ", vm.getLabel(v.newBatchManager));
@@ -2012,11 +2009,8 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             assertTrue(v.wasActive, "Should have failed as Trove wasn't active");
             assertEq(_batchManagerOf[i][v.troveId], address(0), "Should have failed as Trove was in a batch");
             assertTrue(_batchManagers[i].has(v.newBatchManager), "Should have failed as batch manager wasn't valid");
-
-            if (v.premature) {
-                assertGeDecimal(newICR, MCR[i], 18, "Should have failed as new ICR < MCR");
-                assertGeDecimal(newTCR, CCR[i], 18, "Should have failed as new TCR < CCR");
-            }
+            assertGeDecimal(newICR, MCR[i], 18, "Should have failed as new ICR < MCR");
+            assertGeDecimal(newTCR, CCR[i], 18, "Should have failed as new TCR < CCR");
 
             // Effects (Trove)
             v.trove.applyPending();
@@ -2061,12 +2055,10 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
                 );
             } else if (selector == BorrowerOperations.ICRBelowMCR.selector) {
                 uint256 newICR = _ICR(i, 0, 0, v.upfrontFee, v.t);
-                assertTrue(v.premature, "Shouldn't have failed as adjustment was not premature");
                 assertLtDecimal(newICR, MCR[i], 18, "Shouldn't have failed as new ICR >= MCR");
                 info("New ICR would have been: ", newICR.decimal());
             } else if (selector == BorrowerOperations.TCRBelowCCR.selector) {
                 uint256 newTCR = _TCR(i, 0, 0, v.upfrontFee);
-                assertTrue(v.premature, "Shouldn't have failed as adjustment was not premature");
                 assertLtDecimal(newTCR, CCR[i], 18, "Shouldn't have failed as new TCR >= CCR");
                 info("New TCR would have been: ", newTCR.decimal());
             } else {
@@ -2735,12 +2727,17 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
         r = _urgentRedemption;
 
         for (uint256 j = 0; j < r.batch.length; ++j) {
+            if (amount == 0) break;
+
             uint256 troveId = _troveIdOf(i, r.batch[j]);
+            if (!_troveIds[i].has(troveId)) continue; // skip non-existent Trove
 
             if (r.redeemedIds.has(troveId)) continue; // skip duplicate entry
             r.redeemedIds.add(troveId);
 
             LatestTroveData memory trove = branches[i].troveManager.getLatestTroveData(troveId);
+            if (trove.entireDebt == 0) continue; // nothing to redeem
+
             uint256 debtRedeemed = Math.min(amount, trove.entireDebt);
             uint256 collRedeemed = debtRedeemed * (DECIMAL_PRECISION + URGENT_REDEMPTION_BONUS) / _price[i];
 
@@ -2758,7 +2755,6 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
             r.totalDebtRedeemed += debtRedeemed;
 
             amount -= debtRedeemed;
-            if (amount == 0) break; // XXX why at the end?
         }
     }
 
@@ -2932,10 +2928,6 @@ contract InvariantsTestHandler is BaseHandler, BaseMultiCollateralTest {
 
             if (selector == BorrowerOperations.IsShutDown.selector) {
                 return (selector, "BorrowerOperations.IsShutDown()");
-            }
-
-            if (selector == BorrowerOperations.NotShutDown.selector) {
-                return (selector, "BorrowerOperations.NotShutDown()");
             }
 
             if (selector == BorrowerOperations.TCRNotBelowSCR.selector) {

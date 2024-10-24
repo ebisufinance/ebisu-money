@@ -1,47 +1,29 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity 0.8.24;
 
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 
-import "../Interfaces/IAddressesRegistry.sol";
-import "../Interfaces/IBorrowerOperations.sol";
-import "../Interfaces/IWETH.sol";
-import "./LeftoversSweep.sol";
 import "./BaseZapper.sol";
 import "../Dependencies/Constants.sol";
-import "./Interfaces/IFlashLoanProvider.sol";
-import "./Interfaces/IFlashLoanReceiver.sol";
-import "./Interfaces/IExchange.sol";
-import "./Interfaces/IZapper.sol";
 
-// import "forge-std/console2.sol";
-
-contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZapper {
+contract GasCompZapper is BaseZapper {
     using SafeERC20 for IERC20;
 
     IERC20 public immutable collToken;
-    IFlashLoanProvider public immutable flashLoanProvider;
-    IExchange public immutable exchange;
 
     constructor(IAddressesRegistry _addressesRegistry, IFlashLoanProvider _flashLoanProvider, IExchange _exchange)
-        BaseZapper(_addressesRegistry)
+        BaseZapper(_addressesRegistry, _flashLoanProvider, _exchange)
     {
         collToken = _addressesRegistry.collToken();
         require(address(WETH) != address(collToken), "GCZ: Wrong coll branch");
 
-        flashLoanProvider = _flashLoanProvider;
-        exchange = _exchange;
-
+        // Approve WETH to BorrowerOperations
+        WETH.approve(address(borrowerOperations), type(uint256).max);
+        // Approve coll to BorrowerOperations
+        collToken.approve(address(borrowerOperations), type(uint256).max);
         // Approve Coll to exchange module (for closeTroveFromCollateral)
         collToken.approve(address(_exchange), type(uint256).max);
-    }
-
-    struct OpenTroveVars {
-        uint256 troveId;
-        IBorrowerOperations borrowerOperations;
-        IWETH WETH;
-        IERC20 collToken;
     }
 
     function openTroveWithRawETH(OpenTroveParams calldata _params) external payable returns (uint256) {
@@ -51,23 +33,15 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
             "GCZ: Cannot choose interest if joining a batch"
         );
 
-        OpenTroveVars memory vars;
-        vars.borrowerOperations = borrowerOperations;
-        vars.WETH = WETH;
-        vars.collToken = collToken;
-
         // Convert ETH to WETH
-        vars.WETH.deposit{value: msg.value}();
+        WETH.deposit{value: msg.value}();
 
-        // Approve WETH to BorrowerOperations
-        vars.WETH.approve(address(vars.borrowerOperations), msg.value);
+        // Pull coll
+        collToken.safeTransferFrom(msg.sender, address(this), _params.collAmount);
 
-        // Pull and approve coll
-        vars.collToken.safeTransferFrom(msg.sender, address(this), _params.collAmount);
-        vars.collToken.approve(address(vars.borrowerOperations), _params.collAmount);
-
+        uint256 troveId;
         if (_params.batchManager == address(0)) {
-            vars.troveId = vars.borrowerOperations.openTrove(
+            troveId = borrowerOperations.openTrove(
                 _params.owner,
                 _params.ownerIndex,
                 _params.collAmount,
@@ -100,17 +74,17 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
                     removeManager: address(this), // remove manager
                     receiver: address(this) // receiver for remove manager
                 });
-            vars.troveId =
-                vars.borrowerOperations.openTroveAndJoinInterestBatchManager(openTroveAndJoinInterestBatchManagerParams);
+            troveId =
+                borrowerOperations.openTroveAndJoinInterestBatchManager(openTroveAndJoinInterestBatchManagerParams);
         }
 
         boldToken.transfer(msg.sender, _params.boldAmount);
 
         // Set add/remove managers
-        _setAddManager(vars.troveId, _params.addManager);
-        _setRemoveManagerAndReceiver(vars.troveId, _params.removeManager, _params.receiver);
+        _setAddManager(troveId, _params.addManager);
+        _setRemoveManagerAndReceiver(troveId, _params.removeManager, _params.receiver);
 
-        return vars.troveId;
+        return troveId;
     }
 
     function addColl(uint256 _troveId, uint256 _amount) external {
@@ -119,9 +93,8 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
 
         IBorrowerOperations borrowerOperationsCached = borrowerOperations;
 
-        // Pull and approve coll
+        // Pull coll
         collToken.safeTransferFrom(msg.sender, address(this), _amount);
-        collToken.approve(address(borrowerOperationsCached), _amount);
 
         borrowerOperationsCached.addColl(_troveId, _amount);
     }
@@ -160,7 +133,7 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
         borrowerOperations.repayBold(_troveId, _boldAmount);
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     function adjustTrove(
@@ -213,13 +186,11 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
         // Set initial balances to make sure there are not lefovers
         _setInitialBalances(collToken, boldToken, _initialBalances);
 
-        // Pull and approve coll
+        // Pull coll
         if (_isCollIncrease) {
             collToken.safeTransferFrom(msg.sender, address(this), _collChange);
-            collToken.approve(address(borrowerOperations), _collChange);
         }
 
-        // TODO: version with Permit
         // Pull Bold
         if (!_isDebtIncrease) {
             boldToken.transferFrom(msg.sender, address(this), _boldChange);
@@ -247,7 +218,7 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
         }
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, _initialBalances);
+        _returnLeftovers(_initialBalances);
     }
 
     function closeTroveToRawETH(uint256 _troveId) external {
@@ -276,7 +247,9 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
 
         // Set initial balances to make sure there are not lefovers
         InitialBalances memory initialBalances;
-        _setInitialBalancesAndReceiver(collToken, boldToken, initialBalances, receiver);
+        initialBalances.tokens[0] = collToken;
+        initialBalances.tokens[1] = boldToken;
+        _setInitialBalancesAndReceiver(initialBalances, receiver);
 
         // Flash loan coll
         flashLoanProvider.makeFlashLoan(
@@ -284,7 +257,7 @@ contract GasCompZapper is LeftoversSweep, BaseZapper, IFlashLoanReceiver, IZappe
         );
 
         // return leftovers to user
-        _returnLeftovers(collToken, boldToken, initialBalances);
+        _returnLeftovers(initialBalances);
     }
 
     function receiveFlashLoanOnCloseTroveFromCollateral(

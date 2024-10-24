@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "./MainnetPriceFeedBase.sol";
+import "../Interfaces/IWETHPriceFeed.sol";
 
-// import "forge-std/console2.sol";
+contract WETHPriceFeed is MainnetPriceFeedBase, IWETHPriceFeed {
+    Oracle public ethUsdOracle;
 
-contract WETHPriceFeed is MainnetPriceFeedBase {
     constructor(address _owner, address _ethUsdOracleAddress, uint256 _ethUsdStalenessThreshold)
         MainnetPriceFeedBase(_owner, _ethUsdOracleAddress, _ethUsdStalenessThreshold)
     {

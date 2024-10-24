@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "./Accounts.sol";
 import "../../Interfaces/IActivePool.sol";
@@ -126,14 +126,6 @@ contract BaseTest is TestAccounts, Logging {
         returns (uint256)
     {
         return hintHelpers.predictJoinBatchInterestRateUpfrontFee(0, _troveId, _batchAddress);
-    }
-
-    function forcePredictJoinBatchInterestRateUpfrontFee(uint256 _troveId, address _batchAddress)
-        internal
-        view
-        returns (uint256)
-    {
-        return hintHelpers.forcePredictJoinBatchInterestRateUpfrontFee(0, _troveId, _batchAddress);
     }
 
     // Quick and dirty binary search instead of Newton's, because it's easier

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: BUSL-1.1
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "openzeppelin-contracts/contracts/token/ERC721/ERC721.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -10,8 +10,6 @@ import "./Interfaces/IAddressesRegistry.sol";
 
 import {IMetadataNFT} from "./NFTMetadata/MetadataNFT.sol";
 import {ITroveManager} from "./Interfaces/ITroveManager.sol";
-
-// import "forge-std/console2.sol";
 
 contract TroveNFT is ERC721, ITroveNFT {
     ITroveManager public immutable troveManager;

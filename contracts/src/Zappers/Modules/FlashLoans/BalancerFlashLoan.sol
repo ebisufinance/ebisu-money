@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.18;
+pragma solidity 0.8.24;
 
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 import "./Balancer/vault/IVault.sol";
@@ -9,8 +9,6 @@ import "./Balancer/vault/IFlashLoanRecipient.sol";
 import "../../Interfaces/ILeverageZapper.sol";
 import "../../Interfaces/IFlashLoanReceiver.sol";
 import "../../Interfaces/IFlashLoanProvider.sol";
-
-// import "forge-std/console2.sol";
 
 contract BalancerFlashLoan is IFlashLoanRecipient, IFlashLoanProvider {
     using SafeERC20 for IERC20;

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import {Script} from "forge-std/Script.sol";
 import {StdCheats} from "forge-std/StdCheats.sol";
@@ -567,8 +567,7 @@ contract DeployLiquity2Script is Script, StdCheats, MetadataDeployment {
         IWETH _weth
     ) internal returns (GasCompZapper gasCompZapper, WETHZapper wethZapper, ILeverageZapper leverageZapper) {
         IFlashLoanProvider flashLoanProvider = new BalancerFlashLoan();
-        IExchange uniV3Exchange =
-            new UniV3Exchange(_collToken, _boldToken, UNIV3_FEE, uniV3RouterSepolia, uniV3QuoterSepolia);
+        IExchange uniV3Exchange = new UniV3Exchange(_collToken, _boldToken, UNIV3_FEE, uniV3RouterSepolia);
 
         bool lst = _collToken != _weth;
         if (lst) {

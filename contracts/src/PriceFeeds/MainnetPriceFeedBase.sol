@@ -1,19 +1,15 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.18;
+pragma solidity 0.8.24;
 
 import "../Dependencies/Ownable.sol";
 import "../Dependencies/AggregatorV3Interface.sol";
 import "../Interfaces/IMainnetPriceFeed.sol";
 import "../BorrowerOperations.sol";
 
-// import "forge-std/console2.sol";
-
-abstract contract MainnetPriceFeedBase is IMainnetPriceFeed, Ownable {
-    // Dummy flag raised when the collateral branch gets shut down.
-    // Should be removed after actual shutdown logic is implemented.
-
-    PriceSource public priceSource;
+abstract contract MainnetPriceFeedBase is IPriceFeed, Ownable {
+    // Flag raised when the collateral branch gets shut down.
+    bool priceFeedDisabled;
 
     // Last good price tracker for the derived USD price
     uint256 public lastGoodPrice;
